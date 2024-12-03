@@ -6,21 +6,20 @@
 #include "Utils.h"
 #include "Entity.h"
 
+// Barrel class inheriting from Entity
 class Barrel : public Entity {
 
+    bool falling = false; // Indicates if the barrel is currently falling
+    int fall_count = 0; // Counter for the number of steps the barrel has been falling
+    bool explode = false; // Indicates if the barrel should explode
 
-    bool falling = false;
-
-    int fall_count = 0;
-
-    bool explode = false;
-
+    // Method to handle the direction change when the barrel is on different types of floors
     void floor_switch(char bellow_barrel);
 
 public:
+    // Constructor for the Barrel class, initializing the base Entity class with the given parameters
+    Barrel(const Board* org_board, Board* curr_board, Coordinates _pos);
 
-    Barrel(const Board* org_board, Board* curr_board, Coordinates _pos); // Initialize curr_board
-
-    void move(); // Moves Barrel based on key press
-
+    // Method to handle the movement logic of the barrel
+    void move();
 };
