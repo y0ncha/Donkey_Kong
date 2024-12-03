@@ -1,6 +1,6 @@
 #include "Mario.h"
 
-Mario::Mario(const Board* org_board, Board* curr_board) : Entity(org_board, curr_board, Coordinates(DEF_X, DEF_Y), MARIO) {};
+Mario::Mario(const Board* org_board, Board* curr_board) : Entity(org_board, curr_board, Coordinates(MARIO_X0, MARIO_Y0), MARIO) {};
 
 void Mario::update_dir(char key) {
 

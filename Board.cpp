@@ -16,22 +16,6 @@ void Board::print() const {
 }
 
 /**
- * Burn the game board.
- * This function is intended to set the board on fire (actual implementation pending).
- */
-void Board::burn() {
-    // @ implement
-}
-
-/**
- * Clear the game board.
- * This function is intended to clear the board (actual implementation pending).
- */
-void Board::clear() {
-    // @ implement
-}
-
-/**
  * Retrieves the character at the specified position on the board.
  * Returns '\0' if the position is out of bounds.
  */

@@ -2,12 +2,12 @@
 
 #include <iostream>
 #include "Config.h"
-
-#include  "Utils.h" > <
+#include "Utils.h"
 
 // The Board class represents the game board and its functionalities
 class Board {
 
+    // Layout of the game board, represented as a 2D array of characters
     char layout[MAX_Y][MAX_X + 1] = {
         // 01234567890123456789012345678901234567890123456789012345678901234567890123456789
           "             LIVES: <3  <3  <3        LEVEL 1        POINTS : 00                ",// 0
@@ -17,7 +17,7 @@ class Board {
           "     =============              =======                                         ",// 4
           "        H                        H       ======                         =====   ",// 5    
           "        H                        H &      H                                H    ",// 6 
-		  "==================>====== ================== ========<<<===<<<================  ",// 7
+          "==================>====== ================== ========<<<===<<<================  ",// 7
           "                                     H                                  H       ",// 8
           "                                     H                                  H       ",// 9
           "                        =<<<==========             ======== ================    ",// 10
@@ -38,21 +38,27 @@ class Board {
     };
 
 public:
+    // Prints the board on the console
+    void print() const;
 
-    void print() const; // Prints the board on the console
+    // Retrieves the character from the board at given coordinates
+    char get_char(Coordinates coord) const;
+    char get_char(int x, int y) const;
 
-    char get_char(Coordinates coord) const; // Retrieves the character from the board at given coordinates
-    char get_char(int x, int y) const; // Retrieves the character from the board at given coordinates
+    // Sets the character at the given coordinates
+    void set_char(Coordinates coord, char ch);
+    void set_char(int x, int y, char ch);
 
-	void set_char(Coordinates coord, char ch); // Sets the character at the given coordinates
-	void set_char(int x, int y , char ch); // Sets the character at the given coordinates
+    // Checks if the character at the given coordinates is a floor element
+    bool is_floor(Coordinates coord) const;
 
-    bool is_floor(Coordinates coord) const; // Checks if the character at the given coordinates is a floor element
+    // Sets the game board on fire (implementation pending) @ implement
+    void burn();
 
-    void burn(); // Sets the game board on fire (implementation pending) @ implement
+    // Clears the game board (implementation pending) @ implement
+    void clear();
 
-    void clear(); // Clears the game board (implementation pending) @ implement
-  
-	bool path_clear(Coordinates coord) const; // Checks if the path is clear
-	bool path_clear(int x, int y) const; // Checks if the path is clear
+    // Checks if the path is clear
+    bool path_clear(Coordinates coord) const;
+    bool path_clear(int x, int y) const;
 };
