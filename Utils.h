@@ -6,17 +6,23 @@
 #include "Config.h"
 #include "Coord.h"
 
-
+// Moves the console cursor to the specified position
 void gotoxy(Coordinates pos);
 
+// Moves the console cursor to the specified position
 void gotoxy(int x, int y);
 
+// Shows or hides the console cursor based on the showFlag parameter
 void ShowConsoleCursor(bool showFlag);
 
+// Checks if the character is a floor element
 bool is_floor(char ch);
 
-bool x_inbound(int _x); // Check if the x-Coordinates is within the game bounds
+// Checks if the x-coordinate is within the game bounds
+bool x_inbound(int _x);
 
-bool y_inbound(int _y); //  Check if the y-Coordinates is within the game bounds
+// Checks if the y-coordinate is within the game bounds
+bool y_inbound(int _y);
 
-bool pos_inbound(Coordinates pos); //    Check if the position is within the game bounds
+// Checks if the position is within the game bounds
+bool pos_inbound(Coordinates pos);
