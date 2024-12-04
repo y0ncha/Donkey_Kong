@@ -25,7 +25,7 @@ protected:
 
     int last_dx = 0;
 
-    void step(int delay = 80);
+    void step();
 
 public:
 

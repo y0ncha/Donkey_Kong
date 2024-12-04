@@ -29,6 +29,7 @@ void Game::play() {
             mario.update_dir(key); // Update Mario's direction based on the key input
         }
         mario.move(); // Move Mario if he is on a floor element
+		Sleep(100); // Delay for 100 milliseconds
     }
 }
 

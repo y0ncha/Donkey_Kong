@@ -32,12 +32,11 @@ void Entity::set_dir(Coordinates coord) {
 	dir = coord;
 }
 
-void Entity::step(int delay) {
+void Entity::step() {
 
     erase(); // Erase the entity from the current position
 
     pos += dir; // Move the entity by adding the direction to the position
 
     draw(); // Draw the entity at the new position
-    Sleep(delay); // Pause for a short delay
 }

@@ -55,7 +55,7 @@ void Barrel::move() { // @ decide what happens if barrel is off bound
     }
 
     // Move the barrel by a step of 70 units
-    step(70);
+    step();
 }
 
 // Method to handle the direction change when the barrel is on different types of floors

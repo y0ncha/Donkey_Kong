@@ -67,11 +67,11 @@ void Mario::jump() {
     if (ascend_h < JMP_H && org_board->path_clear(pos + dir)) {
         ascend_h++;
         dir.y = -1;
-        step(90);
+        step();
     } else if (descend_h < JMP_H && !on_ground()) {
         descend_h++;
         dir.y = 1;
-        step(90);
+        step();
     } else {
         jumping = false;
         ascend_h = descend_h = 0;
@@ -94,7 +94,7 @@ void Mario::fall() {
     dir.x = 0;
     dir.y = 1;
 
-    step(60);
+    step();
 
     if (on_ground()) {
         falling = false;
@@ -111,7 +111,7 @@ void Mario::climb_up() {
     climbing = true;
     dir.x = 0;
 
-    step(90);
+    step();
 
     if (curr_ch() == AIR) {
         climbing = false;
@@ -126,7 +126,7 @@ void Mario::climb_down() {
     climbing = true;
     dir.x = 0;
 
-    step(90);
+    step();
 
     if (is_floor(dest_ch())) {
         climbing = false;
