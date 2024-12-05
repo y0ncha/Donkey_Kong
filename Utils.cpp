@@ -62,3 +62,5 @@ bool y_inbound(int _y) {
 bool pos_inbound(Coordinates pos) {
     return (x_inbound(pos.x) && y_inbound(pos.y)); // Check if the position is within the game bounds
 }
+
+// test
