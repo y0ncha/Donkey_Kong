@@ -61,3 +61,4 @@ bool Board::path_clear(int x, int y) const {
 
 
 
+//test
