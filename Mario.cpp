@@ -23,8 +23,6 @@ void Mario::update_dir(char key) {
     case STAY:
         dir = {0, 0}; // Stay in place
         break;
-    case ESC:
-        return; // @ assign menu
     default:
         break; // Ignore other keys
     }

@@ -25,6 +25,7 @@ void Game::play() {
 
             char key = _getch(); // Get the key input
             if (key == ESC) break; // Pause the game and open the menu
+			// @ assgin menu functionality to key
 
             mario.update_dir(key); // Update Mario's direction based on the key input
         }

@@ -12,7 +12,7 @@ enum DIM {
 };
 
 // Enum for initial positions of characters
-enum POS { // @ change
+enum POS { 
     MARIO_X0 = 40, // Default Mario's position on the x-axis
     MARIO_Y0 = 23, // Default Mario's position on the y-axis
     
