@@ -8,9 +8,16 @@
  * Pressing the ESC key pauses the game and opens the menu.
  */
 void Game::play() {
+  
+    Menu menu;
+
+    int selectedValue = menu.run();
+
+    if (selectedValue == EXIT) 
+        return;
 
     int i = 0;
-
+    
     ShowConsoleCursor(false); // Hide the console cursor for better visuals
 
     org_board.print(); // Draw the game board

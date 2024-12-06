@@ -9,6 +9,7 @@
 #include "Mario.h"
 #include "Board.h"
 #include "Barrel.h"
+#include "Menu.h"
 
 /**
  * @class Game

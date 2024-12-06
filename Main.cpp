@@ -5,7 +5,7 @@
 /**
  * Main function that initializes the game and starts the game loop.
  */
-void main() {
+int main() {
 	Game myGame;
 	myGame.play();
 }

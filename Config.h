@@ -48,6 +48,14 @@ enum FLR {
     FLOOR_R = '>' // Character representing a right-sloping floor
 };
 
+enum ENTRY_MENU
+{
+    START = '1',
+    KEYS = '8',
+    EXIT = '9'
+
+};
+
 // Character controls
 static constexpr char
 UP = 'w', // Move up
