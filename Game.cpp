@@ -11,9 +11,8 @@ void Game::play() {
   
     Menu menu;
 
-    int selectedValue = menu.run();
-
-    if (selectedValue == EXIT) 
+    // Run the menu and check if the user wants to exit
+    if (menu.run(START_MENU) == EXIT)
         return;
 
     int i = 0;
@@ -31,8 +30,12 @@ void Game::play() {
         if (_kbhit()) { // Check if a key is pressed
 
             char key = _getch(); // Get the key input
-            if (key == ESC) break; // Pause the game and open the menu
-			// @ assgin menu functionality to key
+            if (key == ESC)// Pause the game and open the menu
+            {
+                if (menu.run(PAUSE_MENU) == EXIT)
+                    break;
+            } 
+			
 
             mario.update_dir(key); // Update Mario's direction based on the key input
         }

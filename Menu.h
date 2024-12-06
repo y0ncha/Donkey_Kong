@@ -4,7 +4,8 @@
 #include "Utils.h"
 
 class Menu {
-	void print() const;
+	void print(MENU_TYPES type) const;
+	void ShowKeys() const;
 	char MenuLayout[MAX_Y][MAX_X + 1] = {
 		"================================================================================",// 0
 	"                                                                                ",// 1
@@ -33,5 +34,5 @@ class Menu {
 	};
 public:
 	Menu();
-	int run() const;
+	int run(MENU_TYPES type) const;
 };

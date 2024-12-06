@@ -53,7 +53,12 @@ enum ENTRY_MENU
     START = '1',
     KEYS = '8',
     EXIT = '9'
+};
 
+enum MENU_TYPES
+{
+    START_MENU = 0,
+    PAUSE_MENU = 1
 };
 
 // Character controls
