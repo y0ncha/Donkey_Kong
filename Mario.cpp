@@ -92,6 +92,7 @@ void Mario::jump() {
  * Makes Mario fall.
  */
 void Mario::fall() {
+
     falling = true;
     fall_count++;
 
@@ -101,6 +102,9 @@ void Mario::fall() {
     step();
 
     if (on_ground()) {
+
+        died = (fall_count >= MAX_FALL_H);
+
         falling = false;
         fall_count = 0;
         dir.x = last_dx;
@@ -157,4 +161,11 @@ char Mario::curr_ch() const {
  */
 bool Mario::on_ground() const {
     return (org_board->is_floor(org_board->get_char(pos.x, pos.y + 1)));
+}
+
+/**
+ * Checks if Mario is dead.
+ */
+bool Mario::is_dead() const {
+	return died;
 }

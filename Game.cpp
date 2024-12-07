@@ -36,8 +36,14 @@ void Game::play() {
 
             mario.update_dir(key); // Update Mario's direction based on the key input
         }
-        mario.move(); // Move Mario if he is on a floor element
-		Sleep(100); // Delay for 100 milliseconds
+
+		if (mario.is_dead()) { // Check if Mario is dead
+			break; // End the game if Mario is dead
+		}
+        else {
+            mario.move(); // Move Mario if he is on a floor element
+            Sleep(100); // Delay for 100 milliseconds
+        }
     }
 }
 
