@@ -15,8 +15,9 @@
  * - When the program initially starts.
  * - When the game is paused by the player.
  * 
- * the big letters made with chatGPT
- * 
+ * the "DONKEY KONG" big letters made with chatGPT
+ * the "KEYS" big letters made with : https://www.asciiart.eu/text-to-ascii-art 
+ * the ape from : https://github.com/devtooligan/awesome-ascii-art/blob/main/monkeys.txt
  */
 
 class Menu {
@@ -39,16 +40,16 @@ class Menu {
 	"               |_____/   \\____/  |_| \\_| |_|\\_\\ |______|    |_|                 ",// 10
 	"                         _  __   ____    _   _   _____                          ",// 11
 	"                        | |/ /  / __ \\  | \\ | | / ____|                         ",// 12
-	"                        | ' /  | |  | | |  \\| | | |  __                         ",// 13
-	"                        |  <   | |  | | | . ` | | | |_ |                        ",// 14
-	"                        | . \\  | |__| | | |\\  | | |__| |                        ",// 15
-	"                        |_|\\_\\  \\____/  |_| \\_|  \\_____|                       ",// 16
-	"                                                                                ",// 17
-	"                                                                                ",// 18
-	"                             START A NEW GAME   - 1                             ",// 19
-	"                            INSTRUCTIONS & KEYS - 8                             ",// 20
-	"                                    EXIT        - 9                             ",// 21
-	"                                                                                ",// 22
+	"     .\"`\".              | ' /  | |  | | |  \\| | | |  __                         ",// 13
+	" .-./ _=_ \\.-.          |  <   | |  | | | . ` | | | |_ |                        ",// 14
+	"{  (,(oYo),) }}         | . \\  | |__| | | |\\  | | |__| |                        ",// 15
+	"{{ |   \"   |} }         |_|\\_\\  \\____/  |_| \\_|  \\_____|                        ",// 16
+	"{ { \\(---)/  }}                                                                ",// 17
+	"{{  }'-=-'{ } }                                                                ",// 18
+	"{ { }._:_.{  }}              START A NEW GAME   - 1                            ",// 19
+	"{{  } -:- { } }             INSTRUCTIONS & KEYS - 8                            ",// 20
+	"{_{ }`===`{  _}                    EXIT         - 9                             ",// 21
+	"((((\)     (/))))                                                               ",// 22
 	"================================================================================" // 23
 	};
 
