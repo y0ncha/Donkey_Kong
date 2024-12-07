@@ -1,11 +1,7 @@
 #pragma once
 
-#include <iostream>
-#include <windows.h>
-#include <conio.h>
 
-#include "Config.h"
-#include "Utils.h"
+# include <conio.h>
 #include "Mario.h"
 #include "Board.h"
 #include "Barrel.h"
@@ -24,15 +20,25 @@ class Game {
 
     Mario mario; // Initialize mario with board and config in constructor
 
-    int level = 1; // Current game level
-    int score = 0; // Current game score
-
-    void menu(); // Displays and manages the game menu @ implemen
-
+    // For exercise 2 and 3 
+    //int level = 1; // Current game level
+    //int score = 0; // Current game score
 
 public:
 
-    Game():mario(&org_board, &curr_board){} // Initializes the Game class with the board and Mario
+    // Constructor for the Game class
+	Game();
 
-    void play(); // Starts the game loop and handles user input
+    // Enum for initial positions of characters
+    enum DEF_POS {
+
+        MARIO_X0 = 40, // Default Mario's position on the x-axis
+        MARIO_Y0 = 23, // Default Mario's position on the y-axis
+
+        DKONG_X0 = 40, // Default Donkey Kong's position on the x-axis
+        DKONG_Y0 = 3   // Default Donkey Kong's position on the y-axis
+    };
+
+    // Starts the game loop and handles user input
+    void play();
 };

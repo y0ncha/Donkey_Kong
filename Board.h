@@ -38,6 +38,25 @@ class Board {
     };
 
 public:
+
+    // Enum for game elements
+    enum ELMNTS {
+
+        MARIO = '@', // Character representing Mario
+        DONKEY_KONG = '&', // Character representing Donkey Kong
+        PAULINE = '$', // Character representing Pauline
+
+        LADDER = 'H', // Character representing a ladder
+        BARREL = 'O', // Character representing a barrel
+        AIR = ' ',  // Representation of air (empty space)
+
+        FLOOR = '=', // Character representing a floor
+        FLOOR_L = '<', // Character representing a left-sloping floor
+        FLOOR_R = '>', // Character representing a right-sloping floor
+
+        ERR = '\0' // Error character
+    };
+
     // Prints the board on the console
     void print() const;
 
@@ -51,12 +70,7 @@ public:
 
     // Checks if the character at the given coordinates is a floor element
     bool is_floor(Coordinates coord) const;
-
-    // Sets the game board on fire (implementation pending) @ implement
-    void burn();
-
-    // Clears the game board (implementation pending) @ implement
-    void clear();
+    bool is_floor(char ch) const;
 
     // Checks if the path is clear
     bool path_clear(Coordinates coord) const;

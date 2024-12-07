@@ -2,7 +2,6 @@
 
 Entity::Entity(const Board* org_board, Board* curr_board, Coordinates _pos, char ch) : org_board(org_board), curr_board(curr_board), pos(_pos), icon(ch) {}
  
-
 void Entity::draw() const {
     gotoxy(pos); // Move the cursor to the entity's position
 	curr_board->set_char(pos, icon); // Set the character on the board

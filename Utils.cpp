@@ -36,13 +36,6 @@ void ShowConsoleCursor(bool showFlag) {
 }
 
 /**
- * Checks if the character is a floor element.
- */
-bool is_floor(char ch) {
-    return (ch == FLOOR || ch == FLOOR_L || ch == FLOOR_R); // Checks if the character is a floor element
-}
-
-/**
  * Checks if the x-coordinate is within the game bounds.
  */
 bool x_inbound(int _x) {

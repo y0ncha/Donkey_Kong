@@ -1,9 +1,6 @@
 #pragma once
 
-#include <iostream>
 #include "Board.h"
-#include "Config.h"
-#include "Utils.h"
 #include "Entity.h"
 
 // Barrel class inheriting from Entity
@@ -20,6 +17,11 @@ public:
     // Constructor for the Barrel class, initializing the base Entity class with the given parameters
     Barrel(const Board* org_board, Board* curr_board, Coordinates _pos);
 
-    // Method to handle the movement logic of the barrel
-    void move();
+	// Enum for Barrel's related constants
+	enum CONSTS {
+		MAX_FALL_H = 8 // Maximum height of a fall
+	};
+
+    // Method to handle the movement logic of the barrel (Override of Entity's move method)
+    void move() override;
 };

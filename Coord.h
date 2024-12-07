@@ -4,7 +4,6 @@
  * @struct Coordinates
  * Represents a generic Coordinates with x and y values.
  */
-
 struct Coordinates {
 
     Coordinates() : x(0), y(0) {}

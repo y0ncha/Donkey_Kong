@@ -1,5 +1,11 @@
 #include "Game.h"
 
+
+/**
+Constructor to initialize the Game class with the board and Mario
+*/
+Game::Game() : mario(&org_board, &curr_board, { MARIO_X0, MARIO_Y0 }) {}
+
 /**
  * Starts the game loop.
  *
@@ -8,6 +14,7 @@
  * Pressing the ESC key pauses the game and opens the menu.
  */
 void Game::play() {
+    #include "Game.h"
 
     int i = 0;
 
@@ -33,5 +40,6 @@ void Game::play() {
 		Sleep(100); // Delay for 100 milliseconds
     }
 }
+
 
 
