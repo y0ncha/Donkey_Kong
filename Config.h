@@ -48,17 +48,17 @@ enum FLR {
     FLOOR_R = '>' // Character representing a right-sloping floor
 };
 
-enum ENTRY_MENU
-{
-    START = '1',
-    KEYS = '8',
-    EXIT = '9'
+// Enum for the menu options
+enum ENTRY_MENU {
+    START = '1',// Start the game
+    KEYS = '8',// Show the keys
+    EXIT = '9'// Exit the game
 };
 
-enum MENU_TYPES
-{
-    START_MENU = 0,
-    PAUSE_MENU = 1
+// Enum for the menu types
+enum MENU_TYPES{
+    START_MENU = 0,//Show the start menu
+    PAUSE_MENU = 1//Show the pause menu
 };
 
 // Character controls

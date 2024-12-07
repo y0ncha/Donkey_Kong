@@ -9,6 +9,8 @@
  */
 void Game::play() {
   
+    ShowConsoleCursor(false); // Hide the console cursor for better visuals
+    
     Menu menu;
 
     // Run the menu and check if the user wants to exit
@@ -17,8 +19,6 @@ void Game::play() {
 
     int i = 0;
     
-    ShowConsoleCursor(false); // Hide the console cursor for better visuals
-
     org_board.print(); // Draw the game board
 
     mario.draw(); // Draw Mario at its default position
