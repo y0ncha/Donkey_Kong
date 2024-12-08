@@ -13,9 +13,9 @@ class Mario : public Entity {
     bool falling = false; // Indicates if Mario is currently falling
     bool jumping = false; // Indicates if Mario is currently jumping
     bool climbing = false; // Indicates if Mario is currently climbing
-	bool died = false; // Indicates if Mario is dead
+    bool died = false; // Indicates if Mario is dead
 
-	int jump_ascend = 0, jump_descend = 0; // Height of Mario's jump ascent
+    int jump_ascend = 0, jump_descend = 0; // Height of Mario's jump ascent
 
     // Makes Mario jump
     void jump();
@@ -41,22 +41,21 @@ class Mario : public Entity {
 public:
 
     // Constructor to initialize Mario with the original and current board
-    Mario(const Board* org_board, Board* curr_board, Coordinates init_pos);
+    Mario(const Board* org_board, Board* curr_board);
 
     // Enum for Mario's related constants
     enum CONSTS {
         JMP_H = 2, // Max height of a jump
-		MAX_FALL_H = 5, // Max height of a fall
+        MAX_FALL_H = 5, // Max height of a fall
         LIVES = 3, // Mario's number of lives
     };
 
     // Moves Mario one step with delay (Override of Entity's move method)
-	void move() override;
+    void move() override;
 
     // Updates Mario's direction based on the input key
     void update_dir(char key);
 
-	// Checks if Mario is died
+    // Checks if Mario is dead
     bool is_dead() const;
 };
-

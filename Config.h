@@ -1,10 +1,8 @@
 #pragma once
-
 #include "Coord.h"
 /**  
 * Defines constants for game area dimensions, character controls etc.  
 */
-
 enum CTRL{ // Character controls
     UP = 'w', // Move up
     DOWN = 'x', // Move down
