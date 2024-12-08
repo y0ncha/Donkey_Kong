@@ -1,11 +1,17 @@
 #include "Barrel.h"
 
 // Constructor for the Barrel class, initializing the base Entity class with the given parameters
-Barrel::Barrel(const Board* org_board, Board* curr_board, Coordinates _pos) : Entity(org_board, curr_board, _pos, Board::BARREL) {}
+//Barrel::Barrel(const Board* org_board, Board* curr_board) : Entity(org_board, curr_board, {(rand() % 2 == 0) ? Board::DKONG_X0 + 1 : Board::DKONG_X0 - 1, Board::DKONG_Y0}, Board::BARREL) {} // todo encasulate rand
+
+Barrel::Barrel() : Entity(init_pos(), Board::BARREL) {}
 
 // Method to handle the movement logic of the barrel
 void Barrel::move() { // @ decide what happens if barrel is off bound
-
+	if (!pos_inbound(pos + dir)) { // Check if the next position is within the game bounds
+		erase(); // Erase the barrel from the board
+		active = false; // Deactivate the barrel
+		return;
+	}
     // If the barrel has been falling for 8 or more steps, it should explode
     if (fall_count >= MAX_FALL_H) {
         explode = true;
@@ -28,6 +34,7 @@ void Barrel::move() { // @ decide what happens if barrel is off bound
             // If the barrel should explode, erase it from the board
             if (explode) {
                 erase();
+				active = false; // Deactivate the barrel
                 return;
             }
 
@@ -71,4 +78,27 @@ void Barrel::floor_switch(char bellow_barrel) {
     default:
         break;
     }
+}
+bool Barrel::is_active() const
+{
+    if (active)
+    {
+        return true;
+    }
+	return false;
+}
+
+Coordinates Barrel::init_pos() { 
+	return {(rand()%2 == 0) ? Board::DKONG_X0+1 : Board::DKONG_X0-1, Board::DKONG_Y0};
+}
+
+void Barrel::set_board(const Board* layout, Board* board) {
+	org_board = layout;
+	curr_board = board;
+}
+
+void Barrel::spawn() {
+    pos = init_pos();
+	active = true;
+    draw();
 }

@@ -1,6 +1,15 @@
 #include "Entity.h"
 
-Entity::Entity(const Board* org_board, Board* curr_board, Coordinates _pos, char ch) : org_board(org_board), curr_board(curr_board), pos(_pos), icon(ch) {}
+Entity::Entity(const Board* layout, Board* board, Coordinates init_pos, char ch) : org_board(layout), curr_board(board), pos(init_pos), icon(ch) {
+	if (layout == nullptr || board == nullptr || !pos_inbound(init_pos)) { // Check if the layout, board, and position are valid
+		exit(1);
+	}
+}
+Entity::Entity(Coordinates init_pos, char ch) : pos(init_pos), icon(ch) {
+	if (!pos_inbound(init_pos)) { // Check if the position is within the game bounds
+		exit(1);
+	}
+}
  
 void Entity::draw() const {
     gotoxy(pos); // Move the cursor to the entity's position

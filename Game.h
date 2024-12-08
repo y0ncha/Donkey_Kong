@@ -14,31 +14,38 @@
  */
 class Game {
 
+public: // todo move to private
+
+    // Constructor for the Game class
+    Game();
+
+    // Enum for initial positions of characters
+    enum CONSTS {
+        MAX_BARRELS = 10 // Maximum number of barrels
+    };
+
+    // Starts the game loop and handles user input
+    void play();
+
+    void init_barrels();
+
+    void move_barrels();
+
+    void ctrl_barrels();
+
+private:
+
 	const Board org_board; // Initialize a board to hold the orginal layout
 
 	Board curr_board; // Initialize a board to hold the data real-time
 
     Mario mario; // Initialize mario with board and config in constructor
 
+    Barrel barrels[CONSTS::MAX_BARRELS]; // Initialize an array of barrels
+
+    int frames = 0;
+
     // For exercise 2 and 3 
     //int level = 1; // Current game level
     //int score = 0; // Current game score
-
-public:
-
-    // Constructor for the Game class
-	Game();
-
-    // Enum for initial positions of characters
-    enum DEF_POS {
-
-        MARIO_X0 = 40, // Default Mario's position on the x-axis
-        MARIO_Y0 = 23, // Default Mario's position on the y-axis
-
-        DKONG_X0 = 40, // Default Donkey Kong's position on the x-axis
-        DKONG_Y0 = 3   // Default Donkey Kong's position on the y-axis
-    };
-
-    // Starts the game loop and handles user input
-    void play();
 };

@@ -41,7 +41,7 @@ class Mario : public Entity {
 public:
 
     // Constructor to initialize Mario with the original and current board
-    Mario(const Board* org_board, Board* curr_board, Coordinates def_pos);
+    Mario(const Board* org_board, Board* curr_board, Coordinates init_pos);
 
     // Enum for Mario's related constants
     enum CONSTS {

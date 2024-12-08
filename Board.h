@@ -17,7 +17,7 @@ class Board {
           "     =============              =======                                         ",// 4
           "        H                        H                                      =====   ",// 5    
           "        H                        H &                                       H    ",// 6 
-          "==================>====== ================== ========<<<===<<<================  ",// 7
+          "==================>====== ========<=>======= ========<<<===<<<================  ",// 7
           "                                     H                                  H       ",// 8
           "                                     H                                  H       ",// 9
           "                        =<<<==========             ======== ================    ",// 10
@@ -29,12 +29,12 @@ class Board {
           "                   H                 H                   H         H            ",// 16
           "                   H       =================<<<================    H            ",// 17
           "                   H        H                                      H            ",// 18
-          "                   H        H                           ==================      ",// 19
+          "                   H        H                           ===============<<<      ",// 19
           "                 =====<<<>>>====                                                ",// 20
           "                              H                                                 ",// 21
           "                              H                                                 ",// 22
           "                              H                                                 ",// 23
-          "=======>>>==========================================================<<<=========" // 24
+          "================================================================================" // 24
     };
 
 public:
@@ -54,7 +54,14 @@ public:
         FLOOR_L = '<', // Character representing a left-sloping floor
         FLOOR_R = '>', // Character representing a right-sloping floor
 
-        ERR = '\0' // Error character
+        ERR = '\0', // Error character
+
+        MARIO_X0 = 40, // Default Mario's position on the x-axis
+        MARIO_Y0 = 23, // Default Mario's position on the y-axis
+
+        DKONG_X0 = 35, // Default Donkey Kong's position on the x-axis
+        DKONG_Y0 = 6   // Default Donkey Kong's position on the y-axis
+
     };
 
     // Prints the board on the console

@@ -14,9 +14,12 @@ protected:
 
     const Board* org_board; // Reference to the original game board
     Board* curr_board; // Reference to the current game board
+
     Coordinates pos; // Position of the entity
     Coordinates dir = { 0, 0 }; // Direction of the entity
+
     char icon; // Character representation of the entity
+
     int last_dx = 0; // Last horizontal direction
 
     // Moves the entity by one step with an optional delay
@@ -24,8 +27,9 @@ protected:
 
 public:
 
-    // Constructor to initialize the entity with the given parameters
-    Entity(const Board* layout, Board* board, Coordinates _pos, char ch);
+	// Constructor for the Entity class
+	Entity(const Board* layout, Board* board, Coordinates init_pos, char ch); 
+    Entity(Coordinates init_pos, char ch);
 
     // Getter for the x-coordinate of the entity's position
     int get_x() const { return pos.x; }
