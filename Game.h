@@ -19,6 +19,8 @@
  */
 class Game {
 
+    Menu menu;
+
 	const Board org_board; // Initialize a board to hold the orginal layout
 
 	Board curr_board; // Initialize a board to hold the data real-time
@@ -27,9 +29,6 @@ class Game {
 
     int level = 1; // Current game level
     int score = 0; // Current game score
-
-    void menu(); // Displays and manages the game menu @ implemen
-
 
 public:
 

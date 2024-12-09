@@ -39,7 +39,16 @@ void Menu::ShowKeys(MENU_TYPES type) const
 		}
 			gotoxy(26, 22);
 			std::cout << "Press ESC to return to menu";
+
 			Sleep(700);
+			if (_kbhit()) { // Check if a key is pressed (again to make it run faster between two "seep")
+				char key = _getch(); // Get the key input
+
+				if (key == ESC) {
+					this->print(type);
+					break;
+				}
+			}
 			gotoxy(26, 22);
 			std::cout << "                           ";
 			Sleep(300);

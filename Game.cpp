@@ -11,8 +11,6 @@ void Game::play() {
   
     ShowConsoleCursor(false); // Hide the console cursor for better visuals
     
-    Menu menu;
-
     // Run the menu and check if the user wants to exit
     if (menu.run(START_MENU) == EXIT)
         return;

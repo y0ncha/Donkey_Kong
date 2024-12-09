@@ -63,7 +63,7 @@ class Menu {
 		 " *                  Dodge the barrels in your way by jumping                  * ",// 4
 		 " *                  and use the ladders to climb to the top.                  * ",// 5
 		 " *                           You\'d better move fast!                          * ",// 6
-		 " *                Every second counts when dealing with an ape like           * ",// 7
+		 " *              Every second counts when dealing with an ape like             * ",// 7
 		 " *                                  DONKEY KONG!                              * ",// 8
 		 " \\\\**************************************************************************//",// 9
 		 "                          _                                                     ",// 10
