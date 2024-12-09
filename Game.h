@@ -9,7 +9,8 @@ class Game {
 
     // Enum for initial positions of characters
     enum CONSTS {
-        MAX_BARRELS = 10 // Maximum number of barrels
+        MAX_BARRELS = 10, // Maximum number of barrels
+		BARREL_INTERVAL = 30 // Interval for spawning barrels
     };
 
     // Initializes the barrels
@@ -28,7 +29,7 @@ class Game {
 
     Barrel barrels[CONSTS::MAX_BARRELS]; // Initialize an array of barrels
 
-    int frames = 0; // Frame counter
+    unsigned long int frames = 0; // Frame counter
 
     // For exercise 2 and 3 
     //int level = 1; // Current game level
