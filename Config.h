@@ -12,7 +12,15 @@ enum CTRL{ // Character controls
     ESC = 27 // Escape key
 };
 
-enum DIM {
-    MAX_X = 80, // Maximum x-coordinate
-    MAX_Y = 25  // Maximum y-coordinate
+// Enum for the menu options
+enum ENTRY_MENU {
+    START = '1',// Start the game
+    KEYS = '8',// Show the keys
+    EXIT = '9'// Exit the game
+};
+
+// Enum for the menu types
+enum MENU_TYPES{
+    START_MENU = 0,//Show the start menu
+    PAUSE_MENU = 1//Show the pause menu
 };

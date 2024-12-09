@@ -34,6 +34,7 @@ void Entity::draw() const {
  */
 void Entity::erase() const {
     gotoxy(pos); // Move the cursor to the entity's position
+	curr_board->set_char(pos, org_board->get_char(pos));
     std::cout << org_board->get_char(pos); // Restore the character from the board
 }
 

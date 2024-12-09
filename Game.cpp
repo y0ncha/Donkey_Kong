@@ -18,7 +18,13 @@ Game::Game() : mario(&org_board, &curr_board) {
 void Game::play() {
 
     ShowConsoleCursor(false); // Hide the console cursor for better visuals
+    
+    // Run the menu and check if the user wants to exit
+    if (menu.run(START_MENU) == EXIT)
+        return;
 
+    int i = 0;
+    
     org_board.print(); // Draw the game board
 
     mario.draw(); // Draw Mario at its default position
@@ -26,15 +32,18 @@ void Game::play() {
 	while (true) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
+          
             char key = _getch(); // Get the key input
-            if (key == ESC) break; // Pause the game and open the menu
-            // @ assign menu functionality to key
-
+          
+            if (key == ESC) { // Pause the game and open the me
+                if (menu.run(PAUSE_MENU) == EXIT)
+                    break;
+            } 
             mario.update_dir(key); // Update Mario's direction based on the key input
         }
 
         if (mario.is_dead()) { // Check if Mario is dead
-            break; // End the game if Mario is dead
+            break; // todo reset function
         } 
         else {
             mario.move(); // Move Mario if he is on a floor element

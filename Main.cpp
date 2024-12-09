@@ -6,6 +6,8 @@
 /**
  * Main function that initializes the game and starts the game loop.
  */
+
+
 void main() {
 	srand(static_cast<unsigned int>(time(0))); // Seed the random number generator
 	Game myGame;
