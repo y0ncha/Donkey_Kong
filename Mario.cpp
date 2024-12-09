@@ -1,7 +1,7 @@
 #include "Mario.h"
 
 // Constructor for the Mario class, initializing the base Entity class with the given parameters
-Mario::Mario(const Board* org_board, Board* curr_board) : Entity(org_board, curr_board, Coordinates(MARIO_X0, MARIO_Y0), MARIO) {}
+Mario::Mario(const Board* org_board, Board* curr_board) : Entity(org_board, curr_board, {Board::MARIO_X0, Board::MARIO_Y0}, Board::MARIO) {}
 
 /**
  * Updates Mario's direction based on the key input.
@@ -32,22 +32,28 @@ void Mario::update_dir(char key) {
  * Moves Mario based on the current direction and game state.
  */
 void Mario::move() {
+
     if (jumping) { // If Mario is jumping, continue the jump
         jump();
-    } else if (climbing) { // If Mario is climbing, continue the climb
+    } 
+    else if (climbing) { // If Mario is climbing, continue the climb
         if (dir.y == -1) climb_up();
         else climb_down();
-    } else if (!on_ground()) { // If Mario is not on the ground, make him fall
+    } 
+    else if (!on_ground()) { // If Mario is not on the ground, make him fall
         fall();
-    } else if (dir.y == -1) { // If Mario is moving up, check if he can ascend
-        if (curr_ch() == LADDER) { // If Mario is on a ladder, make him climb
+    } 
+    else if (dir.y == -1) { // If Mario is moving up, check if he can ascend
+        if (curr_ch() == Board::LADDER) { // If Mario is on a ladder, make him climb
             climb_up();
         } else { // If Mario is not on a ladder, make him jump
             jump();
         }
-    } else if (dir.y == 1 && org_board->get_char(pos.x, pos.y + 2) == LADDER) { // If Mario is moving down and there is a ladder below him, make him climb down
+    } 
+    else if (dir.y == 1 && org_board->get_char(pos.x, pos.y + 2) == Board::LADDER) { // If Mario is moving down and there is a ladder below him, make him climb down
         climb_down();
-    } else { // If Mario is not jumping, climbing, or falling, move horizontally
+    } 
+    else { // If Mario is not jumping, climbing, or falling, move horizontally
         dir.y = 0;
         dir.x = org_board->path_clear(pos + dir) ? dir.x : -dir.x; // Check if Mario is within the game bounds
         last_dx = dir.x; // Save the last direction
@@ -59,26 +65,26 @@ void Mario::move() {
  * Makes Mario jump.
  */
 void Mario::jump() {
-    jumping = true;
-    static int ascend_h = 0, descend_h = 0;
 
-    if (ascend_h < JMP_H && org_board->path_clear(pos + dir)) {
-        ascend_h++;
+    jumping = true;
+
+    if (jump_ascend < JMP_H && org_board->path_clear(pos + dir)) {
+        jump_ascend++;
         dir.y = -1;
         step();
-    } else if (descend_h < JMP_H && !on_ground()) {
-        descend_h++;
+    } else if (jump_descend < JMP_H && !on_ground()) {
+        jump_descend++;
         dir.y = 1;
         step();
     } else {
         jumping = false;
-        ascend_h = descend_h = 0;
+        jump_ascend = jump_descend = 0;
     }
 
     if (on_ground()) {
         jumping = false;
         dir.y = 0;
-        ascend_h = descend_h = 0;
+        jump_ascend = jump_descend = 0;
     }
 }
 
@@ -86,6 +92,7 @@ void Mario::jump() {
  * Makes Mario fall.
  */
 void Mario::fall() {
+
     falling = true;
     fall_count++;
 
@@ -95,6 +102,9 @@ void Mario::fall() {
     step();
 
     if (on_ground()) {
+
+        died = (fall_count >= MAX_FALL_H);
+
         falling = false;
         fall_count = 0;
         dir.x = last_dx;
@@ -111,7 +121,7 @@ void Mario::climb_up() {
 
     step();
 
-    if (curr_ch() == AIR) {
+    if (curr_ch() == Board::AIR) {
         climbing = false;
         dir.y = 0;
     }
@@ -126,7 +136,7 @@ void Mario::climb_down() {
 
     step();
 
-    if (is_floor(dest_ch())) {
+    if (org_board->is_floor(dest_ch())) {
         climbing = false;
         dir.y = 0;
     }
@@ -150,5 +160,12 @@ char Mario::curr_ch() const {
  * Checks if Mario is on the ground.
  */
 bool Mario::on_ground() const {
-    return (is_floor(org_board->get_char(pos.x, pos.y + 1)));
+    return (org_board->is_floor(org_board->get_char(pos.x, pos.y + 1)));
+}
+
+/**
+ * Checks if Mario is dead.
+ */
+bool Mario::is_dead() const {
+	return died;
 }

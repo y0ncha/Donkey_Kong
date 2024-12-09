@@ -1,38 +1,49 @@
 #pragma once
 
-#include <iostream>
-#include <windows.h>
 #include <conio.h>
-
-#include "Config.h"
-#include "Utils.h"
 #include "Mario.h"
 #include "Board.h"
 #include "Barrel.h"
 #include "Menu.h"
 
-/**
- * @class Game
- * Manages the main game structure, including the player (Mario),
- * the game board, and progress such as score and level.
- * This class handles the game loop, player input, and other gameplay logic.
- */
 class Game {
 
+    // Enum for initial positions of characters
+    enum CONSTS {
+        MAX_BARRELS = 10, // Maximum number of barrels
+		    BARREL_INTERVAL = 30 // Interval for spawning barrels
+    };
+  
     Menu menu;
+  
+    const Board org_board; // Initialize a board to hold the original layout
+    Board curr_board; // Initialize a board to hold the data in real-time
 
-	const Board org_board; // Initialize a board to hold the orginal layout
+    Mario mario; // Initialize Mario
 
-	Board curr_board; // Initialize a board to hold the data real-time
+    Barrel barrels[CONSTS::MAX_BARRELS]; // Initialize an array of barrels
+  
+      // Initializes the barrels
+    void init_barrels();
 
-    Mario mario; // Initialize mario with board and config in constructor
+    // Moves all active barrels
+    void move_barrels();
 
-    int level = 1; // Current game level
-    int score = 0; // Current game score
+    // Controls the spawning and movement of barrels
+    void ctrl_barrels();
 
+
+    unsigned long int frames = 0; // Frame counter
+
+    // For exercise 2 and 3 
+    //int level = 1; // Current game level
+    //int score = 0; // Current game score
+  
 public:
 
-    Game():mario(&org_board, &curr_board){} // Initializes the Game class with the board and Mario
+    // Constructor for the Game class
+    Game();
 
-    void play(); // Starts the game loop and handles user input
+    // Starts the game loop and handles user input
+    void play();
 };
