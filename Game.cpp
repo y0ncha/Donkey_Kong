@@ -20,7 +20,7 @@ void Game::play() {
     ShowConsoleCursor(false); // Hide the console cursor for better visuals
     
     // Run the menu and check if the user wants to exit
-    if (menu.run(START_MENU) == EXIT)
+    if (menu.run(Menu::START_MENU) == Menu::EXIT)
         return;
 
     int i = 0;
@@ -36,7 +36,7 @@ void Game::play() {
             char key = _getch(); // Get the key input
           
             if (key == ESC) { // Pause the game and open the me
-                if (menu.run(PAUSE_MENU) == EXIT)
+                if (menu.run(Menu::PAUSE_MENU) == Menu::EXIT)
                     break;
             } 
             mario.update_dir(key); // Update Mario's direction based on the key input

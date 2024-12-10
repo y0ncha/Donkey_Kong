@@ -4,6 +4,7 @@
 #include "Board.h"
 #include "Coord.h"
 
+
 /**
  * @class Entity
  * Represents a generic game entity with position, movement, and rendering capabilities.
@@ -15,21 +16,21 @@ protected:
     const Board* org_board; // Reference to the original game board
     Board* curr_board; // Reference to the current game board
 
-    Coordinates pos; // Position of the entity
-    Coordinates dir = { 0, 0 }; // Direction of the entity
-
     char icon; // Character representation of the entity
+
+    Coordinates pos; // Default position of an entity
+    Coordinates dir; // Direction of the entity
 
     int last_dx = 0; // Last horizontal direction
 
     // Moves the entity by one step with an optional delay
     void step();
 
-public:
+    // Constructor for the Entity class
+    Entity(const Board* layout, Board* board, char ch, Coordinates init_pos = { Board::MARIO_X0, Board::MARIO_Y0 }, Coordinates dir = { 0, 0 });
+    Entity(char ch, Coordinates init_pos = { Board::MARIO_X0, Board::MARIO_Y0 }, Coordinates dir = { 0, 0 });
 
-	// Constructor for the Entity class
-	Entity(const Board* layout, Board* board, Coordinates init_pos, char ch); 
-    Entity(Coordinates init_pos, char ch);
+public:
 
     // Getter for the x-coordinate of the entity's position
     int get_x() const { return pos.x; }
@@ -45,21 +46,17 @@ public:
 
     // Setter for the entity's position using x and y coordinates
     void set_pos(int _x, int _y);
+    void set_pos(Coordinates coord);
 
     // Setter for the entity's direction using dx and dy values
     void set_dir(int dx, int dy);
-
-    // Setter for the entity's position using a Coordinates object
-    void set_pos(Coordinates coord);
-
-    // Setter for the entity's direction using a Coordinates object
     void set_dir(Coordinates coord);
 
     // Draws the entity at its current position
-    void draw() const;
+    void draw() const; // todo move to pirivate
 
     // Erases the entity from its current position
-    void erase() const;
+    void erase() const; // todo move to pirivate
 
     // Virtual move method to be overridden by derived classes
     virtual void move() = 0;

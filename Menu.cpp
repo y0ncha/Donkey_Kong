@@ -1,7 +1,5 @@
 #include "Menu.h"
 
-Menu::Menu(){}
-
 void Menu::print(MENU_TYPES type) const {
 	gotoxy(0, 0);
 	if (type == START_MENU)

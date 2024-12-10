@@ -2,7 +2,6 @@
 
 #include <windows.h>
 #include <iostream>
-#include "Config.h"
 #include "Coord.h"
 
 // Moves the console cursor to the specified position
@@ -20,3 +19,4 @@ bool y_inbound(int _y);
 
 // Checks if the position is within the game bounds
 bool pos_inbound(Coordinates pos);
+

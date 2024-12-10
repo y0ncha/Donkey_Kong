@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Entity.h"
-#include "Config.h"
 #include "Utils.h"
+#include "Config.h"
 
 // Mario class inheriting from Entity
 class Mario : public Entity {

@@ -1,7 +1,10 @@
 #include "Barrel.h"
 
-// Constructor for the Barrel class, initializing the base Entity class with the given parameters
-Barrel::Barrel() : Entity(init_pos(), Board::BARREL) {}
+/**
+* Constructor for the Barrel class (WARNING - THIS C'TOR DOES NOT INITIALIZE THE BOARD POINTERS).
+* --------------- please see @init_barrels() in Game.cpp for the correct c'tor ------------------
+*/
+Barrel::Barrel() : Entity(Board::BARREL, init_pos()) {}
 
 /**
  * Method to handle the movement logic of the barrel.

@@ -4,17 +4,12 @@
  * Constructor for the Entity class, initializing the base Entity class with the given parameters.
  * Checks if the layout, board, and position are valid.
  */
-Entity::Entity(const Board* layout, Board* board, Coordinates init_pos, char ch) : org_board(layout), curr_board(board), pos(init_pos), icon(ch) {
+Entity::Entity(const Board* layout, Board* board, char ch, Coordinates init_pos, Coordinates init_dir) : icon(ch), org_board(layout), curr_board(board), pos(init_pos), dir(init_dir) {
     if (layout == nullptr || board == nullptr || !pos_inbound(init_pos)) { // Check if the layout, board, and position are valid
         exit(1);
     }
 }
-
-/**
- * Constructor for the Entity class, initializing the base Entity class with the given parameters.
- * Checks if the position is within the game bounds.
- */
-Entity::Entity(Coordinates init_pos, char ch) : pos(init_pos), icon(ch) {
+Entity::Entity(char ch, Coordinates init_pos , Coordinates init_dir) : icon(ch), pos(init_pos), dir(init_dir) {
     if (!pos_inbound(init_pos)) { // Check if the position is within the game bounds
         exit(1);
     }

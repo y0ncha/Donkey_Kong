@@ -1,5 +1,5 @@
 #pragma once
-#include <cstdlib> // Required for rand() and srand()
+#include <cstdlib>
 #include "Board.h"
 #include "Entity.h"
 
