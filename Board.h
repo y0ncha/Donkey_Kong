@@ -1,11 +1,59 @@
 #pragma once
 
 #include <iostream>
-#include "Config.h"
 #include "Utils.h"
+#include "Coord.h"
+#include "Config.h"
 
 // The Board class represents the game board and its functionalities
 class Board {
+
+public:
+
+    // Enum for game elements
+    enum CONSTS {
+
+        MARIO = '@', // Character representing Mario
+        DONKEY_KONG = '&', // Character representing Donkey Kong
+        PAULINE = '$', // Character representing Pauline
+
+        LADDER = 'H', // Character representing a ladder
+        BARREL = 'O', // Character representing a barrel
+        AIR = ' ',  // Representation of air (empty space)
+
+        FLOOR = '=', // Character representing a floor
+        FLOOR_L = '<', // Character representing a left-sloping floor
+        FLOOR_R = '>', // Character representing a right-sloping floor
+
+        ERR = '\0', // Error character
+
+        MARIO_X0 = 40, // Default Mario's position on the x-axis
+        MARIO_Y0 = 23, // Default Mario's position on the y-axis
+
+        DKONG_X0 = 35, // Default Donkey Kong's position on the x-axis
+        DKONG_Y0 = 6,   // Default Donkey Kong's position on the y-axis
+    };
+
+    // Prints the board on the console
+    void print() const;
+
+    // Retrieves the character from the board at given coordinates
+    char get_char(Coordinates coord) const;
+    char get_char(int x, int y) const;
+
+    // Sets the character at the given coordinates
+    void set_char(Coordinates coord, char ch);
+    void set_char(int x, int y, char ch);
+
+    // Checks if the character at the given coordinates is a floor element
+    bool is_floor(Coordinates coord) const;
+    bool is_floor(char ch) const;
+
+    // Checks if the path is clear
+    bool path_clear(Coordinates coord) const;
+    bool path_clear(int x, int y) const;
+
+private: 
 
     // Layout of the game board, represented as a 2D array of characters
     char layout[MAX_Y][MAX_X + 1] = {
@@ -36,50 +84,4 @@ class Board {
           "                              H                                                 ",// 23
           "================================================================================" // 24
     };
-
-public:
-
-    // Enum for game elements
-    enum ELMNTS {
-
-        MARIO = '@', // Character representing Mario
-        DONKEY_KONG = '&', // Character representing Donkey Kong
-        PAULINE = '$', // Character representing Pauline
-
-        LADDER = 'H', // Character representing a ladder
-        BARREL = 'O', // Character representing a barrel
-        AIR = ' ',  // Representation of air (empty space)
-
-        FLOOR = '=', // Character representing a floor
-        FLOOR_L = '<', // Character representing a left-sloping floor
-        FLOOR_R = '>', // Character representing a right-sloping floor
-
-        ERR = '\0', // Error character
-
-        MARIO_X0 = 40, // Default Mario's position on the x-axis
-        MARIO_Y0 = 23, // Default Mario's position on the y-axis
-
-        DKONG_X0 = 35, // Default Donkey Kong's position on the x-axis
-        DKONG_Y0 = 6   // Default Donkey Kong's position on the y-axis
-
-    };
-
-    // Prints the board on the console
-    void print() const;
-
-    // Retrieves the character from the board at given coordinates
-    char get_char(Coordinates coord) const;
-    char get_char(int x, int y) const;
-
-    // Sets the character at the given coordinates
-    void set_char(Coordinates coord, char ch);
-    void set_char(int x, int y, char ch);
-
-    // Checks if the character at the given coordinates is a floor element
-    bool is_floor(Coordinates coord) const;
-    bool is_floor(char ch) const;
-
-    // Checks if the path is clear
-    bool path_clear(Coordinates coord) const;
-    bool path_clear(int x, int y) const;
 };

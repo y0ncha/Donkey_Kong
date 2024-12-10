@@ -1,6 +1,6 @@
 #include "Utils.h"
-#include "Config.h"
 #include "Coord.h"
+#include "Board.h"
 
 /*---Created by Amir Kirsh--- */
 /**
@@ -19,7 +19,7 @@ void gotoxy(Coordinates pos) {
  */
 void gotoxy(int x, int y) {
     std::cout.flush();
-    COORD coord = { x, y }; // Create a COORD structure
+    COORD coord = { (short)x, (short)y }; // Create a COORD structure
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // Move the cursor
 }
 

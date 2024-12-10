@@ -7,7 +7,7 @@
 void Board::print() const {
     gotoxy(0, 0); // Move the cursor to the top-left corner of the console
 
-    for (int i = 0; i < DIM::MAX_Y - 1; i++) {
+    for (int i = 0; i < MAX_Y - 1; i++) {
         std::cout << layout[i] << std::endl; // Prints each row of the preset board
     }
     std::cout << layout[MAX_Y - 1]; // Print the last row without a newline
@@ -18,7 +18,7 @@ void Board::print() const {
  * Returns ERR if the position is out of bounds.
  */
 char Board::get_char(Coordinates coord) const {
-    if (coord.x < 0 || coord.x >= DIM::MAX_X || coord.y < 0 || coord.y >= MAX_Y)
+    if (coord.x < 0 || coord.x >= MAX_X || coord.y < 0 || coord.y >= MAX_Y)
         return ERR; // Return error character if out of bounds
 
     return layout[coord.y][coord.x]; // Return the character at the specified position

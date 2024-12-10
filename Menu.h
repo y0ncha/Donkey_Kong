@@ -2,6 +2,7 @@
 #include <iostream>
 #include <conio.h>
 #include "Utils.h"
+#include "Board.h"
 
 /**
  * @class Menu
@@ -10,17 +11,28 @@
  * - Displaying the main menu when the program starts.
  * - Showing the keys and controls to the user.
  * - Managing the option to exit the game gracefully.
- *
- * The Menu class is utilized at two key points:
- * - When the program initially starts.
- * - When the game is paused by the player.
- * 
- * the "DONKEY KONG" big letters made with chatGPT
- * the "KEYS" big letters made with : https://www.asciiart.eu/text-to-ascii-art 
- * the ape from : https://github.com/devtooligan/awesome-ascii-art/blob/main/monkeys.txt
  */
-
 class Menu {
+
+public:
+
+	// Enum for the menu options
+	enum ENTRY_MENU {
+		START = '1',// Start the game
+		KEYS = '8',// Show the keys
+		EXIT = '9'// Exit the game
+	};
+
+	// Enum for the menu types
+	enum MENU_TYPES {
+		START_MENU = 0,//Show the start menu
+		PAUSE_MENU = 1//Show the pause menu
+	};
+
+	int run(MENU_TYPES type) const;//Run the menu
+
+private: 
+
 	void print(MENU_TYPES type) const;//Print the menu
 	void ShowKeys(MENU_TYPES type) const;//Print the keys instructions
 
@@ -49,7 +61,7 @@ class Menu {
 	"{ { }._:_.{  }}              START A NEW GAME   - 1                            ",// 19
 	"{{  } -:- { } }             INSTRUCTIONS & KEYS - 8                            ",// 20
 	"{_{ }`===`{  _}                    EXIT         - 9                             ",// 21
-	"((((\)     (/))))                                                               ",// 22
+	"((((\\)   (/))))                                                               ",// 22
 	"================================================================================" // 23
 	};
 
@@ -81,8 +93,4 @@ class Menu {
 		 "                                                                                ",// 22
 		 "================================================================================" // 23
 	};
-
-public:
-	Menu();//Constructor #####not sure if we need one######
-	int run(MENU_TYPES type) const;//Run the menu
 };
