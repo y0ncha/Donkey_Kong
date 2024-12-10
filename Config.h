@@ -1,11 +1,9 @@
 #pragma once
 
-#include "Coord.h"
-/**  
-* Defines constants for game area dimensions, character controls etc.  
+/*
+* General game Configurations
 */
-
-enum CTRL{ // Character controls
+enum CTRL { // Character controls
     UP = 'w', // Move up
     DOWN = 'x', // Move down
     LEFT = 'a', // Move left
@@ -14,7 +12,7 @@ enum CTRL{ // Character controls
     ESC = 27 // Escape key
 };
 
-enum DIM {
-    MAX_X = 80, // Maximum x-coordinate
-    MAX_Y = 25  // Maximum y-coordinate
+enum SCRN_DIM {
+	MAX_X = 80, // Maximum width of the game area
+	MAX_Y = 25 // Maximum height of the game area
 };

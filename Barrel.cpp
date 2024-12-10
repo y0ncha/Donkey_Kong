@@ -1,11 +1,20 @@
 #include "Barrel.h"
 
-// Constructor for the Barrel class, initializing the base Entity class with the given parameters
-Barrel::Barrel(const Board* org_board, Board* curr_board, Coordinates _pos) : Entity(org_board, curr_board, _pos, Board::BARREL) {}
+/**
+* Constructor for the Barrel class (WARNING - THIS C'TOR DOES NOT INITIALIZE THE BOARD POINTERS).
+* --------------- please see @init_barrels() in Game.cpp for the correct c'tor ------------------
+*/
+Barrel::Barrel() : Entity(Board::BARREL, init_pos()) {}
 
-// Method to handle the movement logic of the barrel
+/**
+ * Method to handle the movement logic of the barrel.
+ */
 void Barrel::move() { // @ decide what happens if barrel is off bound
-
+    if (!pos_inbound(pos + dir)) { // Check if the next position is within the game bounds
+        erase(); // Erase the barrel from the board
+        active = false; // Deactivate the barrel
+        return;
+    }
     // If the barrel has been falling for 8 or more steps, it should explode
     if (fall_count >= MAX_FALL_H) {
         explode = true;
@@ -16,10 +25,8 @@ void Barrel::move() { // @ decide what happens if barrel is off bound
 
     // If the barrel is currently falling
     if (falling) {
-
         // Check if the barrel has landed on the floor
         if (org_board->is_floor(bellow_barrel)) {
-
             // Stop the falling process
             falling = false;
             dir.y = 0;
@@ -28,6 +35,7 @@ void Barrel::move() { // @ decide what happens if barrel is off bound
             // If the barrel should explode, erase it from the board
             if (explode) {
                 erase();
+                active = false; // Deactivate the barrel
                 return;
             }
 
@@ -57,7 +65,9 @@ void Barrel::move() { // @ decide what happens if barrel is off bound
     step();
 }
 
-// Method to handle the direction change when the barrel is on different types of floors
+/**
+ * Method to handle the direction change when the barrel is on different types of floors.
+ */
 void Barrel::floor_switch(char bellow_barrel) {
     switch (bellow_barrel) {
     case Board::FLOOR_L:
@@ -71,4 +81,35 @@ void Barrel::floor_switch(char bellow_barrel) {
     default:
         break;
     }
+}
+
+/**
+ * Checks if the barrel is active.
+ */
+bool Barrel::is_active() const {
+    return active;
+}
+
+/**
+ * Returns the initial position of the barrel.
+ */
+Coordinates Barrel::init_pos() { 
+    return {(rand() % 2 == 0) ? Board::DKONG_X0 + 1 : Board::DKONG_X0 - 1, Board::DKONG_Y0};
+}
+
+/**
+ * Sets the original and current board for the barrel.
+ */
+void Barrel::set_board(const Board* layout, Board* board) {
+    org_board = layout;
+    curr_board = board;
+}
+
+/**
+ * Spawns the barrel at the initial position and activates it.
+ */
+void Barrel::spawn() {
+    pos = init_pos();
+    active = true;
+    draw();
 }

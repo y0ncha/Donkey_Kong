@@ -6,8 +6,8 @@
  */
 struct Coordinates {
 
-    Coordinates() : x(0), y(0) {}
-    Coordinates(int x, int y) : x(x), y(y) {}
+	Coordinates() : x(0), y(0) {} // Default constructor
+	Coordinates(int x, int y) : x(x), y(y) {} // Constructor with x and y values
 
     int x, y;
 

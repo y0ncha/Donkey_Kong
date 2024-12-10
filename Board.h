@@ -1,46 +1,17 @@
 #pragma once
 
 #include <iostream>
-#include "Config.h"
 #include "Utils.h"
+#include "Coord.h"
+#include "Config.h"
 
 // The Board class represents the game board and its functionalities
 class Board {
 
-    // Layout of the game board, represented as a 2D array of characters
-    char layout[MAX_Y][MAX_X + 1] = {
-        // 01234567890123456789012345678901234567890123456789012345678901234567890123456789
-          "             LIVES: <3  <3  <3        LEVEL 1        POINTS : 00                ",// 0
-          "================================================================================",// 1
-          "                                                                                ",// 2
-          "                                   $                                            ",// 3
-          "     =============              =======                                         ",// 4
-          "        H                        H                                      =====   ",// 5    
-          "        H                        H &                                       H    ",// 6 
-          "==================>====== ================== ========<<<===<<<================  ",// 7
-          "                                     H                                  H       ",// 8
-          "                                     H                                  H       ",// 9
-          "                        =<<<==========             ======== ================    ",// 10
-          "                                                               H                ",// 11
-          "                                     =======>>>======          H                ",// 12
-          "      ===============>>>             H             H           H                ",// 13
-          "                   H                 H         ===========   ==========         ",// 14
-          "                   H                 H                   H         H            ",// 15
-          "                   H                 H                   H         H            ",// 16
-          "                   H       =================<<<================    H            ",// 17
-          "                   H        H                                      H            ",// 18
-          "                   H        H                           ==================      ",// 19
-          "                 =====<<<>>>====                                                ",// 20
-          "                              H                                                 ",// 21
-          "                              H                                                 ",// 22
-          "                              H                                                 ",// 23
-          "=======>>>==========================================================<<<=========" // 24
-    };
-
 public:
 
     // Enum for game elements
-    enum ELMNTS {
+    enum CONSTS {
 
         MARIO = '@', // Character representing Mario
         DONKEY_KONG = '&', // Character representing Donkey Kong
@@ -54,7 +25,13 @@ public:
         FLOOR_L = '<', // Character representing a left-sloping floor
         FLOOR_R = '>', // Character representing a right-sloping floor
 
-        ERR = '\0' // Error character
+        ERR = '\0', // Error character
+
+        MARIO_X0 = 40, // Default Mario's position on the x-axis
+        MARIO_Y0 = 23, // Default Mario's position on the y-axis
+
+        DKONG_X0 = 35, // Default Donkey Kong's position on the x-axis
+        DKONG_Y0 = 6,   // Default Donkey Kong's position on the y-axis
     };
 
     // Prints the board on the console
@@ -75,4 +52,36 @@ public:
     // Checks if the path is clear
     bool path_clear(Coordinates coord) const;
     bool path_clear(int x, int y) const;
+
+private: 
+
+    // Layout of the game board, represented as a 2D array of characters
+    char layout[MAX_Y][MAX_X + 1] = {
+        // 01234567890123456789012345678901234567890123456789012345678901234567890123456789
+          "             LIVES: <3  <3  <3        LEVEL 1        POINTS : 00                ",// 0
+          "================================================================================",// 1
+          "                                                                                ",// 2
+          "                                   $                                            ",// 3
+          "     =============              =======                                         ",// 4
+          "        H                        H                                      =====   ",// 5    
+          "        H                        H &                                       H    ",// 6 
+          "==================>====== ========<=>======= ========<<<===<<<================  ",// 7
+          "                                     H                                  H       ",// 8
+          "                                     H                                  H       ",// 9
+          "                        =<<<==========             ======== ================    ",// 10
+          "                                                               H                ",// 11
+          "                                     =======>>>======          H                ",// 12
+          "      ===============>>>             H             H           H                ",// 13
+          "                   H                 H         ===========   ==========         ",// 14
+          "                   H                 H                   H         H            ",// 15
+          "                   H                 H                   H         H            ",// 16
+          "                   H       =================<<<================    H            ",// 17
+          "                   H        H                                      H            ",// 18
+          "                   H        H                           ===============<<<      ",// 19
+          "                 =====<<<>>>====                                                ",// 20
+          "                              H                                                 ",// 21
+          "                              H                                                 ",// 22
+          "                              H                                                 ",// 23
+          "================================================================================" // 24
+    };
 };
