@@ -39,10 +39,12 @@ private:
     void init_barrels();
 
     // Moves all active barrels
-    void move_barrels();
+    bool move_barrels();
 
     // Controls the spawning and movement of barrels
-    void ctrl_barrels();
+    void spawn_barrels();
+
+
 
     unsigned long int frames = 0; // Frame counter
 

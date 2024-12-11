@@ -29,9 +29,6 @@ class Mario : public Entity {
     // Makes Mario climb down
     void climb_down();
 
-    // Gets the character at the destination position
-    char dest_ch() const;
-
     // Gets the character at the current position
     char curr_ch() const;
 
@@ -58,4 +55,7 @@ public:
 
     // Checks if Mario is dead
     bool is_dead() const;
+
+	// Decreases Mario's lives by one
+    void kill();
 };

@@ -67,8 +67,29 @@ void Entity::set_dir(Coordinates coord) {
  * Moves the entity by one step.
  * Erases the entity from the current position, updates the position, and draws the entity at the new position.
  */
-void Entity::step() {
-    erase(); // Erase the entity from the current position
-    pos += dir; // Move the entity by adding the direction to the position
-    draw(); // Draw the entity at the new position
+bool Entity::step(char obst) {
+
+    if (curr_board->get_char(pos + dir) == obst) {
+		return false;
+    }
+    else {
+        erase(); // Erase the entity from the current position
+        pos += dir; // Move the entity by adding the direction to the position
+        draw(); // Draw the entity at the new position
+    }
+	return true;
+}
+
+/**
+ * Gets the character at the destination position.
+ */
+char Entity::org_dest() const {
+    return org_board->get_char(pos + dir);
+}
+
+/**
+ * Gets the character at the destination position.
+ */
+char Entity::curr_dest() const {
+    return curr_board->get_char(pos + dir);
 }

@@ -61,8 +61,10 @@ void Barrel::move() { // @ decide what happens if barrel is off bound
             fall_count++;
         }
     }
-    // Move the barrel by a step of 70 units
-    step();
+    // Move the barrel by a step
+    if (!step(Board::MARIO)) {
+
+    }
 }
 
 /**

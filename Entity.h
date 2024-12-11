@@ -24,13 +24,19 @@ protected:
     int last_dx = 0; // Last horizontal direction
 
     // Moves the entity by one step with an optional delay
-    void step();
+    bool step(char obst = '\0');
 
     // Constructor for the Entity class
     Entity(const Board* layout, Board* board, char ch, Coordinates init_pos = { Board::MARIO_X0, Board::MARIO_Y0 }, Coordinates dir = { 0, 0 });
     Entity(char ch, Coordinates init_pos = { Board::MARIO_X0, Board::MARIO_Y0 }, Coordinates dir = { 0, 0 });
 
 public:
+
+	// Getter for the entity's icon
+    char org_dest() const;
+
+	// Getter for the entity's icon
+    char curr_dest() const;
 
     // Getter for the x-coordinate of the entity's position
     int get_x() const { return pos.x; }

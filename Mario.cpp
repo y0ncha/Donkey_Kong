@@ -7,6 +7,7 @@ Mario::Mario(const Board* org_board, Board* curr_board) : Entity(org_board, curr
  * Updates Mario's direction based on the key input.
  */
 void Mario::update_dir(char key) {
+
     switch (std::tolower(key)) {
     case UP:
         dir.y = -1; // Move up
@@ -99,7 +100,7 @@ void Mario::fall() {
     dir.x = 0;
     dir.y = 1;
 
-    step();
+	step();
 
     if (on_ground()) {
 
@@ -136,17 +137,10 @@ void Mario::climb_down() {
 
     step();
 
-    if (org_board->is_floor(dest_ch())) {
+	if (org_board->is_floor(pos + dir)) { // If Mario is on the ground
         climbing = false;
         dir.y = 0;
     }
-}
-
-/**
- * Gets the character at the destination position.
- */
-char Mario::dest_ch() const {
-    return org_board->get_char(pos + dir);
 }
 
 /**
@@ -168,4 +162,12 @@ bool Mario::on_ground() const {
  */
 bool Mario::is_dead() const {
 	return died;
+}
+
+/**
+ * Decreases Mario's lives by one.
+ */
+void Mario::kill() {
+	lives_left--;
+    died = true;
 }
