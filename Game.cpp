@@ -4,7 +4,7 @@
  * Constructor to initialize the Game class with the board and Mario.
  * Also initializes the barrels.
  */
-Game::Game() : mario(&org_board, &curr_board) {
+Game::Game() : mario(&board) {
     init_barrels(); // Initialize the barrels
 }
 
@@ -17,7 +17,7 @@ Game::Game() : mario(&org_board, &curr_board) {
  */
 void Game::play() {
 
-    ShowConsoleCursor(false); // Hide the console cursor for better visuals
+    show_cursor(false); // Hide the console cursor for better visuals
     
     // Run the menu and check if the user wants to exit
     if (menu.run(Menu::START_MENU) == Menu::EXIT)
@@ -25,11 +25,11 @@ void Game::play() {
 
     int i = 0;
     
-    org_board.print(); // Draw the game board
+    board.print(); // Draw the game board
 
     mario.draw(); // Draw Mario at its default position
 
-	while (true) { // Main game loop
+	while (mario.get_lives() > 0) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
           
@@ -42,19 +42,12 @@ void Game::play() {
             mario.update_dir(key); // Update Mario's direction based on the key input
         }
 
-        if (mario.is_dead()) { // Check if Mario is dead
-            break; // todo reset function
-        } 
         else {
 
-			if (mario.curr_dest() == Board::BARREL || curr_board.get_char(mario.get_pos()) == Board::BARREL) { // Check if Mario has hit a barrel
-				mario.kill(); // Kill Mario
-				break;
-			}
-            mario.move(); // Move Mario if he is on a floor element
+            mario.Move(); // Move Mario if he is on a floor element
 			spawn_barrels(); // Spawn a new barrel every 30 frames
 
-			if (!move_barrels()) break; // Move all active barrels
+			move_barrels(); // Move all active barrels
             Sleep(100); // Delay for 100 milliseconds
         }
         frames++;
@@ -66,27 +59,18 @@ void Game::play() {
  */
 void Game::init_barrels() {
     for (int i = 0; i < MAX_BARRELS; i++) {
-        barrels[i].set_board(&org_board, &curr_board);
+        barrels[i].set_board(&board);
     }
 }
 
 /**
  * Moves all active barrels.
  */
-bool Game::move_barrels() {
+void Game::move_barrels() {
     for (int i = 0; i < MAX_BARRELS; i++) {
-        if (barrels[i].is_active()) {
-
-			if (barrels[i].curr_dest() == Board::MARIO || curr_board.get_char(barrels[i].get_pos()) == Board::MARIO) { // Check if the barrel has hit Mario
-				mario.kill(); // Kill Mario
-                return false;
-			}
-            else {
-                barrels[i].move();
-            }
-        }
+        if (barrels[i].is_active()) barrels[i].Move();
+   
     }
-	return true;
 }
 
 /**
@@ -104,4 +88,3 @@ void Game::spawn_barrels() {
     }
 }
 
-// Test

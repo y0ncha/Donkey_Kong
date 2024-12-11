@@ -4,11 +4,11 @@ void Menu::print(MENU_TYPES type) const {
 	gotoxy(0, 0);
 	if (type == START_MENU)
 	{
-		for (int i = 0; i < MAX_Y - 1; i++)
+		for (int i = 0; i < Screen_dim::Y - 1; i++)
 		{
 			std::cout << MenuLayout[i] << std::endl;
 		}
-		std::cout << MenuLayout[MAX_Y - 1];
+		std::cout << MenuLayout[Screen_dim::Y - 1];
 	}
 	else//PAUSE_MENU
 	{
@@ -19,11 +19,11 @@ void Menu::print(MENU_TYPES type) const {
 void Menu::ShowKeys(MENU_TYPES type) const
 {
 	gotoxy(0, 0);
-	for (int i = 0; i < MAX_Y - 1; i++)
+	for (int i = 0; i < Screen_dim::Y - 1; i++)
 	{
 		std::cout << KeysLayout[i] << std::endl;
 	}
-	std::cout << MenuLayout[MAX_Y - 1];
+	std::cout << MenuLayout[Screen_dim::Y - 1];
 
 	while (true)//Wait for ESC
 	{

@@ -1,9 +1,7 @@
 #include "Utils.h"
-#include "Coord.h"
-#include "Board.h"
 
-/*---Created by Amir Kirsh--- */
 /**
+ * ---Created by Amir Kirsh--- 
  * Moves the console cursor to the specified position.
  */
 void gotoxy(Coordinates pos) {
@@ -15,6 +13,7 @@ void gotoxy(Coordinates pos) {
 }
 
 /**
+ * ---Created by Amir Kirsh---
  * Moves the console cursor to the specified position.
  */
 void gotoxy(int x, int y) {
@@ -23,30 +22,85 @@ void gotoxy(int x, int y) {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // Move the cursor
 }
 
-/*---Created by Amir Kirsh--- */
 /**
+ * ---Created by Amir Kirsh---
  * Shows or hides the console cursor based on the showFlag parameter.
  */
-void ShowConsoleCursor(bool showFlag) {
+void show_cursor(bool flag) {
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(out, &cursorInfo);
-    cursorInfo.bVisible = showFlag; // Set the cursor visibility
-    SetConsoleCursorInfo(out, &cursorInfo);
+    cursorInfo.bVisible = flag; // Set the cursor visibility
+	SetConsoleCursorInfo(out, &cursorInfo); // Set the cursor info
+}
+
+/**
+* ---Created by copilot---
+* Function to get a character from a specific console screen buffer location
+*/
+char getch_console(Coordinates pos) {
+
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hConsole == INVALID_HANDLE_VALUE) {
+        return '\0';
+    }
+
+    CHAR_INFO charInfo;
+    COORD coord = { (SHORT)pos.x, (SHORT)pos.y };
+    SMALL_RECT readRegion = { (SHORT)pos.x, (SHORT)pos.y, (SHORT)pos.x, (SHORT)pos.y };
+    COORD bufferSize = { 1, 1 };
+
+    if (!ReadConsoleOutput(hConsole, &charInfo, bufferSize, { 0, 0 }, &readRegion) || !pos_inbound(pos)) {
+        return '\0';
+    }
+
+    return charInfo.Char.AsciiChar;
+}
+
+/**
+ * ---Created by copilot---
+ * Clears the console screen.
+ */
+void clear_screen() {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hConsole == INVALID_HANDLE_VALUE) {
+        return;
+    }
+
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    DWORD count;
+    DWORD cellCount;
+    COORD homeCoords = { 0, 0 };
+
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+        return;
+    }
+
+    cellCount = csbi.dwSize.X * csbi.dwSize.Y;
+
+    if (!FillConsoleOutputCharacter(hConsole, (TCHAR)' ', cellCount, homeCoords, &count)) {
+        return;
+    }
+
+    if (!FillConsoleOutputAttribute(hConsole, csbi.wAttributes, cellCount, homeCoords, &count)) {
+        return;
+    }
+
+    SetConsoleCursorPosition(hConsole, homeCoords);
 }
 
 /**
  * Checks if the x-coordinate is within the game bounds.
  */
-bool x_inbound(int _x) {
-    return (_x >= 0 && _x < MAX_X); // Check if the x-coordinate is within the game bounds
+bool x_inbound(int x) {
+    return (x >= 0 && x < Screen_dim::X); // Check if the x-coordinate is within the game bounds
 }
 
 /**
  * Checks if the y-coordinate is within the game bounds.
  */
-bool y_inbound(int _y) {
-    return (_y >= 0 && _y < MAX_Y); // Check if the y-coordinate is within the game bounds
+bool y_inbound(int y) {
+    return (y >= 0 && y < Screen_dim::Y); // Check if the y-coordinate is within the game bounds
 }
 
 /**

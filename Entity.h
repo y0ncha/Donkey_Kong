@@ -3,7 +3,10 @@
 #include <iostream>
 #include "Board.h"
 #include "Coord.h"
+#include "Utils.h"
 
+// Forward declaration of the handle_err function
+void handle_err(const std::string& message, const char* file, int line);
 
 /**
  * @class Entity
@@ -13,30 +16,47 @@ class Entity {
 
 protected:
 
-    const Board* org_board; // Reference to the original game board
-    Board* curr_board; // Reference to the current game board
+    // Constructor for the Entity class
+    Entity(char ch, const Board* pBoard = nullptr, Coordinates init_pos = {Board::MARIO_X0, Board::MARIO_Y0}, Coordinates dir = {0, 0});
+
+    const Board* board; // Reference to the original game board
 
     char icon; // Character representation of the entity
+
+    int last_dx = 0; // Last horizontal direction
 
     Coordinates pos; // Default position of an entity
     Coordinates dir; // Direction of the entity
 
-    int last_dx = 0; // Last horizontal direction
-
     // Moves the entity by one step with an optional delay
-    bool step(char obst = '\0');
+    void step();
 
-    // Constructor for the Entity class
-    Entity(const Board* layout, Board* board, char ch, Coordinates init_pos = { Board::MARIO_X0, Board::MARIO_Y0 }, Coordinates dir = { 0, 0 });
-    Entity(char ch, Coordinates init_pos = { Board::MARIO_X0, Board::MARIO_Y0 }, Coordinates dir = { 0, 0 });
+    // Virtual method to handle collisions with other entities or obstacles
+    virtual void handle_collision() = 0;
+
 
 public:
 
-	// Getter for the entity's icon
-    char org_dest() const;
+    // Virtual Move method to be overridden by derived classes
+    virtual void Move() = 0;
+
+    // Draws the entity at its current position
+    void draw() const;
+
+    // Erases the entity from its current position
+    void erase() const;
 
 	// Getter for the entity's icon
-    char curr_dest() const;
+	char curr_ch() const;
+
+	// Getter for the entity's icon
+    char next_ch() const;
+
+    // Checks the character beneath Mario
+    char beneath_ch() const;
+
+	// Checks the character above Mario
+	char above_ch() const;
 
     // Getter for the x-coordinate of the entity's position
     int get_x() const { return pos.x; }
@@ -57,13 +77,4 @@ public:
     // Setter for the entity's direction using dx and dy values
     void set_dir(int dx, int dy);
     void set_dir(Coordinates coord);
-
-    // Draws the entity at its current position
-    void draw() const; // todo move to pirivate
-
-    // Erases the entity from its current position
-    void erase() const; // todo move to pirivate
-
-    // Virtual move method to be overridden by derived classes
-    virtual void move() = 0;
 };

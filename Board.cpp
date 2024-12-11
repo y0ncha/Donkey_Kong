@@ -2,15 +2,15 @@
 
 /**
  * Draws the game board by printing each row of the layout.
- * Loops through all rows (from 0 to MAX_Y-1) and prints each line to the console.
+ * Loops through all rows (from 0 to Screen_dim::Y-1) and prints each line to the console.
  */
 void Board::print() const {
     gotoxy(0, 0); // Move the cursor to the top-left corner of the console
 
-    for (int i = 0; i < MAX_Y - 1; i++) {
+    for (int i = 0; i < Screen_dim::Y - 1; i++) {
         std::cout << layout[i] << std::endl; // Prints each row of the preset board
     }
-    std::cout << layout[MAX_Y - 1]; // Print the last row without a newline
+    std::cout << layout[Screen_dim::Y - 1]; // Print the last row without a newline
 }
 
 /**
@@ -18,7 +18,7 @@ void Board::print() const {
  * Returns ERR if the position is out of bounds.
  */
 char Board::get_char(Coordinates coord) const {
-    if (coord.x < 0 || coord.x >= MAX_X || coord.y < 0 || coord.y >= MAX_Y)
+    if (coord.x < 0 || coord.x >= Screen_dim::X || coord.y < 0 || coord.y >= Screen_dim::Y)
         return ERR; // Return error character if out of bounds
 
     return layout[coord.y][coord.x]; // Return the character at the specified position
@@ -29,7 +29,7 @@ char Board::get_char(Coordinates coord) const {
  * Returns ERR if the position is out of bounds.
  */
 char Board::get_char(int x, int y) const {
-    if (x < 0 || x >= MAX_X || y < 0 || y >= MAX_Y)
+    if (x < 0 || x >= Screen_dim::X || y < 0 || y >= Screen_dim::Y)
         return ERR; // Return error character if out of bounds
 
     return layout[y][x]; // Return the character at the specified position

@@ -37,7 +37,7 @@ private:
 	void ShowKeys(MENU_TYPES type) const;//Print the keys instructions
 
 	//Menu layout
-	char MenuLayout[MAX_Y][MAX_X + 1] = {
+	char MenuLayout[Screen_dim::Y][Screen_dim::X + 1] = {
    //01234567890123456789012345678901234567890123456789012345678901234567890123456789
     "================================================================================",// 0
 	"                                                                                ",// 1
@@ -66,7 +66,7 @@ private:
 	};
 
 	//Keys instructions layout
-	char KeysLayout[MAX_Y][MAX_X + 1] = {
+	char KeysLayout[Screen_dim::Y][Screen_dim::X + 1] = {
 		//01234567890123456789012345678901234567890123456789012345678901234567890123456789
 		 "================================================================================",// 0
 		 "//****************************************************************************\\\\",// 1
@@ -74,7 +74,7 @@ private:
 		 " *                       We must hurry to rescue her!!!                       * ",// 3
 		 " *                  Dodge the barrels in your way by jumping                  * ",// 4
 		 " *                  and use the ladders to climb to the top.                  * ",// 5
-		 " *                           You\'d better move fast!                          * ",// 6
+		 " *                           You\'d better Move fast!                          * ",// 6
 		 " *              Every second counts when dealing with an ape like             * ",// 7
 		 " *                                  DONKEY KONG!                              * ",// 8
 		 " \\\\**************************************************************************//",// 9

@@ -11,7 +11,7 @@ class Board {
 public:
 
     // Enum for game elements
-    enum CONSTS {
+    enum Consts {
 
         MARIO = '@', // Character representing Mario
         DONKEY_KONG = '&', // Character representing Donkey Kong
@@ -56,7 +56,7 @@ public:
 private: 
 
     // Layout of the game board, represented as a 2D array of characters
-    char layout[MAX_Y][MAX_X + 1] = {
+    char layout[Screen_dim::Y][Screen_dim::X + 1] = {
         // 01234567890123456789012345678901234567890123456789012345678901234567890123456789
           "             LIVES: <3  <3  <3        LEVEL 1        POINTS : 00                ",// 0
           "================================================================================",// 1
