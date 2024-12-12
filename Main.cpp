@@ -7,7 +7,7 @@
  * Main function that initializes the game and starts the game loop.
  */
 void main() {
-	srand(time(nullptr)); // Seed the random number generator
+	srand((time_t)time(nullptr)); // Seed the random number generator
 	Game myGame; // Initialize the game
 	myGame.play();
 }

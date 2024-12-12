@@ -49,7 +49,7 @@ private:
 
     int lives_left = LIVES; // Number of lives Mario has
     int fall_count = 0; // Counter for the number of steps Mario has been falling
-	int jump_h = 0; // Counter for the height of Mario's jump
+	int jump_ascend = 0, jump_descend = 0; // Counter for the height of Mario's jump
 
     bool died = false; // Indicates if Mario is dead
 

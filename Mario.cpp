@@ -61,7 +61,7 @@ void Mario::handle_jumping() {
     if (on_ground()) {
         status = Status::Idle;
         dir.y = 0;
-        jump_h = 0;
+        jump_ascend = jump_descend = 0;
     }
 }
 
@@ -126,7 +126,6 @@ void Mario::handle_idle() {
     else switch (dir.y) {
 
     case -1:
-
         if (can_climb()) {
             handle_climbing();
         } 
@@ -136,14 +135,12 @@ void Mario::handle_idle() {
         break;  
 
 	case 1:
-
         if (can_climb()) {
 			handle_climbing();
 		}
         break;
 
     default:
-
         last_dx = dir.x; // Save the last direction
         step(); // Move Mario one step
 		break;
@@ -155,16 +152,22 @@ void Mario::handle_idle() {
  */
 void Mario::jump() {
 
-    if (jump_h < JMP_H && board->path_clear(pos + dir)) {
-        jump_h++;
+    if (jump_ascend < JMP_H && board->path_clear(pos + dir)) {
+        jump_ascend++;
         dir.y = -1;
         step();
     } 
-    else if (0 <= jump_h && off_ground()) {
-        jump_h--;
+    else if (jump_descend < JMP_H && off_ground()) {
+        jump_descend++;
         dir.y = 1;
         step();
-    } 
+    }
+    else {
+        status = Status::Falling;
+        dir.y = 0;
+        jump_ascend = jump_descend = 0;
+        fall_count++;
+    }
 }
 
 /**
