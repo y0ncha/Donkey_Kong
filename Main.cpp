@@ -7,8 +7,12 @@
  * Main function that initializes the game and starts the game loop.
  */
 void main() {
-	srand((time_t)time(nullptr)); // Seed the random number generator
-	Game myGame; // Initialize the game
+
+	// Seed the random number generator
+	srand(static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
+
+	// Initialize the game
+	Game myGame; 
 	myGame.play();
 }
 

@@ -21,37 +21,38 @@ public:
 
     // Enum for Mario's status
     enum class Status{
-        Idle,
-        Jumping,
-        Falling,
-        Climbing,
-        Dead
+        IDLE,
+        JUMPING,
+        FALLING,
+        CLIMBING,
+        DEAD
     };
 
-    Status status = Status::Idle; // Current status of Mario
+    Status status = Status::IDLE; // Current status of Mario
 
-    // Moves Mario one step with delay (Override of Entity's Move method)
-    void Move() override;
+    // Moves Mario one step with delay (Override of Entity's move method)
+    void move() override;
 
     // Updates Mario's direction based on the input key
-    void update_dir(char key);
+    void update_dir(char key) override;
 
-    // Checks if Mario is dead
+    // Checks if Mario is DEAD
     bool is_dead() const;
 
 	// Gets the number of lives Mario has left
 	int get_lives() const;
 
-    // Decreases Mario's lives by one
-    void kill();
+    // Reset Mario to the initial position
+    void reset() override;
 
 private:
 
     int lives_left = LIVES; // Number of lives Mario has
-    int fall_count = 0; // Counter for the number of steps Mario has been falling
+    int fall_count = 0; // Counter for the number of steps Mario has been FALLING
 	int jump_ascend = 0, jump_descend = 0; // Counter for the height of Mario's jump
 
-    bool died = false; // Indicates if Mario is dead
+    // Decreases Mario's lives by one
+    void kill();
 
     // Makes Mario jump
     void jump();
@@ -68,24 +69,18 @@ private:
 	// Checks if Mario can climb
 	bool can_climb();
 
-    // Checks if Mario is on the ground
-    bool off_ground() const;
-
-	// Checks if Mario is on the ground
-	bool on_ground() const;
-
-    // Handles Mario's jumping logic
+    // Handles Mario's JUMPING logic
     void handle_jumping();
 
-    // Handles Mario's climbing logic
+    // Handles Mario's CLIMBING logic
     void handle_climbing();
 
-    // Handles Mario's falling logic
-    void handle_falling();
+    // Handles Mario's FALLING logic
+    void handle_falling() override;
 
-    // Handles Mario's idle logic
+    // Handles Mario's IDLE logic
     void handle_idle();
 
 	// Handles Mario's collision with other objects
-	void handle_collision() override;
+	char handle_collision() override;
 };

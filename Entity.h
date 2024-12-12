@@ -32,13 +32,22 @@ protected:
     void step();
 
     // Virtual method to handle collisions with other entities or obstacles
-    virtual void handle_collision() = 0;
+    virtual char handle_collision() = 0;
+
+    // Virtual method to update the entity's direction
+	virtual void update_dir(char key = static_cast<char>(Ctrl::DEF)) = 0; // Explicitly cast the default value
+
+	// Virtual method to handle the direction change when the entity is on different types of floors
+    virtual void handle_falling() = 0;
 
 
 public:
 
-    // Virtual Move method to be overridden by derived classes
-    virtual void Move() = 0;
+	// Virtual method to move the Entity
+    virtual void move() = 0;
+
+    // Virtual method to reset the Entity
+    virtual void reset() = 0;
 
     // Draws the entity at its current position
     void draw() const;
@@ -77,4 +86,10 @@ public:
     // Setter for the entity's direction using dx and dy values
     void set_dir(int dx, int dy);
     void set_dir(Coordinates coord);
+
+    // Checks if Entity is on the ground
+    bool off_ground() const;
+
+    // Checks if Entity is on the ground
+    bool on_ground() const;
 };

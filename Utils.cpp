@@ -9,7 +9,7 @@ void gotoxy(Coordinates pos) {
     COORD coord; // Create a COORD structure
     coord.X = pos.x;
     coord.Y = pos.y;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // Move the cursor
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // move the cursor
 }
 
 /**
@@ -19,7 +19,7 @@ void gotoxy(Coordinates pos) {
 void gotoxy(int x, int y) {
     std::cout.flush();
     COORD coord = { (short)x, (short)y }; // Create a COORD structure
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // Move the cursor
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // move the cursor
 }
 
 /**
@@ -42,7 +42,7 @@ char getch_console(Coordinates pos) {
 
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hConsole == INVALID_HANDLE_VALUE) {
-        return '\0';
+        return Board::ERR;
     }
 
     CHAR_INFO charInfo;
@@ -51,7 +51,7 @@ char getch_console(Coordinates pos) {
     COORD bufferSize = { 1, 1 };
 
     if (!ReadConsoleOutput(hConsole, &charInfo, bufferSize, { 0, 0 }, &readRegion) || !pos_inbound(pos)) {
-        return '\0';
+        return Board::ERR;
     }
 
     return charInfo.Char.AsciiChar;

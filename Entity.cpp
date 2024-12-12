@@ -8,7 +8,7 @@ Entity::Entity(char ch, const Board* pBoard, Coordinates init_pos, Coordinates i
     : icon(ch), board(pBoard), pos(init_pos), dir(init_dir) {
     if (!pos_inbound(init_pos)) { // Validate
         clear_screen();
-        handle_err("Error: position is out of bound!", __FILE__, __LINE__);
+        handle_err("SYSTEM ERROR: position is out of bound!", __FILE__, __LINE__);
     }
 }
 
@@ -16,7 +16,7 @@ Entity::Entity(char ch, const Board* pBoard, Coordinates init_pos, Coordinates i
  * Draws the entity at its current position.
  */
 void Entity::draw() const {
-    gotoxy(pos); // Move the cursor to the entity's position
+    gotoxy(pos); // move the cursor to the entity's position
     std::cout << icon; // Print the entity's character at the position
 }
 
@@ -24,7 +24,7 @@ void Entity::draw() const {
  * Erases the entity from its current position.
  */
 void Entity::erase() const {
-    gotoxy(pos); // Move the cursor to the entity's position
+    gotoxy(pos); // move the cursor to the entity's position
     std::cout << board->get_char(pos); // Restore the character from the board
 }
 
@@ -54,10 +54,11 @@ void Entity::set_dir(Coordinates coord) {
  */
 void Entity::step() {
     erase(); // Erase the entity from the current position
-    handle_collision(); // Handle collisions with other entities or obstacles
 
-    pos += dir; // Move the entity by adding the direction to the position
-    draw(); // Draw the entity at the new position
+    if (handle_collision()) { // Handle collisions with other entities or obstacles
+        pos += dir; // move the entity by adding the direction to the position
+        draw(); // Draw the entity at the new position
+    }
 }
 
 /**
@@ -86,4 +87,19 @@ char Entity::above_ch() const {
  */
 char Entity::curr_ch() const {
     return board->get_char(pos);
+}
+
+/**
+ * Checks if Entity is on the ground.
+ */
+bool Entity::off_ground() const {
+    char bellow = beneath_ch();
+    return (bellow != Board::FLOOR && bellow != Board::FLOOR_L && bellow != Board::FLOOR_R);
+}
+
+/**
+ * Checks if Entity is on the ground.
+ */
+bool Entity::on_ground() const {
+    return !off_ground();
 }

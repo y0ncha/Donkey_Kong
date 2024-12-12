@@ -22,8 +22,6 @@ void Game::play() {
     // Run the menu and check if the user wants to exit
     if (menu.run(Menu::START_MENU) == Menu::EXIT)
         return;
-
-    int i = 0;
     
     board.print(); // Draw the game board
 
@@ -44,10 +42,12 @@ void Game::play() {
 
         else {
 
-            mario.Move(); // Move Mario if he is on a floor element
-			spawn_barrels(); // Spawn a new barrel every 30 frames
+            mario.move(); // move Mario if he is on a floor element
+			move_barrels(); // move all active barrels
 
-			move_barrels(); // Move all active barrels
+			if (mario.is_dead()) { // If Mario is DEAD
+                reset_level();
+			}
             Sleep(100); // Delay for 100 milliseconds
         }
         frames++;
@@ -68,9 +68,10 @@ void Game::init_barrels() {
  */
 void Game::move_barrels() {
     for (int i = 0; i < MAX_BARRELS; i++) {
-        if (barrels[i].is_active()) barrels[i].Move();
+        if (barrels[i].is_active()) barrels[i].move();
    
     }
+	spawn_barrels(); // Spawn a new barrel every 30 frames
 }
 
 /**
@@ -86,5 +87,18 @@ void Game::spawn_barrels() {
             }
         }
     }
+}
+
+void Game::reset_barrels() {
+    for (int i = 0; i < MAX_BARRELS; i++) {
+        barrels[i].reset();
+    }
+}
+
+void Game::reset_level() {
+	board.print(); // Draw the game board
+	mario.reset(); // Draw Mario at its default position
+	reset_barrels();
+	frames = 0;
 }
 

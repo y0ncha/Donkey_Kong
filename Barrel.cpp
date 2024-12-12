@@ -9,79 +9,63 @@ Barrel::Barrel() : Entity(Board::BARREL) {}
 /**
  * Method to handle the movement logic of the barrel.
  */
-void Barrel::Move() { // @ decide what happens if barrel is off bound
-    if (!pos_inbound(pos + dir)) { // Check if the next position is within the game bounds
-        erase(); // Erase the barrel from the board
-        active = false; // Deactivate the barrel
-        return;
+void Barrel::move() { // @ decide what happens if barrel is off bound
+    // If the barrel has been FALLING for 8 or more steps, it should explode
+
+    char beneath = beneath_ch();
+
+    if (FALLING) {
+        handle_falling();
     }
-    // If the barrel has been falling for 8 or more steps, it should explode
-    if (fall_count >= MAX_FALL_H) {
-        explode = true;
+    else {
+		update_dir(beneath);
+		step();
     }
-
-    // Get the character directly below the barrel's current position
-	char bellow_barrel = beneath_ch();
-
-    // If the barrel is currently falling
-    if (falling) {
-        // Check if the barrel has landed on the floor
-        if (board->is_floor(bellow_barrel)) {
-            // Stop the falling process
-            falling = false;
-            dir.y = 0;
-            fall_count = 0;
-
-            // If the barrel should explode, erase it from the board
-            if (explode) {
-                erase();
-                active = false; // Deactivate the barrel
-                return;
-            }
-
-            // Handle the floor switch logic based on the type of floor
-            floor_switch(bellow_barrel);
-        } else {
-            // Continue falling
-            dir.y = 1;
-            fall_count++;   
-        }
-    } else {
-        // Store the last horizontal direction
-        last_dx = dir.x;
-
-        // Check if the barrel is on the floor
-        if (board->is_floor(bellow_barrel)) {
-            floor_switch(bellow_barrel);
-        } else {
-            // Start falling
-            dir.y = 1;
-            dir.x = 0;
-            falling = true;
-            fall_count++;
-        }
-    }
-    step(); // Move the barrel one step
 }
 
 /**
  * Method to handle the direction change when the barrel is on different types of floors.
  */
-void Barrel::floor_switch(char bellow_barrel) {
+void Barrel::update_dir(char beneath) {
 
-    switch (bellow_barrel) {
-    case Board::FLOOR_L:
-        dir.x = -1; // Move left
+    switch (beneath) {
+    case Board::FLOOR_L: // If the barrel is on a left-sloping floor
+        last_dx = dir.x = -1; // move left
         break;
 
-    case Board::FLOOR_R:
-        dir.x = 1; // Move right
+    case Board::FLOOR_R: // If the barrel is on a right-sloping floor
+        last_dx = dir.x = 1; // move right
         break;
 
-    case Board::FLOOR:
-        dir.x = last_dx; // Continue in the last horizontal direction
+	case Board::AIR: // If the barrel is in the air
+        FALLING = true;
+		dir = { 0, 1 }; // move down
+        fall_count++;
+
+    default: // If the barrel is on a flat floor keep moving in the same direction
         break;
     }
+}
+
+/*
+* Method to handle the FALLING of the barrel.
+*/
+void Barrel::handle_falling() { // todo make virtual
+
+    FALLING = true;
+	fall_count++;
+
+	// Set the direction to fall and step
+	dir = { 0, 1 };
+    step();
+	
+	// If the barrel is now on the ground
+	if (on_ground()) {
+		explode = (fall_count >= MAX_FALL_H);
+		dir = { last_dx, 0 };
+		FALLING = false;
+		fall_count = 0;
+	}
 }
 
 /**
@@ -117,16 +101,24 @@ void Barrel::spawn() {
 /**
  * Handles collision logic for the barrel.
  */
-void Barrel::handle_collision() {
+char Barrel::handle_collision() {
 
 	char obst = getch_console(pos + dir);
 
     switch (obst) {
-	case Board::MARIO:
-		// todo add Mario logic
+	case Board::MARIO: // If the barrel hits Mario
+        explode = true;
 		break;
-	case Board::ERR:
-		// todo set inactive and erase
+
+	case Board::ERR: // If the barrel is out of bounds
+        reset();
         break;
     }
+	return obst; // Return the type of object the barrel hits (optional for next exercise) 
+}
+
+void Barrel::reset() {
+    erase();
+    dir = { 0,0 };
+    active = false;
 }

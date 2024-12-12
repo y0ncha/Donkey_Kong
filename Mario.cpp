@@ -7,115 +7,132 @@ Mario::Mario(const Board* pBoard) : Entity(Board::MARIO, pBoard) {}
  * Updates Mario's direction based on the key input.
  */
 void Mario::update_dir(char key) {
+
+	// Convert key to direction (ignore non-defined keys)
     switch (std::tolower(key)) {
+
     case Ctrl::UP:
-        dir.y = -1; // Move up
+        dir.y = -1; // move up
         break;
+
     case Ctrl::DOWN:
-        dir.y = 1; // Move down
+        dir.y = 1; // move down
         break;
+
     case Ctrl::LEFT:
-        dir.x = -1; // Move left
+        dir.x = -1; // move left
         break;
+
     case Ctrl::RIGHT:
-        dir.x = 1; // Move right
+        dir.x = 1; // move right
         break;
+
     case Ctrl::STAY:
         dir = {0, 0}; // Stay in place
         break;
-    default:
-        break; // Ignore other keys
-    }
+	} 
 }
 
 /**
  * Moves Mario based on the current direction and game state.
  */
-void Mario::Move() {
+void Mario::move() {
+
     switch (status) {
-    case Status::Jumping:
+	case Status::JUMPING: // If Mario is JUMPING
         handle_jumping();
         break;
-    case Status::Climbing:
+
+	case Status::CLIMBING: // If Mario is CLIMBING
         handle_climbing();
         break;
-    case Status::Falling:
+
+	case Status::FALLING: // If Mario is FALLING
         handle_falling();
         break;
-    case Status::Idle:
-    default:
+
+	case Status::IDLE: // If Mario is IDLE
         handle_idle();
         break;
-    }
+
+    case Status::DEAD: // If Mario is DEAD
+        dir = { 0, 0 };
+		break;
+  }
 }
 
 /**
- * Handles Mario's jumping logic.
+ * Handles Mario's JUMPING logic.
  */
 void Mario::handle_jumping() {
 
-    status = Status::Jumping;
+    status = Status::JUMPING;
     jump(); // Make Mario jump
 
     // If Mario is on the ground
     if (on_ground()) {
-        status = Status::Idle;
+        status = Status::IDLE;
         dir.y = 0;
         jump_ascend = jump_descend = 0;
     }
 }
 
 /**
- * Handles Mario's climbing logic.
+ * Handles Mario's CLIMBING logic.
  */
 void Mario::handle_climbing() {
 
     if (dir.y == -1) {
 
-        status = Status::Climbing;
-        climb_up(); // Continue climbing up
+        status = Status::CLIMBING;
+        climb_up(); // Continue CLIMBING up
 
         // If Mario reaches the top of the ladder
         if (curr_ch() == Board::AIR) {
-            status = Status::Idle;
+            status = Status::IDLE;
             dir.y = 0;
         }
     } 
     else {
 
 		// todo add check for this condition "can_climb" 
-        status = Status::Climbing;
-        climb_down(); // Continue climbing down
+        status = Status::CLIMBING;
+        climb_down(); // Continue CLIMBING down
        
         // If Mario reaches the floor
         if (board->is_floor(pos + dir)) {
-            status = Status::Idle;
+            status = Status::IDLE;
             dir.y = 0;
         }
     }
 }
 
 /**
- * Handles Mario's falling logic.
+ * Handles Mario's FALLING logic.
  */
 void Mario::handle_falling() {
 
-    status = Status::Falling;
+    status = Status::FALLING;
 
     fall(); // Make Mario fall if not on the ground
 
     // If Mario is on the ground
     if (on_ground()) {
-        died = (fall_count >= MAX_FALL_H);
-        status = Status::Idle;
-        fall_count = 0;
-        dir.x = last_dx;
-        dir.y = 0;
+
+        if (fall_count >= MAX_FALL_H) { 
+			kill(); // Kill Mario if he falls too far
+        }
+        else {
+            status = Status::IDLE;
+            fall_count = 0;
+            dir.x = last_dx;
+            dir.y = 0;
+        }
     }
 }
 
 /**
- * Handles Mario's idle logic.
+ * Handles Mario's IDLE logic.
  */
 void Mario::handle_idle() {
 
@@ -125,24 +142,24 @@ void Mario::handle_idle() {
 
     else switch (dir.y) {
 
-    case -1:
-        if (can_climb()) {
+	case -1: // If Mario is moving up
+		if (can_climb()) { // If Mario can climb
             handle_climbing();
         } 
-        else {
+		else { // If Mario can't climb
             handle_jumping();
         }
         break;  
 
-	case 1:
-        if (can_climb()) {
+	case 1: // If Mario is moving down
+		if (can_climb()) { // If Mario can climb
 			handle_climbing();
 		}
         break;
 
-    default:
+	default: // If Mario is on the ground
         last_dx = dir.x; // Save the last direction
-        step(); // Move Mario one step
+        step(); // move Mario one step
 		break;
     }
 }
@@ -152,21 +169,19 @@ void Mario::handle_idle() {
  */
 void Mario::jump() {
 
-    if (jump_ascend < JMP_H && board->path_clear(pos + dir)) {
+	if (jump_ascend < JMP_H && board->path_clear(pos + dir)) { // If Mario is ascending
         jump_ascend++;
         dir.y = -1;
         step();
     } 
-    else if (jump_descend < JMP_H && off_ground()) {
+	else if (jump_descend < JMP_H && off_ground()) { // If Mario is descending
         jump_descend++;
         dir.y = 1;
         step();
     }
-    else {
-        status = Status::Falling;
-        dir.y = 0;
+	else { // If Mario finish the jump and starts FALLING
         jump_ascend = jump_descend = 0;
-        fall_count++;
+		handle_falling(); // An extra step is being done here intentionally, it makes the fall look smoother and dosnt seems to make the barrels lag.
     }
 }
 
@@ -174,7 +189,6 @@ void Mario::jump() {
  * Makes Mario fall.
  */
 void Mario::fall() {
-
     fall_count++;
 
 	dir = { 0, 1 };
@@ -185,7 +199,6 @@ void Mario::fall() {
  * Makes Mario climb up.
  */
 void Mario::climb_up() {
-
     dir.x = 0;
     step();
 }
@@ -194,35 +207,22 @@ void Mario::climb_up() {
  * Makes Mario climb down.
  */
 void Mario::climb_down() {
-
     dir.x = 0;
     step();
 }
 
+/**
+ * Checks if Mario can climb.
+ */ 
 bool Mario::can_climb() {
 	return (dir.y == -1 && curr_ch() == Board::LADDER) || (dir.y == 1 && board->get_char(pos.x, pos.y + 2) == Board::LADDER); // todo add is LADDER function
 }
 
 /**
- * Checks if Mario is on the ground.
- */
-bool Mario::off_ground() const {
-	char bellow = beneath_ch();
-	return (bellow != Board::FLOOR && bellow != Board::FLOOR_L && bellow != Board::FLOOR_R);
-}
-
-/**
- * Checks if Mario is on the ground.
- */
-bool Mario::on_ground() const {
-	return !off_ground();
-}
-
-/**
- * Checks if Mario is dead.
+ * Checks if Mario is DEAD.
  */
 bool Mario::is_dead() const {
-    return died;
+    return (status == Status::DEAD);
 }
 
 /**
@@ -230,40 +230,62 @@ bool Mario::is_dead() const {
  */
 void Mario::kill() {
     lives_left--;
-    died = true;
+	status = Status::DEAD;
+    dir = { 0, 0 };
+    // todo reset
 }
 
 /**
  * Checks if Mario hits something and returns the type of object he hits.
  */
-void Mario::handle_collision() {
+char Mario::handle_collision() {
 
 	char obst = getch_console(pos + dir);
 
     switch (obst) {
 
-    case Board::BARREL:
+	case Board::BARREL: // If Mario hits a barrel
         kill();
         break;
 
-    case Board::DONKEY_KONG:
+	case Board::DONKEY_KONG: // If Mario hits Donkey Kong
         // todo add DK logic
         break;
 
-    case Board::PAULINE:
+	case Board::PAULINE: // If Mario hits Pauline
         // todo add Pauline logic
         break;
 
-    case Board::ERR:
-
+	case Board::ERR: // If Mario's next step is out of bounds
         dir.x = -dir.x; // Reverse direction if path is not clear
-        break;
-
-    default:
-        break;
+		obst = Board::AIR; // Return air to allow Mario to move
+		break;
     }
+    return obst; // Return the type of object the mario hits (optional for next exercise)
 }
 
+/**
+ * Gets the number of lives Mario has left.
+ */
 int Mario::get_lives() const {
 	return lives_left;
 }
+
+/*
+* Reset Mario to its initial feilds.
+ */ 
+void Mario::reset() {
+
+    pos = { Board::MARIO_X0, Board::MARIO_Y0 };
+
+    status = Status::IDLE;
+
+    fall_count = 0;
+    jump_ascend = 0;
+    jump_descend = 0;
+
+    dir = { 0, 0 };
+    last_dx = 0;
+    draw();
+}
+

@@ -4,10 +4,25 @@
  * Draws the game board by printing each row of the layout.
  * Loops through all rows (from 0 to Screen_dim::Y-1) and prints each line to the console.
  */
-void Board::print() const {
-    gotoxy(0, 0); // Move the cursor to the top-left corner of the console
+void Board::print(int lives_left) const {
+    gotoxy(0, 0); // move the cursor to the top-left corner of the console
 
-    for (int i = 0; i < Screen_dim::Y - 1; i++) {
+	// Determine the first raw based on the number of lives left
+    switch (lives_left) {
+	case 2: // If Mario has 2 lives left
+        std::cout << "             LIVES : < 3 < 3            LEVEL 1        POINTS : 00                " << std::endl;
+        break;
+
+	case 1: // If Mario has 1 life left
+        std::cout << "             LIVES : < 3                LEVEL 1        POINTS : 00                " << std::endl;
+        break;
+
+	default: // If Mario has 3 lives left
+		std::cout << layout[0] << std::endl;
+    }
+
+	// Print the rest of the layout
+    for (int i = 1; i < Screen_dim::Y - 1; i++) {
         std::cout << layout[i] << std::endl; // Prints each row of the preset board
     }
     std::cout << layout[Screen_dim::Y - 1]; // Print the last row without a newline

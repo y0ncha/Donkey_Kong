@@ -44,6 +44,12 @@ private:
     // Controls the spawning and movement of barrels
     void spawn_barrels();
 
+	// Resets the barrels
+	void reset_barrels();
+
+	// Resets the level
+	void reset_level();
+
     // For exercise 2 and 3 
     //int level = 1; // Current game level
     //int score = 0; // Current game score
