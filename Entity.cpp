@@ -4,12 +4,17 @@
  * Constructor for the Entity class, initializing the base Entity class with the given parameters.
  * Checks if the layout, board, and position are valid.
  */
-Entity::Entity(char ch, const Board* pBoard, Coordinates init_pos, Coordinates init_dir)
-    : icon(ch), board(pBoard), pos(init_pos), dir(init_dir) {
+Entity::Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates init_dir)
+    : board(pBoard), icon(ch), pos(init_pos), dir(init_dir) {
+    
     if (!pos_inbound(init_pos)) { // Validate
         clear_screen();
         handle_err("SYSTEM ERROR: position is out of bound!", __FILE__, __LINE__);
     }
+	if (board == nullptr) { // Validate
+		clear_screen();
+		handle_err("SYSTEM ERROR: board is not initialized!", __FILE__, __LINE__);
+	}
 }
 
 /**

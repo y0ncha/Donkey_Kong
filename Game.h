@@ -4,7 +4,7 @@
 #include "Menu.h"
 #include "Mario.h"
 #include "Board.h"
-#include "Barrel.h"
+#include "Barrels.h"
 
 // The Game class represents the main game loop and controls the game's logic, future to control the game levels and score
 class Game {
@@ -15,15 +15,11 @@ public:
     Game();
 
     // Starts the game loop and handles user input
-    void play();
-
-    // Enum for initial positions of characters
-    enum Consts {
-        MAX_BARRELS = 10, // Maximum number of barrels
-        BARREL_INTERVAL = 30, // Interval for spawning barrels
-    };
+    void play(int max_barrels = 10, int sapwn_interval = 30);
 
 private: 
+
+	int max_barrels, spawn_interval; // Maximum number of barrels and the interval for spawning barrels
 
 	Menu menu; // Initialize the menu
   
@@ -31,26 +27,20 @@ private:
 
     Mario mario; // Initialize Mario
 
-    Barrel barrels[MAX_BARRELS]; // Initialize an array of barrels
+	Barrels barrels; // Initialize the barrels
 
-    unsigned long int frames = 0; // Frame counter
-  
-    // Initializes the barrels
-    void init_barrels();
-
-    // Moves all active barrels
-    void move_barrels();
-
-    // Controls the spawning and movement of barrels
-    void spawn_barrels();
-
-	// Resets the barrels
-	void reset_barrels();
+	unsigned long int frames = 0; // Used to follow the game frames for barrel control (can be used for future game features)
 
 	// Resets the level
 	void reset_level();
 
-    // For exercise 2 and 3 
+    // Method to update the lives display
+    void print_data() const;
+
+	// Method to update print the board and the game's data
+	void print_screen() const;
+
+	// For exercise 2 and 3 
     //int level = 1; // Current game level
     //int score = 0; // Current game score
 };

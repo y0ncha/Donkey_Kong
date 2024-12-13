@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Barrel.cpp" />
+    <ClCompile Include="Barrels.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Coord.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -39,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Barrel.h" />
+    <ClInclude Include="Barrels.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Coord.h" />

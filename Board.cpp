@@ -7,22 +7,8 @@
 void Board::print(int lives_left) const {
     gotoxy(0, 0); // move the cursor to the top-left corner of the console
 
-	// Determine the first raw based on the number of lives left
-    switch (lives_left) {
-	case 2: // If Mario has 2 lives left
-        std::cout << "             LIVES : < 3 < 3            LEVEL 1        POINTS : 00                " << std::endl;
-        break;
-
-	case 1: // If Mario has 1 life left
-        std::cout << "             LIVES : < 3                LEVEL 1        POINTS : 00                " << std::endl;
-        break;
-
-	default: // If Mario has 3 lives left
-		std::cout << layout[0] << std::endl;
-    }
-
 	// Print the rest of the layout
-    for (int i = 1; i < Screen_dim::Y - 1; i++) {
+    for (int i = 0; i < Screen_dim::Y - 1; i++) {
         std::cout << layout[i] << std::endl; // Prints each row of the preset board
     }
     std::cout << layout[Screen_dim::Y - 1]; // Print the last row without a newline
@@ -64,9 +50,9 @@ void Board::set_char(Coordinates coord, char ch) {
  * Sets the character at the specified position on the board.
  * Only sets the character if the position is within bounds.
  */
-void Board::set_char(int _x, int _y, char ch) {
-    if (pos_inbound({ _x, _y })) { // Check if the position is within the game bounds
-        layout[_y][_x] = ch; // Set the character at the specified position
+void Board::set_char(int x, int y, char ch) {
+    if (pos_inbound({ x, y })) { // Check if the position is within the game bounds
+        layout[y][x] = ch; // Set the character at the specified position
     }
 }
 

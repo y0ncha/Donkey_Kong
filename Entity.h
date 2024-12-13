@@ -17,7 +17,7 @@ class Entity {
 protected:
 
     // Constructor for the Entity class
-    Entity(char ch, const Board* pBoard = nullptr, Coordinates init_pos = {Board::MARIO_X0, Board::MARIO_Y0}, Coordinates dir = {0, 0});
+    Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates dir = {0, 0});
 
     const Board* board; // Reference to the original game board
 

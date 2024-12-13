@@ -23,7 +23,7 @@ class Barrel : public Entity {
 public:
 
     // Constructor for the Barrel class
-    Barrel();
+    Barrel(const Board* pBoard);
 
     // Enum for Barrel's related constants
     enum Consts {
@@ -37,7 +37,7 @@ public:
     bool is_active() const;
 
     // Returns the initial position of the Barrel
-    void init_pos();
+    Coordinates init_pos();
 
     // Sets the original and current board for the Barrel
     void set_board(const Board* pBoard);

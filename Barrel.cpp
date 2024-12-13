@@ -4,7 +4,7 @@
 * Constructor for the Barrel class.
 * @warning This constructor does not initialize the barrel's position and pointer.
 */
-Barrel::Barrel() : Entity(Board::BARREL) {}
+Barrel::Barrel(const Board* pBoard) : Entity(pBoard, Board::BARREL, init_pos()) {}
 
 /**
  * Method to handle the movement logic of the barrel.
@@ -76,10 +76,10 @@ bool Barrel::is_active() const {
 }
 
 /**
- * Returns the initial position of the barrel.
+ * Returns and sets the initial position of the barrel.
  */
-void Barrel::init_pos() { 
-    pos = {(rand() % 2 == 0) ? Board::DKONG_X0 + 1 : Board::DKONG_X0 - 1, Board::DKONG_Y0};
+Coordinates Barrel::init_pos() { 
+    return (pos = {(rand() % 2 == 0) ? Board::DKONG_X0 + 1 : Board::DKONG_X0 - 1, Board::DKONG_Y0});
 }
 
 /**
@@ -117,6 +117,9 @@ char Barrel::handle_collision() {
 	return obst; // Return the type of object the barrel hits (optional for next exercise) 
 }
 
+/*
+* Resets the barrel status and direction.
+*/
 void Barrel::reset() {
     erase();
     dir = { 0,0 };

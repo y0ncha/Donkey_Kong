@@ -1,7 +1,7 @@
 #include "Mario.h"
 
 // Constructor for the Mario class, initializing the base Entity class with the given parameters
-Mario::Mario(const Board* pBoard) : Entity(Board::MARIO, pBoard) {}
+Mario::Mario(const Board* pBoard) : Entity(pBoard, Board::MARIO, {Board::MARIO_X0, Board::MARIO_Y0}) {}
 
 /**
  * Updates Mario's direction based on the key input.
