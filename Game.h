@@ -19,7 +19,7 @@ public:
 
 private: 
 
-	int max_barrels, spawn_interval; // Maximum number of barrels and the interval for spawning barrels
+	int max_barrels = 10, spawn_interval = 30; // Maximum number of barrels and the interval for spawning barrels
 
 	Menu menu; // Initialize the menu
   
@@ -30,6 +30,9 @@ private:
 	Barrels barrels; // Initialize the barrels
 
 	unsigned long int frames = 0; // Used to follow the game frames for barrel control (can be used for future game features)
+
+	// Method to handle user input
+	void handle_input(); // Method to handle user input
 
 	// Resets the level
 	void reset_level();

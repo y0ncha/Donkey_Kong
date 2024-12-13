@@ -17,27 +17,27 @@ class Menu {
 public:
 
 	// Enum for the menu options
-	enum ENTRY_MENU {
+	enum Entry_menu {
 		START = '1',// Start the game
 		KEYS = '8',// Show the keys
 		EXIT = '9'// Exit the game
 	};
 
 	// Enum for the menu types
-	enum MENU_TYPES {
+	enum Menu_types {
 		START_MENU = 0,//Show the start menu
 		PAUSE_MENU = 1//Show the pause menu
 	};
 
-	int run(MENU_TYPES type) const;//Run the menu
+	int run(Menu_types type) const;//Run the menu
 
 private: 
 
-	void print(MENU_TYPES type) const;//Print the menu
-	void ShowKeys(MENU_TYPES type) const;//Print the keys instructions
+	void print(Menu_types type) const;//Print the menu
+	void keys(Menu_types type) const;//Print the keys instructions
 
 	//Menu layout
-	char MenuLayout[Screen_dim::Y][Screen_dim::X + 1] = {
+	char main_layout[Screen_dim::Y][Screen_dim::X + 1] = {
    //01234567890123456789012345678901234567890123456789012345678901234567890123456789
     "================================================================================",// 0
 	"                                                                                ",// 1
@@ -66,7 +66,7 @@ private:
 	};
 
 	//Keys instructions layout
-	char KeysLayout[Screen_dim::Y][Screen_dim::X + 1] = {
+	char keys_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 		//01234567890123456789012345678901234567890123456789012345678901234567890123456789
 		 "================================================================================",// 0
 		 "//****************************************************************************\\\\",// 1

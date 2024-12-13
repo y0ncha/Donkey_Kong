@@ -42,6 +42,12 @@ protected:
 
 
 public:
+    
+	// Enum for the move status
+	enum move_status {
+		MOVE_SUCCESS,
+		MARIO_HIT,
+	};
 
 	// Virtual method to move the Entity
     virtual void move() = 0;

@@ -25,7 +25,6 @@ public:
         JUMPING,
         FALLING,
         CLIMBING,
-        DEAD
     };
 
     Status status = Status::IDLE; // Current status of Mario
@@ -36,14 +35,14 @@ public:
     // Updates Mario's direction based on the input key
     void update_dir(char key) override;
 
-    // Checks if Mario is DEAD
-    bool is_dead() const;
-
 	// Gets the number of lives Mario has left
 	int get_lives() const;
 
     // Reset Mario to the initial position
     void reset() override;
+
+	// Checks if Mario was hit
+	bool is_hit() const;
 
 private:
 
@@ -51,8 +50,7 @@ private:
     int fall_count = 0; // Counter for the number of steps Mario has been FALLING
 	int jump_ascend = 0, jump_descend = 0; // Counter for the height of Mario's jump
 
-    // Decreases Mario's lives by one
-    void kill();
+	bool mario_hit = false; // Indicates if Mario has been hit
 
     // Makes Mario jump
     void jump();

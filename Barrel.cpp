@@ -14,7 +14,7 @@ void Barrel::move() { // @ decide what happens if barrel is off bound
 
     char beneath = beneath_ch();
 
-    if (FALLING) {
+    if (falling) {
         handle_falling();
     }
     else {
@@ -38,7 +38,7 @@ void Barrel::update_dir(char beneath) {
         break;
 
 	case Board::AIR: // If the barrel is in the air
-        FALLING = true;
+        falling = true;
 		dir = { 0, 1 }; // move down
         fall_count++;
 
@@ -52,7 +52,7 @@ void Barrel::update_dir(char beneath) {
 */
 void Barrel::handle_falling() { // todo make virtual
 
-    FALLING = true;
+    falling = true;
 	fall_count++;
 
 	// Set the direction to fall and step
@@ -61,10 +61,23 @@ void Barrel::handle_falling() { // todo make virtual
 	
 	// If the barrel is now on the ground
 	if (on_ground()) {
-		explode = (fall_count >= MAX_FALL_H);
-		dir = { last_dx, 0 };
-		FALLING = false;
-		fall_count = 0;
+        if (fall_count >= MAX_FALL_H) {
+			explode();
+        }
+        else {
+            dir = { last_dx, 0 };
+            falling = false;
+            fall_count = 0;
+        }
+	}
+}
+
+void Barrel::explode() {
+	gotoxy(pos.x - 2, pos.y - 2); // Move the cursor to the position of the top left two chars radius of the barrel
+
+	for (int i = 0; i < 5; i++) {
+        std::cout << "*****";
+		gotoxy(pos.x - 2, pos.y - 2 + i); // Move the cursor to the next row
 	}
 }
 
@@ -107,7 +120,7 @@ char Barrel::handle_collision() {
 
     switch (obst) {
 	case Board::MARIO: // If the barrel hits Mario
-        explode = true;
+        hit_mario = true;
 		break;
 
 	case Board::ERR: // If the barrel is out of bounds
@@ -124,4 +137,12 @@ void Barrel::reset() {
     erase();
     dir = { 0,0 };
     active = false;
+	hit_mario = false;
+}
+
+/*
+* Checks if the barrel hitted Mario.
+*/
+bool Barrel::hitted_mario() const {
+        return hit_mario;
 }

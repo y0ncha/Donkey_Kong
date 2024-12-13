@@ -28,14 +28,8 @@ void Game::play(int max_barrels, int sapwn_interval) {
 	while (mario.get_lives() > 0) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
-          
-            char key = _getch(); // Get the key input
-          
-            if (key == ESC) { // Pause the game and open the me
-                if (menu.run(Menu::PAUSE_MENU) == Menu::EXIT)
-                    break;
-            } 
-            mario.update_dir(key); // Update Mario's direction based on the key input
+
+			handle_input(); // Handle the key input
         }
 
         else {
@@ -43,22 +37,33 @@ void Game::play(int max_barrels, int sapwn_interval) {
             mario.move(); // move Mario if he is on a floor element
 			barrels.move(frames); // Move the barrels
 
-			if (mario.is_dead()) { // If Mario is DEAD
-                reset_level();
-			}
+            if (mario.is_hit() || barrels.hitted_mario()) { // Check if Mario was hit by a barrel
+				reset_level(); // Reset the level if Mario was hit
+            }
+
             Sleep(100); // Delay for 100 milliseconds
         }
         frames++; // 
     }
 }
 
-void handle_input() {
+void Game::handle_input() {
+
+    char key = _getch(); // Get the key input
+
+	if (key == ESC) { // If the key is ESC, open the pause menu
+        if (menu.run(Menu::PAUSE_MENU) == Menu::EXIT)
+			return;
+	}
+    else {
+        mario.update_dir(key); // Update Mario's direction based on the key input
+    }
 }
 /*
-* Resets the level
+* Resets the level and updates mari's lives.
 */
 void Game::reset_level() {
-
+	Sleep(1000); // Delay for 1 second
 	mario.reset(); // Draw Mario at its default position
 	barrels.reset(); // Reset the barrels
     frames = 0;

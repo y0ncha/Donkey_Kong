@@ -39,26 +39,24 @@ void Mario::update_dir(char key) {
 void Mario::move() {
 
     switch (status) {
-	case Status::JUMPING: // If Mario is JUMPING
+    case Status::JUMPING: // If Mario is JUMPING
         handle_jumping();
         break;
 
-	case Status::CLIMBING: // If Mario is CLIMBING
+    case Status::CLIMBING: // If Mario is CLIMBING
         handle_climbing();
         break;
 
-	case Status::FALLING: // If Mario is FALLING
+    case Status::FALLING: // If Mario is FALLING
         handle_falling();
         break;
 
-	case Status::IDLE: // If Mario is IDLE
+    case Status::IDLE: // If Mario is IDLE
         handle_idle();
-        break;
-
-    case Status::DEAD: // If Mario is DEAD
-        dir = { 0, 0 };
 		break;
-  }
+	default:
+		break;
+    }
 }
 
 /**
@@ -120,7 +118,7 @@ void Mario::handle_falling() {
     if (on_ground()) {
 
         if (fall_count >= MAX_FALL_H) { 
-			kill(); // Kill Mario if he falls too far
+			mario_hit = true; // Set Mario as hit
         }
         else {
             status = Status::IDLE;
@@ -219,23 +217,6 @@ bool Mario::can_climb() {
 }
 
 /**
- * Checks if Mario is DEAD.
- */
-bool Mario::is_dead() const {
-    return (status == Status::DEAD);
-}
-
-/**
- * Decreases Mario's lives by one.
- */
-void Mario::kill() {
-    lives_left--;
-	status = Status::DEAD;
-    dir = { 0, 0 };
-    // todo reset
-}
-
-/**
  * Checks if Mario hits something and returns the type of object he hits.
  */
 char Mario::handle_collision() {
@@ -245,7 +226,7 @@ char Mario::handle_collision() {
     switch (obst) {
 
 	case Board::BARREL: // If Mario hits a barrel
-        kill();
+		mario_hit = true; // Set Mario as hit
         break;
 
 	case Board::DONKEY_KONG: // If Mario hits Donkey Kong
@@ -276,7 +257,11 @@ int Mario::get_lives() const {
  */ 
 void Mario::reset() {
 
+    lives_left--;
+
     pos = { Board::MARIO_X0, Board::MARIO_Y0 };
+
+	mario_hit = false;
 
     status = Status::IDLE;
 
@@ -287,5 +272,12 @@ void Mario::reset() {
     dir = { 0, 0 };
     last_dx = 0;
     draw();
+}
+
+/**
+ * Checks if Mario is hit.
+ */ 
+bool Mario::is_hit() const {
+	return mario_hit;
 }
 
