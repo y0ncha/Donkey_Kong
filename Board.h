@@ -5,14 +5,15 @@
 #include "Coord.h"
 #include "Config.h"
 
-// The Board class represents the game board and its functionalities
+/**
+ * @class Board
+ * Represents the game board and its functionalities.
+ */
 class Board {
 
 public:
-
     // Enum for game elements
     enum Consts {
-
         MARIO = '@', // Character representing Mario
         DONKEY_KONG = '&', // Character representing Donkey Kong
         PAULINE = '$', // Character representing Pauline
@@ -33,8 +34,8 @@ public:
         DKONG_X0 = 35, // Default Donkey Kong's position on the x-axis
         DKONG_Y0 = 6,   // Default Donkey Kong's position on the y-axis
 
-		HRTS_DISP_X = 20, // Initial x-coordinate for the hearts display
-		HRTS_DISP_Y = 0, // Initial y-coordinate for the hearts display
+        HRTS_DISP_X = 20, // Initial x-coordinate for the hearts display
+        HRTS_DISP_Y = 0, // Initial y-coordinate for the hearts display
     };
 
     // Prints the board on the console
@@ -56,66 +57,41 @@ public:
     bool path_clear(Coordinates coord) const;
     bool path_clear(int x, int y) const;
 
+private:
+    // Layout of the game board, represented as a 2D array of characters
+    char layout[Screen_dim::Y][Screen_dim::X + 1] = {
+        // 01234567890123456789012345678901234567890123456789012345678901234567890123456789
+          "             LIVES:                   LEVEL 1        POINTS : 00                ",// 0
+          "================================================================================",// 1
+          "                                                                                ",// 2
+          "                                   $                                            ",// 3
+          "     =============            ==========                                        ",// 4
+          "        H                      H                                                ",// 5    
+          "        H                      H   &                                            ",// 6 
+          "==================>====== =======<<=>>===============  =======================  ",// 7
+          "                                     H                                  H       ",// 8
+          "                                     H                                  H       ",// 9
+          "                          ============             ====================<<<==    ",// 10
+          "                 ========                                      H                ",// 11
+          "                     H               =======>>>======          H                ",// 12
+          "                     H                  H          H           H                ",// 13
+          "                     H                  H      ===========   ==========         ",// 14
+          "             ===============            H                H         H            ",// 15
+          "                H                       H                H         H            ",// 16
+          "                H          =================<<<==============<<<   H            ",// 17
+          "                H           H                                      H            ",// 18
+          "                H           H                           ==================      ",// 19
+          "              >>>===============                                                ",// 20
+          "                              H                                                 ",// 21
+          "                              H                                                 ",// 22
+          "                              H                                                 ",// 23
+          "=============================================================================<<<" // 24
+    };
 
-private: 
-    /*
-    // Layout of the game board, represented as a 2D array of characters
-    char layout[Screen_dim::Y][Screen_dim::X + 1] = {
-        // 01234567890123456789012345678901234567890123456789012345678901234567890123456789
-          "             LIVES:                   LEVEL 1        POINTS : 00                ",// 0
-          "================================================================================",// 1
-          "                                                                                ",// 2
-          "                                   $                                            ",// 3
-          "     =============            ==========                                        ",// 4
-          "        H                      H                                        =====   ",// 5    
-          "        H                      H   &                                       H    ",// 6 
-          "==================>====== =======<<=>>====== ========<<<===<<<================  ",// 7
-          "                                     H                                  H       ",// 8
-          "                                     H                                  H       ",// 9
-          "                        =<<<==========             ======== ================    ",// 10
-          "                                                               H                ",// 11
-          "                                     =======>>>======          H                ",// 12
-          "      ===============>>>             H             H           H                ",// 13
-          "                   H                 H         ===========   ==========         ",// 14
-          "                   H                 H                   H         H            ",// 15
-          "                   H                 H                   H         H            ",// 16
-          "                   H       =================<<<================    H            ",// 17
-          "                   H        H                                      H            ",// 18
-          "                   H        H                           ===============<<<      ",// 19
-          "                 =====<<<>>>====                                                ",// 20
-          "                              H                                                 ",// 21
-          "                              H                                                 ",// 22
-          "                              H                                                 ",// 23
-          "================================================================================" // 24
-    };
-    */
-    // Layout of the game board, represented as a 2D array of characters
-    char layout[Screen_dim::Y][Screen_dim::X + 1] = {
-        // 01234567890123456789012345678901234567890123456789012345678901234567890123456789
-          "             LIVES:                   LEVEL 1        POINTS : 00                ",// 0
-          "================================================================================",// 1
-          "                                                                                ",// 2
-          "                                   $                                            ",// 3
-          "     =============            ==========                                        ",// 4
-          "        H                      H                                        =====   ",// 5    
-          "        H                      H   &                                       H    ",// 6 
-          "==================>====== =======<<=>>====== ========<<<===<<<================  ",// 7
-          "                                     H                                  H       ",// 8
-          "                                     H                                  H       ",// 9
-          "                            ==========             ======== ================    ",// 10
-          "                                                               H                ",// 11
-          "                                     =======>>>======          H                ",// 12
-          "      ===============>>>             H             H           H                ",// 13
-          "                   H                 H         ===========   ==========         ",// 14
-          "                   H                 H                   H         H            ",// 15
-          "                   H                 H                   H         H            ",// 16
-          "                   H       =================<<<================    H            ",// 17
-          "                   H        H                                      H            ",// 18
-          "                   H        H                           ===============<<<      ",// 19
-          "                 =====<<<>>>====                                                ",// 20
-          "                              H                                                 ",// 21
-          "                              H                                                 ",// 22
-          "                              H                                                 ",// 23
-          "================================================================================" // 24
-    };
+    // Checks if the position is within the game bounds
+    bool pos_inbound(Coordinates coord) const {
+        return coord.x >= 0 && coord.x < Screen_dim::X && coord.y >= 0 && coord.y < Screen_dim::Y;
+    }
 };
+
+

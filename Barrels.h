@@ -1,13 +1,14 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include "Barrel.h"
 #include "Board.h"
 
-/*
-* The Barrels class represents a collection of barrels in the game.
-* It controls the spawning, movement, and resetting of barrels.
-*/
+/**
+ * @class Barrels
+ * Manages a collection of barrels in the game.
+ */
 class Barrels {
 
 public:
@@ -20,18 +21,22 @@ public:
     // Resets the barrels
     void reset();
 
-	// Checks if Mario was hit by a barrel
-	bool hitted_mario() const;
+    // Checks if Mario was hit by a barrel
+    bool hitted_mario() const;
 
 private:
+    // Pointer to the game board
+    const Board* board;
 
-    const Board* board; // Pointer to the game board
+    // Vector to store the barrels
+    std::vector<std::unique_ptr<Barrel>> barrels;
 
-    std::vector<Barrel> barrels; // Vector of barrels
+    // Maximum number of barrels
+    int max_barrels;
 
-    int max_barrels; // Maximum number of barrels
+    // Interval for spawning barrels
+    int spawn_intvl;
 
-    int spawn_intvl; // Interval for spawning barrels
-
-	bool hit_mario = false; // Indicates if Mario was hit by a barrel
+    // Flag to check if Mario was hit
+    bool hit_mario = false;
 };

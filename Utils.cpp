@@ -1,8 +1,9 @@
 #include "Utils.h"
 
 /**
- * ---Created by Amir Kirsh--- 
- * Moves the console cursor to the specified position.
+ * @brief Moves the console cursor to the specified position.
+ * @param pos The coordinates to move the cursor to.
+ * @note Created by Amir Kirsh
  */
 void gotoxy(Coordinates pos) {
     std::cout.flush();
@@ -13,8 +14,10 @@ void gotoxy(Coordinates pos) {
 }
 
 /**
- * ---Created by Amir Kirsh---
- * Moves the console cursor to the specified position.
+ * @brief Moves the console cursor to the specified position.
+ * @param x The x-coordinate to move the cursor to.
+ * @param y The y-coordinate to move the cursor to.
+ * @note Created by Amir Kirsh
  */
 void gotoxy(int x, int y) {
     std::cout.flush();
@@ -23,23 +26,25 @@ void gotoxy(int x, int y) {
 }
 
 /**
- * ---Created by Amir Kirsh---
- * Shows or hides the console cursor based on the showFlag parameter.
+ * @brief Shows or hides the console cursor based on the flag parameter.
+ * @param flag If true, the cursor is shown; if false, the cursor is hidden.
+ * @note Created by Amir Kirsh
  */
 void show_cursor(bool flag) {
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(out, &cursorInfo);
     cursorInfo.bVisible = flag; // Set the cursor visibility
-	SetConsoleCursorInfo(out, &cursorInfo); // Set the cursor info
+    SetConsoleCursorInfo(out, &cursorInfo); // Set the cursor info
 }
 
 /**
-* ---Created by copilot---
-* Function to get a character from a specific console screen buffer location
-*/
+ * @brief Gets a character from a specific console screen buffer location.
+ * @param pos The coordinates to get the character from.
+ * @return The character at the specified position, or Board::ERR if an error occurs.
+ * @note Created by copilot
+ */
 char getch_console(Coordinates pos) {
-
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hConsole == INVALID_HANDLE_VALUE) {
         return Board::ERR;
@@ -58,8 +63,8 @@ char getch_console(Coordinates pos) {
 }
 
 /**
- * ---Created by copilot---
- * Clears the console screen.
+ * @brief Clears the console screen.
+ * @note Created by copilot
  */
 void clear_screen() {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -90,21 +95,27 @@ void clear_screen() {
 }
 
 /**
- * Checks if the x-coordinate is within the game bounds.
+ * @brief Checks if the x-coordinate is within the game bounds.
+ * @param x The x-coordinate to check.
+ * @return True if the x-coordinate is within the game bounds, false otherwise.
  */
 bool x_inbound(int x) {
     return (x >= 0 && x < Screen_dim::X); // Check if the x-coordinate is within the game bounds
 }
 
 /**
- * Checks if the y-coordinate is within the game bounds.
+ * @brief Checks if the y-coordinate is within the game bounds.
+ * @param y The y-coordinate to check.
+ * @return True if the y-coordinate is within the game bounds, false otherwise.
  */
 bool y_inbound(int y) {
     return (y >= 0 && y < Screen_dim::Y); // Check if the y-coordinate is within the game bounds
 }
 
 /**
- * Checks if the position is within the game bounds.
+ * @brief Checks if the position is within the game bounds.
+ * @param pos The coordinates to check.
+ * @return True if the position is within the game bounds, false otherwise.
  */
 bool pos_inbound(Coordinates pos) {
     return (x_inbound(pos.x) && y_inbound(pos.y)); // Check if the position is within the game bounds
