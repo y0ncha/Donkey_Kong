@@ -60,7 +60,8 @@ void Entity::set_dir(Coordinates coord) {
 void Entity::step() {
     erase(); // Erase the entity from the current position
 
-    if (handle_collision()) { // Handle collisions with other entities or obstacles
+    if (handle_collision()) {
+        ; // Handle collisions with other entities or obstacles
         pos += dir; // move the entity by adding the direction to the position
         draw(); // Draw the entity at the new position
     }

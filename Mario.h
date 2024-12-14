@@ -19,16 +19,6 @@ public:
         LIVES = 3, // Mario's number of lives
     };
 
-    // Enum for Mario's status
-    enum class Status{
-        IDLE,
-        JUMPING,
-        FALLING,
-        CLIMBING,
-    };
-
-    Status status = Status::IDLE; // Current status of Mario
-
     // Moves Mario one step with delay (Override of Entity's move method)
     void move() override;
 
@@ -44,13 +34,27 @@ public:
 	// Checks if Mario was hit
 	bool is_hit() const;
 
+    // Cheks if Mario saved Pauline
+    bool is_rescued_pauline() const;
+
 private:
+
+    // Enum for Mario's status
+    enum class Status {
+        IDLE,
+        JUMPING,
+        FALLING,
+        CLIMBING,
+    };
+
+    Status status = Status::IDLE; // Current status of Mario
 
     int lives_left = LIVES; // Number of lives Mario has
     int fall_count = 0; // Counter for the number of steps Mario has been FALLING
 	int jump_ascend = 0, jump_descend = 0; // Counter for the height of Mario's jump
 
 	bool mario_hit = false; // Indicates if Mario has been hit
+	bool rescued_pauline = false; // Indicates if Mario has saved Pauline
 
     // Makes Mario jump
     void jump();

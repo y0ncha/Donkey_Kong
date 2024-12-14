@@ -14,10 +14,10 @@ void Barrel::move() { // @ decide what happens if barrel is off bound
 
     char beneath = beneath_ch();
 
-    if (falling) {
+	if (status == Status::FALLING) { // If the barrel is falling
         handle_falling();
     }
-    else {
+	else { // If the barrel is not falling
 		update_dir(beneath);
 		step();
     }
@@ -38,7 +38,7 @@ void Barrel::update_dir(char beneath) {
         break;
 
 	case Board::AIR: // If the barrel is in the air
-        falling = true;
+        status = Status::FALLING; // Set the status to FALLING
 		dir = { 0, 1 }; // move down
         fall_count++;
 
@@ -52,33 +52,79 @@ void Barrel::update_dir(char beneath) {
 */
 void Barrel::handle_falling() { // todo make virtual
 
-    falling = true;
 	fall_count++;
 
 	// Set the direction to fall and step
 	dir = { 0, 1 };
     step();
 	
-	// If the barrel is now on the ground
-	if (on_ground()) {
-        if (fall_count >= MAX_FALL_H) {
+	// If the barrel hits the groud (and did not fell right on Mario)
+	if (on_ground() && !hit_mario) {
+		if (fall_count >= MAX_FALL_H) { // If the barrel has been falling for 8 or more chars
 			explode();
         }
-        else {
+		else { // If the barrel has not been falling for 8 or more chars
             dir = { last_dx, 0 };
-            falling = false;
+			status = Status::IDLE;
             fall_count = 0;
         }
 	}
 }
 
 void Barrel::explode() {
-	gotoxy(pos.x - 2, pos.y - 2); // Move the cursor to the position of the top left two chars radius of the barrel
+	reset(); // Reset the barrel
 
-	for (int i = 0; i < 5; i++) {
-        std::cout << "*****";
-		gotoxy(pos.x - 2, pos.y - 2 + i); // Move the cursor to the next row
+    for (int i = 0; i <= Barrel::EXPLOSION_RADIUS; i++) {
+        print_explosion_phase(i);
+		clear_explosion_phase(i -1);
+		Sleep(EXPLOSION_DELAY);
+    }
+	clear_explosion_phase(Barrel::EXPLOSION_RADIUS);
+}
+
+/*
+* Method to print the explosion phase within a given radius.
+*/
+void Barrel::print_explosion_phase(int radius) {
+
+	if (radius == 0) {
+        gotoxy(pos); // Move the cursor to the position of the barrel
+		if (getch_console(pos) == Board::MARIO) {
+			hit_mario = true;
+		}
+        std::cout << "*"; // Print the explosion message
 	}
+    else {
+        for (int i = -radius; i <= radius; i++) {
+            for (int j = -radius; j <= radius; j++) {
+                if (getch_console({ pos.x + i, pos.y + j }) == Board::MARIO) {
+                    hit_mario = true;
+                }
+                gotoxy(pos.x + i, pos.y + j);
+                std::cout << "*"; // Print the explosion
+            }
+        }
+    }
+
+}
+
+/*
+*  Method to clear the explosion phase within a given radius.
+*/
+void Barrel::clear_explosion_phase(int radius) {
+
+	if (radius == -1) {
+		gotoxy(pos); // Move the cursor to the position of the barrel
+		std::cout << board->get_char(pos); // Clear the explosion
+	}
+    else {
+        for (int i = -radius; i <= radius; i++) {
+            for (int j = -radius; j <= radius; j++) {
+                gotoxy(pos.x + i, pos.y + j); // Move the cursor to the position of the barrel
+                std::cout << board->get_char(pos.x + i, pos.y + j); // Clear the explosion
+            }
+        }
+    }
 }
 
 /**
@@ -116,28 +162,29 @@ void Barrel::spawn() {
  */
 char Barrel::handle_collision() {
 
-	char obst = getch_console(pos + dir);
+    char obst = getch_console(pos + dir);
 
     switch (obst) {
-	case Board::MARIO: // If the barrel hits Mario
+    case Board::MARIO: // If the barrel hits Mario
         hit_mario = true;
-		break;
+        break;
 
-	case Board::ERR: // If the barrel is out of bounds
+    case Board::ERR: // If the barrel is out of bounds
         reset();
         break;
     }
-	return obst; // Return the type of object the barrel hits (optional for next exercise) 
+    return obst;
 }
-
 /*
 * Resets the barrel status and direction.
 */
 void Barrel::reset() {
     erase();
     dir = { 0,0 };
-    active = false;
+	status = Status::IDLE;
+    fall_count = 0;
 	hit_mario = false;
+    active = false;
 }
 
 /*

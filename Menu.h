@@ -33,8 +33,11 @@ public:
 
 private: 
 
-	void print(Menu_types type) const;//Print the menu
-	void keys(Menu_types type) const;//Print the keys instructions
+	// Print the menu
+	void print(Menu_types type) const;
+
+	// Print the keys
+	void keys(Menu_types type) const;
 
 	//Menu layout
 	char main_layout[Screen_dim::Y][Screen_dim::X + 1] = {

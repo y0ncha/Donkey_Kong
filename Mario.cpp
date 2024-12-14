@@ -72,6 +72,7 @@ void Mario::handle_jumping() {
         status = Status::IDLE;
         dir.y = 0;
         jump_ascend = jump_descend = 0;
+		fall_count = 0; // Reset the fall count
     }
 }
 
@@ -121,10 +122,9 @@ void Mario::handle_falling() {
 			mario_hit = true; // Set Mario as hit
         }
         else {
+			fall_count = 0;
             status = Status::IDLE;
-            fall_count = 0;
-            dir.x = last_dx;
-            dir.y = 0;
+			dir = { last_dx, 0 };
         }
     }
 }
@@ -178,6 +178,7 @@ void Mario::jump() {
         step();
     }
 	else { // If Mario finish the jump and starts FALLING
+		fall_count = jump_descend; // Start the fall from the height of the jump
         jump_ascend = jump_descend = 0;
 		handle_falling(); // An extra step is being done here intentionally, it makes the fall look smoother and dosnt seems to make the barrels lag.
     }
@@ -229,20 +230,19 @@ char Mario::handle_collision() {
 		mario_hit = true; // Set Mario as hit
         break;
 
-	case Board::DONKEY_KONG: // If Mario hits Donkey Kong
-        // todo add DK logic
-        break;
-
 	case Board::PAULINE: // If Mario hits Pauline
-        // todo add Pauline logic
+		rescued_pauline = true; // Set Mario as saved Pauline
         break;
 
 	case Board::ERR: // If Mario's next step is out of bounds
         dir.x = -dir.x; // Reverse direction if path is not clear
 		obst = Board::AIR; // Return air to allow Mario to move
 		break;
+ 
+    default:
+		break;
     }
-    return obst; // Return the type of object the mario hits (optional for next exercise)
+    return obst; // Return the type of object the mario hits (optional for next exercises)
 }
 
 /**
@@ -279,5 +279,12 @@ void Mario::reset() {
  */ 
 bool Mario::is_hit() const {
 	return mario_hit;
+}
+
+/**
+ * Checks if Mario saved Pauline.
+ */
+bool Mario::is_rescued_pauline() const {
+	return rescued_pauline;
 }
 
