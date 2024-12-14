@@ -25,14 +25,14 @@ void Game::play(int max_barrels, int sapwn_interval) {
 
     mario.draw(); // Draw Mario at its default position
 
-    while (mario.get_lives() > 0) { // Main game loop
+    while (mario.get_lives() > 0 && !mario.is_rescued_pauline()) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
             handle_input(); // Handle the key input
         }
         else { // If no key is pressed
             advance_entities(); // Advance the entities in the game
-            Sleep(100); // Delay for 100 milliseconds
+            Sleep(DEF_DELLAY); // Delay for 100 milliseconds
         }
         frames++; // Increment the frame counter
     }
@@ -54,7 +54,7 @@ void Game::handle_input() {
 * Resets the level and updates mari's lives.
 */
 void Game::reset_level() {
-	Sleep(1000); // Delay for 1 second
+	Sleep(KILLED_DELLAY); // Delay for 1 second
 	mario.reset(); // Draw Mario at its default position
 	barrels.reset(); // Reset the barrels
     frames = 0;
@@ -78,6 +78,8 @@ void Game::print_data() const {
  * Updates the game screen by printing the board and the game data.
  */
 void Game::print_game() const {
+
+	mario.draw(); // Draw Mario
 	board.print(); // Draw the game board
 	print_data(); // Update the lives display
 }
@@ -102,7 +104,7 @@ void Game::try_again() {
     // todo print success screen
     clear_screen(); // Clear the screen
     std::cout << "###PRINT RESET SCREEN###" << std::endl; // Print the reset message (opiional "press key to continue")
-    Sleep(1000); // Delay for 1 second
+    Sleep(PROMPT_DELLAY); // Delay for 1 second
 
     print_game(); // Update the game screen
 }

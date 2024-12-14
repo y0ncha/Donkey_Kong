@@ -271,7 +271,6 @@ void Mario::reset() {
 
     dir = { 0, 0 };
     last_dx = 0;
-    draw();
 }
 
 /**

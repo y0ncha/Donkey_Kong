@@ -5,6 +5,11 @@
 #include "Coord.h"
 
 
+/*
+ * @class Point
+ * The Point class represents a point in the game board.
+ * It holds a character icon and a position on the board.
+ */
 class Point {
 
 public:
