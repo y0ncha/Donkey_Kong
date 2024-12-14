@@ -1,105 +1,131 @@
 #include "Game.h"
 
 /**
- * Constructor to initialize the Game class with the board and Mario.
+ * @brief Constructor to initialize the Game class with the board and Mario.
  * Also initializes the barrels.
  */
-Game::Game() : mario(&org_board, &curr_board) {
-    init_barrels(); // Initialize the barrels
-}
+Game::Game() : mario(&board), barrels(&board) {}
 
 /**
- * Starts the game loop.
+ * @brief Starts the game loop.
  *
  * Initializes the game components, hides the console cursor, and begins the main game loop.
  * The loop listens for key inputs to control Mario and updates the game state.
  * Pressing the ESC key pauses the game and opens the menu.
+ * @param max_barrels Maximum number of barrels.
+ * @param spawn_interval Interval for spawning barrels.
  */
-void Game::play() {
+void Game::play(int max_barrels, int spawn_interval) {
+    show_cursor(false); // Hide the console cursor for better visuals
 
-    ShowConsoleCursor(false); // Hide the console cursor for better visuals
-    
     // Run the menu and check if the user wants to exit
     if (menu.run(Menu::START_MENU) == Menu::EXIT)
         return;
 
-    int i = 0;
-    
-    org_board.print(); // Draw the game board
+    print_game(); // Update the game screen
 
-    mario.draw(); // Draw Mario at its default position
+    mario.set(); // Draw Mario at its default position
 
-	while (true) { // Main game loop
-
+    while (mario.get_lives() > 0 && !mario.is_rescued_pauline()) { // Main game loop
         if (_kbhit()) { // Check if a key is pressed
-          
-            char key = _getch(); // Get the key input
-          
-            if (key == ESC) { // Pause the game and open the me
-                if (menu.run(Menu::PAUSE_MENU) == Menu::EXIT)
-                    break;
-            } 
-            mario.update_dir(key); // Update Mario's direction based on the key input
+            handle_input(); // Handle the key input
+        } else { // If no key is pressed
+            advance_entities(); // Advance the entities in the game
+            Sleep(Consts::DEF_DELAY); // Delay for 100 milliseconds
         }
-
-        if (mario.is_dead()) { // Check if Mario is dead
-            break; // todo reset function
-        } 
-        else {
-
-			if (mario.curr_dest() == Board::BARREL || curr_board.get_char(mario.get_pos()) == Board::BARREL) { // Check if Mario has hit a barrel
-				mario.kill(); // Kill Mario
-				break;
-			}
-            mario.move(); // Move Mario if he is on a floor element
-			spawn_barrels(); // Spawn a new barrel every 30 frames
-
-			if (!move_barrels()) break; // Move all active barrels
-            Sleep(100); // Delay for 100 milliseconds
-        }
-        frames++;
+        frames++; // Increment the frame counter
     }
 }
 
 /**
- * Initializes the barrels by setting their board pointers.
+ * @brief Handles key input during the game.
  */
-void Game::init_barrels() {
-    for (int i = 0; i < MAX_BARRELS; i++) {
-        barrels[i].set_board(&org_board, &curr_board);
+void Game::handle_input() {
+    char key = _getch(); // Get the key input
+
+    if (key == ESC) { // If the key is ESC, open the pause menu
+        if (menu.run(Menu::PAUSE_MENU) == Menu::EXIT)
+            return;
+    } else {
+        mario.update_dir(key); // Update Mario's direction based on the key input
     }
 }
 
 /**
- * Moves all active barrels.
+ * @brief Resets the level and updates Mario's lives.
  */
-bool Game::move_barrels() {
-    for (int i = 0; i < MAX_BARRELS; i++) {
-        if (barrels[i].is_active()) {
-
-			if (barrels[i].curr_dest() == Board::MARIO || curr_board.get_char(barrels[i].get_pos()) == Board::MARIO) { // Check if the barrel has hit Mario
-				mario.kill(); // Kill Mario
-                return false;
-			}
-            else {
-                barrels[i].move();
-            }
-        }
-    }
-	return true;
+void Game::reset_level() {
+    Sleep(Consts::KILLED_DELAY); // Delay for 1 second
+    mario.reset(); // Draw Mario at its default position
+    barrels.reset(); // Reset the barrels
+    frames = 0;
 }
 
 /**
- * Controls the spawning and movement of barrels.
- * Spawns a new barrel every 30 frames.
+ * @brief Updates the lives display by printing the hearts in the right location.
  */
-void Game::spawn_barrels() {
-	if (frames % 30 == 0) { // Spawn a new barrel every 30 frames
-        for (int i = 0; i < MAX_BARRELS; i++) {
-            if (!barrels[i].is_active()) {
-				barrels[i].spawn(); // Spawn a new barrel
-                break;
-            }
-        }
+void Game::print_data() const {
+    int n = mario.get_lives(); // Get the number of lives Mario has left
+    gotoxy(Board::HRTS_DISP_X, Board::HRTS_DISP_Y); // Move the cursor to the position where lives are displayed
+
+    // Print the lives
+    for (int i = 0; i < n; ++i) {
+        std::cout << "<3 ";
     }
+}
+
+/**
+ * @brief Updates the game screen by printing the board and the game data.
+ */
+void Game::print_game() const {
+    mario.set(); // Draw Mario
+    board.print(); // Draw the game board
+    print_data(); // Update the lives display
+}
+
+/**
+ * @brief Advances the entities in the game.
+ */
+void Game::advance_entities() {
+    mario.move(); // Move Mario if he is on a floor element
+    barrels.move(frames); // Move the barrels
+
+    if (mario.is_hit() || barrels.hitted_mario()) { // Check if Mario was hit by a barrel
+        mario.get_lives() > 1 ? try_again() : finish_failure(); // Reset the level if Mario has more lives, else finish the game
+    } else if (mario.is_rescued_pauline()) { // Check if Mario saved Pauline
+        finish_success(); // Finish the game successfully
+    }
+}
+
+/**
+ * @brief Handles the logic for trying again after Mario is hit.
+ */
+void Game::try_again() {
+    reset_level(); // Reset the game
+    // TODO: Print success screen
+    clear_screen(); // Clear the screen
+    std::cout << "###PRINT RESET SCREEN###" << std::endl; // Print the reset message (optional "press key to continue")
+    Sleep(Consts::PROMPT_DELAY); // Delay for 1 second
+
+    print_game(); // Update the game screen
+}
+
+/**
+ * @brief Finishes the game successfully.
+ */
+void Game::finish_success() {
+    reset_level(); // Reset the game
+    // TODO: Print success screen
+    clear_screen(); // Clear the screen
+    std::cout << "###PRINT SUCCESS SCREEN###" << std::endl; // Print the success message
+}
+
+/**
+ * @brief Finishes the game with failure.
+ */
+void Game::finish_failure() {
+    reset_level(); // Reset the game
+    // TODO: Print failure screen
+    clear_screen(); // Clear the screen
+    std::cout << "###PRINT FAILURE SCREEN###" << std::endl; // Print the failure message
 }

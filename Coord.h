@@ -6,15 +6,27 @@
  */
 struct Coordinates {
 
-	Coordinates() : x(0), y(0) {} // Default constructor
-	Coordinates(int x, int y) : x(x), y(y) {} // Constructor with x and y values
+    // Default constructor
+    Coordinates() : x(0), y(0) {}
 
+    // Constructor with x and y values
+    Coordinates(int x, int y) : x(x), y(y) {}
+
+    // x and y coordinates
     int x, y;
 
-    // Define the += operator
+    // Overloads the += operator to add the coordinates of another Coordinates object to this one
     Coordinates& operator+=(const Coordinates& other);
 
-    // Define the + operator
+    // Overloads the + operator to return a new Coordinates object that is the sum of this object and another
     Coordinates operator+(const Coordinates& other) const;
-};
 
+    // Overloads the == operator to compare two Coordinates objects
+    bool operator==(const Coordinates& other) const;
+
+    // Overloads the != operator to compare two Coordinates objects
+    bool operator!=(const Coordinates& other) const;
+
+    // Resets the coordinates to (0, 0)
+    void reset();
+};

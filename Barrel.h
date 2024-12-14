@@ -1,42 +1,74 @@
 #pragma once
-#include <cstdlib>
-#include "Board.h"
-#include "Entity.h"
 
-// Barrel class inheriting from Entity
+#include "Entity.h"
+#include "Board.h"
+
+/**
+ * @class Barrel
+ * Represents a barrel entity in the game.
+ */
 class Barrel : public Entity {
 
-    bool falling = false; // Indicates if the barrel is currently falling
-    bool explode = false; // Indicates if the barrel should explode
-    bool active = false; // Indicates if the barrel is active
-
-    int fall_count = 0; // Counter for the number of steps the barrel has been falling
-
-    // Method to handle the direction change when the barrel is on different types of floors
-    void floor_switch(char bellow_barrel);
-
 public:
-
     // Constructor for the Barrel class
-    Barrel();
+    Barrel(const Board* pBoard);
 
-    // Enum for Barrel's related constants
-    enum CONSTS {
-        MAX_FALL_H = 8 // Maximum height of a fall
-    };
-
-    // Method to handle the movement logic of the barrel (Override of Entity's move method)
+    // Method to handle the movement logic of the barrel
     void move() override;
 
-    // Checks if the barrel is active
+    // Method to handle collision logic for the barrel
+    char handle_collision() override;
+
+    // Method to reset the barrel
+    void reset() override;
+
+    // Method to check if the barrel is active
     bool is_active() const;
 
-    // Returns the initial position of the barrel
+    // Method to check if the barrel hit Mario
+    bool hitted_mario() const;
+
+    // Method to set the board for the barrel
+    void set_board(const Board* pBoard);
+
+    // Method to spawn the barrel
+    void spawn();
+
+private:
+    // Method to handle the direction change when the barrel is on different types of floors
+    void update_dir(char beneath) override;
+
+    // Method to handle the falling of the barrel
+    void handle_falling() override;
+
+    // Method to print the explosion phase within a given radius
+    void print_explosion_phase(int radius);
+
+    // Method to clear the explosion phase within a given radius
+    void clear_explosion_phase(int radius);
+
+    // Method to set the initial position of the barrel
     Coordinates init_pos();
 
-    // Sets the original and current board for the barrel
-    void set_board(const Board* org_board, Board* curr_board);
+    // Method to handle the explosion of the barrel
+    void explode();
 
-    // Spawns the barrel at the initial position
-    void spawn();
+    // State of the barrel
+    enum class State { IDLE, FALLING, HIT_MARIO } state = State::IDLE;
+
+    // Maximum fall height before the barrel explodes
+    static constexpr int MAX_FALL_H = 8;
+
+    // Explosion radius
+    static constexpr int EXPLOSION_RADIUS = 2;
+
+    // Explosion delay in milliseconds
+    static constexpr int EXPLOSION_DELAY = 100;
+
+    // Fall count
+    int fall_count = 0;
+
+
+    // Flag to check if the barrel is active
+    bool active = false;
 };
