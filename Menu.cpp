@@ -1,14 +1,15 @@
 #include "Menu.h"
 
-void Menu::print(MENU_TYPES type) const {
+void Menu::print(Menu_types type) const {
+
 	gotoxy(0, 0);
 	if (type == START_MENU)
 	{
-		for (int i = 0; i < MAX_Y - 1; i++)
+		for (int i = 0; i < Screen_dim::Y - 1; i++)
 		{
-			std::cout << MenuLayout[i] << std::endl;
+			std::cout << main_layout[i] << std::endl;
 		}
-		std::cout << MenuLayout[MAX_Y - 1];
+		std::cout << main_layout[Screen_dim::Y - 1];
 	}
 	else//PAUSE_MENU
 	{
@@ -16,14 +17,14 @@ void Menu::print(MENU_TYPES type) const {
 	}
 }
 
-void Menu::ShowKeys(MENU_TYPES type) const
+void Menu::keys(Menu_types type) const
 {
 	gotoxy(0, 0);
-	for (int i = 0; i < MAX_Y - 1; i++)
+	for (int i = 0; i < Screen_dim::Y - 1; i++)
 	{
-		std::cout << KeysLayout[i] << std::endl;
+		std::cout << keys_layout[i] << std::endl;
 	}
-	std::cout << MenuLayout[MAX_Y - 1];
+	std::cout << main_layout[Screen_dim::Y - 1];
 
 	while (true)//Wait for ESC
 	{
@@ -54,7 +55,7 @@ void Menu::ShowKeys(MENU_TYPES type) const
 	}
 }
 
-int Menu::run(MENU_TYPES type) const {
+int Menu::run(Menu_types type) const {
 	this->print(type);
 
 	while (true) {
@@ -63,7 +64,7 @@ int Menu::run(MENU_TYPES type) const {
 			if (key == START || key == EXIT)
 				return key; // Return the key value (START or EXIT)
 			else if (key == KEYS)
-				this->ShowKeys(type);
+				this->keys(type);
 		}
 	}
 }
