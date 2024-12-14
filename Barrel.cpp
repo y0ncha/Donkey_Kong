@@ -1,115 +1,188 @@
 #include "Barrel.h"
 
 /**
-* Constructor for the Barrel class (WARNING - THIS C'TOR DOES NOT INITIALIZE THE BOARD POINTERS).
-* --------------- please see @init_barrels() in Game.cpp for the correct c'tor ------------------
-*/
-Barrel::Barrel() : Entity(Board::BARREL, init_pos()) {}
+ * @brief Constructor for the Barrel class.
+ * @param pBoard Pointer to the game board.
+ */
+Barrel::Barrel(const Board* pBoard) : Entity(pBoard, Board::BARREL, init_pos()) {}
 
 /**
- * Method to handle the movement logic of the barrel.
+ * @brief Method to handle the movement logic of the barrel.
  */
-void Barrel::move() { // @ decide what happens if barrel is off bound
-    if (!pos_inbound(pos + dir)) { // Check if the next position is within the game bounds
-        erase(); // Erase the barrel from the board
-        active = false; // Deactivate the barrel
-        return;
-    }
-    // If the barrel has been falling for 8 or more steps, it should explode
-    if (fall_count >= MAX_FALL_H) {
-        explode = true;
-    }
+void Barrel::move() {
+    char beneath = beneath_ch();
 
-    // Get the character directly below the barrel's current position
-    char bellow_barrel = curr_board->get_char(pos.x, pos.y + 1);
-
-    // If the barrel is currently falling
-    if (falling) {
-        // Check if the barrel has landed on the floor
-        if (org_board->is_floor(bellow_barrel)) {
-            // Stop the falling process
-            falling = false;
-            dir.y = 0;
-            fall_count = 0;
-
-            // If the barrel should explode, erase it from the board
-            if (explode) {
-                erase();
-                active = false; // Deactivate the barrel
-                return;
-            }
-
-            // Handle the floor switch logic based on the type of floor
-            floor_switch(bellow_barrel);
-        } else {
-            // Continue falling
-            dir.y = 1;
-            fall_count++;   
-        }
+    if (state == State::FALLING) {
+        handle_falling();
     } else {
-        // Store the last horizontal direction
-        last_dx = dir.x;
+        update_dir(beneath);
+        step();
+    }
+}
 
-        // Check if the barrel is on the floor
-        if (org_board->is_floor(bellow_barrel)) {
-            floor_switch(bellow_barrel);
-        } else {
-            // Start falling
-            dir.y = 1;
-            dir.x = 0;
-            falling = true;
+/**
+ * @brief Method to handle the direction change when the barrel is on different types of floors.
+ * @param beneath The character beneath the barrel.
+ */
+void Barrel::update_dir(char beneath) {
+    switch (beneath) {
+        case Board::FLOOR_L:
+            last_dx = dir.x = -1; // Move left
+            break;
+        case Board::FLOOR_R:
+            last_dx = dir.x = 1; // Move right
+            break;
+        case Board::AIR:
+            state = State::FALLING; // Set the State to FALLING
+            dir = {0, 1}; // Move down
             fall_count++;
+            break;
+        default:
+            break;
+    }
+}
+
+/**
+ * @brief Method to handle the falling of the barrel.
+ */
+void Barrel::handle_falling() {
+    fall_count++;
+    dir = {0, 1}; // Set the direction to fall and step
+    step();
+
+    if (on_ground() && !hitted_mario()) {
+        if (fall_count >= MAX_FALL_H) {
+            explode();
+        } else {
+            dir = {last_dx, 0};
+            state = State::IDLE;
+            fall_count = 0;
         }
     }
-    // Move the barrel by a step of 70 units
-    step();
 }
 
 /**
- * Method to handle the direction change when the barrel is on different types of floors.
+ * @brief Method to handle the explosion of the barrel.
  */
-void Barrel::floor_switch(char bellow_barrel) {
-    switch (bellow_barrel) {
-    case Board::FLOOR_L:
-        dir.x = -1; // Move left
-        break;
-    case Board::FLOOR_R:
-        dir.x = 1; // Move right
-        break;
-    case Board::FLOOR:
-        dir.x = last_dx; // Continue in the last horizontal direction
-    default:
-        break;
+void Barrel::explode() {
+    reset();
+
+    for (int i = 0; i <= EXPLOSION_RADIUS; i++) {
+        print_explosion_phase(i);
+        clear_explosion_phase(i - 1);
+        Sleep(EXPLOSION_DELAY);
+    }
+    clear_explosion_phase(EXPLOSION_RADIUS);
+}
+
+/**
+ * @brief Method to print the explosion phase within a given radius.
+ * @param radius The radius of the explosion phase.
+ */
+void Barrel::print_explosion_phase(int radius) {
+    if (radius == 0) {
+        gotoxy(point.pos);
+        if (getch_console(point.pos) == Board::MARIO) {
+            state = State::HIT_MARIO;
+        }
+        std::cout << "*";
+    } else {
+        for (int i = -radius; i <= radius; i++) {
+            for (int j = -radius; j <= radius; j++) {
+                if (getch_console({point.pos.x + i, point.pos.y + j}) == Board::MARIO) {
+                    state = State::HIT_MARIO;
+                }
+                gotoxy(point.pos.x + i, point.pos.y + j);
+                std::cout << "*";
+            }
+        }
     }
 }
 
 /**
- * Checks if the barrel is active.
+ * @brief Method to clear the explosion phase within a given radius.
+ * @param radius The radius of the explosion phase to clear.
+ */
+void Barrel::clear_explosion_phase(int radius) {
+    if (radius == -1) {
+        gotoxy(point.pos);
+        std::cout << board->get_char(point.pos);
+    } else {
+        for (int i = -radius; i <= radius; i++) {
+            for (int j = -radius; j <= radius; j++) {
+                gotoxy(point.pos.x + i, point.pos.y + j);
+                std::cout << board->get_char(point.pos.x + i, point.pos.y + j);
+            }
+        }
+    }
+}
+
+/**
+ * @brief Checks if the barrel is active.
+ * @return True if the barrel is active, false otherwise.
  */
 bool Barrel::is_active() const {
     return active;
 }
 
 /**
- * Returns the initial position of the barrel.
+ * @brief Returns and sets the initial position of the barrel randomly to the left or right of Donkey Kong.
+ * @return The initial position of the barrel.
  */
-Coordinates Barrel::init_pos() { 
-    return {(rand() % 2 == 0) ? Board::DKONG_X0 + 1 : Board::DKONG_X0 - 1, Board::DKONG_Y0};
+Coordinates Barrel::init_pos() {
+    return (point.pos = {(rand() % 2 == 0) ? Board::DKONG_X0 + 1 : Board::DKONG_X0 - 1, Board::DKONG_Y0});
 }
 
 /**
- * Sets the original and current board for the barrel.
+ * @brief Sets the original and current board for the barrel.
+ * @param pBoard Pointer to the game board.
  */
-void Barrel::set_board(const Board* layout, Board* board) {
-    org_board = layout;
-    curr_board = board;
+void Barrel::set_board(const Board* pBoard) {
+    board = pBoard;
 }
 
 /**
- * Spawns the barrel at the initial position and activates it.
+ * @brief Spawns the barrel at the initial position and activates it.
  */
 void Barrel::spawn() {
-    pos = init_pos();
+    init_pos();
     active = true;
-    draw();
+    set();
+}
+
+/**
+ * @brief Handles collision logic for the barrel.
+ * @return The type of object the barrel collides with.
+ */
+char Barrel::handle_collision() {
+    char obst = getch_console(point.pos + dir);
+
+    switch (obst) {
+        case Board::MARIO:
+            state = State::HIT_MARIO;
+            break;
+        case Board::ERR:
+            reset();
+            break;
+    }
+    return obst;
+}
+
+/**
+ * @brief Resets the barrel state and direction.
+ */
+void Barrel::reset() {
+    vanish();
+    dir = {0, 0};
+    state = State::IDLE;
+    fall_count = 0;
+    active = false;
+}
+
+/**
+ * @brief Checks if the barrel hit Mario.
+ * @return True if the barrel hit Mario, false otherwise.
+ */
+bool Barrel::hitted_mario() const {
+    return (state == State::HIT_MARIO);
 }

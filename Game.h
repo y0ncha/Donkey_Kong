@@ -4,49 +4,67 @@
 #include "Menu.h"
 #include "Mario.h"
 #include "Board.h"
-#include "Barrel.h"
+#include "Barrels.h"
 
-// The Game class represents the main game loop and controls the game's logic, future to control the game levels and score
+/**
+ * @class Game
+ * Represents the main game loop and controls the game's logic, including levels and score.
+ */
 class Game {
 
 public:
-
     // Constructor for the Game class
     Game();
 
     // Starts the game loop and handles user input
-    void play();
+    void play(int max_barrels = 10, int spawn_interval = 30);
 
-    // Enum for initial positions of characters
-    enum CONSTS {
-
-        MAX_BARRELS = 10, // Maximum number of barrels
-        BARREL_INTERVAL = 30, // Interval for spawning barrels
+    // Enum for game constants
+    enum Consts {
+        DEF_DELAY = 100, // Default delay for the game
+        KILLED_DELAY = 800, // Delay for the killed animation
+        PROMPT_DELAY = 1000, // Delay for the prompt message
     };
 
-private: 
+private:
+    // Maximum number of barrels and the interval for spawning barrels
+    int max_barrels = 10;
+    int spawn_interval = 30;
 
-	Menu menu; // Initialize the menu
-  
-    const Board org_board; // Initialize a board to hold the original layout
-    Board curr_board; // Initialize a board to hold the data in real-time
-
+    // Game components
+    Menu menu; // Initialize the menu
+    Board board; // Initialize a board to hold the original layout
     Mario mario; // Initialize Mario
+    Barrels barrels; // Initialize the barrels
 
-    Barrel barrels[MAX_BARRELS]; // Initialize an array of barrels
-  
-    // Initializes the barrels
-    void init_barrels();
+    // Frame counter used to follow the game frames for barrel control (can be used for future game features)
+    unsigned long int frames = 0;
 
-    // Moves all active barrels
-    void move_barrels();
+    // Method to handle user input
+    void handle_input();
 
-    // Controls the spawning and movement of barrels
-    void ctrl_barrels();
+    // Resets the level
+    void reset_level();
 
-    unsigned long int frames = 0; // Frame counter
+    // Method to update the lives display
+    void print_data() const;
 
-    // For exercise 2 and 3 
-    //int level = 1; // Current game level
-    //int score = 0; // Current game score
+    // Method to update and print the board and the game's data
+    void print_game() const;
+
+    // Method to advance the entities in the game
+    void advance_entities();
+
+    // Method to finish the game successfully
+    void finish_success();
+
+    // Method to finish the game unsuccessfully
+    void finish_failure();
+
+    // Method to try again
+    void try_again();
+
+    // For exercise 2 and 3
+    // int level = 1; // Current game level
+    // int score = 0; // Current game score
 };
