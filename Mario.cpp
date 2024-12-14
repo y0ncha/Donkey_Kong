@@ -87,7 +87,7 @@ void Mario::handle_climbing() {
         climb_up(); // Continue CLIMBING up
 
         // If Mario reaches the top of the ladder
-        if (curr_ch() == Board::AIR) {
+        if (behind_ch() == Board::AIR) {
             status = Status::IDLE;
             dir.y = 0;
         }
@@ -99,7 +99,7 @@ void Mario::handle_climbing() {
         climb_down(); // Continue CLIMBING down
        
         // If Mario reaches the floor
-        if (board->is_floor(pos + dir)) {
+        if (board->is_floor(point.pos + dir)) {
             status = Status::IDLE;
             dir.y = 0;
         }
@@ -167,7 +167,7 @@ void Mario::handle_idle() {
  */
 void Mario::jump() {
 
-	if (jump_ascend < JMP_H && board->path_clear(pos + dir)) { // If Mario is ascending
+	if (jump_ascend < JMP_H && board->path_clear(point.pos + dir)) { // If Mario is ascending
         jump_ascend++;
         dir.y = -1;
         step();
@@ -214,7 +214,7 @@ void Mario::climb_down() {
  * Checks if Mario can climb.
  */ 
 bool Mario::can_climb() {
-	return (dir.y == -1 && curr_ch() == Board::LADDER) || (dir.y == 1 && board->get_char(pos.x, pos.y + 2) == Board::LADDER); // todo add is LADDER function
+	return (dir.y == -1 && behind_ch() == Board::LADDER) || (dir.y == 1 && board->get_char(point.pos.x, point.pos.y + 2) == Board::LADDER); // todo add is LADDER function
 }
 
 /**
@@ -222,7 +222,7 @@ bool Mario::can_climb() {
  */
 char Mario::handle_collision() {
 
-	char obst = getch_console(pos + dir);
+	char obst = getch_console(point.pos + dir);
 
     switch (obst) {
 
@@ -259,7 +259,7 @@ void Mario::reset() {
 
     lives_left--;
 
-    pos = { Board::MARIO_X0, Board::MARIO_Y0 };
+    point.pos = { Board::MARIO_X0, Board::MARIO_Y0 };
 
 	mario_hit = false;
 

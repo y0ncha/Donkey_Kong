@@ -88,8 +88,8 @@ void Barrel::explode() {
 void Barrel::print_explosion_phase(int radius) {
 
 	if (radius == 0) {
-        gotoxy(pos); // Move the cursor to the position of the barrel
-		if (getch_console(pos) == Board::MARIO) {
+        gotoxy(point.pos); // Move the cursor to the position of the barrel
+		if (getch_console(point.pos) == Board::MARIO) {
 			hit_mario = true;
 		}
         std::cout << "*"; // Print the explosion message
@@ -97,10 +97,10 @@ void Barrel::print_explosion_phase(int radius) {
     else {
         for (int i = -radius; i <= radius; i++) {
             for (int j = -radius; j <= radius; j++) {
-                if (getch_console({ pos.x + i, pos.y + j }) == Board::MARIO) {
+                if (getch_console({ point.pos.x + i, point.pos.y + j }) == Board::MARIO) {
                     hit_mario = true;
                 }
-                gotoxy(pos.x + i, pos.y + j);
+                gotoxy(point.pos.x + i, point.pos.y + j);
                 std::cout << "*"; // Print the explosion
             }
         }
@@ -114,14 +114,14 @@ void Barrel::print_explosion_phase(int radius) {
 void Barrel::clear_explosion_phase(int radius) {
 
 	if (radius == -1) {
-		gotoxy(pos); // Move the cursor to the position of the barrel
-		std::cout << board->get_char(pos); // Clear the explosion
+		gotoxy(point.pos); // Move the cursor to the position of the barrel
+		std::cout << board->get_char(point.pos); // Clear the explosion
 	}
     else {
         for (int i = -radius; i <= radius; i++) {
             for (int j = -radius; j <= radius; j++) {
-                gotoxy(pos.x + i, pos.y + j); // Move the cursor to the position of the barrel
-                std::cout << board->get_char(pos.x + i, pos.y + j); // Clear the explosion
+                gotoxy(point.pos.x + i, point.pos.y + j); // Move the cursor to the position of the barrel
+                std::cout << board->get_char(point.pos.x + i, point.pos.y + j); // Clear the explosion
             }
         }
     }
@@ -138,7 +138,7 @@ bool Barrel::is_active() const {
  * Returns and sets the initial position of the barrel.
  */
 Coordinates Barrel::init_pos() { 
-    return (pos = {(rand() % 2 == 0) ? Board::DKONG_X0 + 1 : Board::DKONG_X0 - 1, Board::DKONG_Y0});
+    return (point.pos = {(rand() % 2 == 0) ? Board::DKONG_X0 + 1 : Board::DKONG_X0 - 1, Board::DKONG_Y0});
 }
 
 /**
@@ -162,7 +162,7 @@ void Barrel::spawn() {
  */
 char Barrel::handle_collision() {
 
-    char obst = getch_console(pos + dir);
+    char obst = getch_console(point.pos + dir);
 
     switch (obst) {
     case Board::MARIO: // If the barrel hits Mario

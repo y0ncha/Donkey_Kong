@@ -4,6 +4,7 @@
 #include "Board.h"
 #include "Coord.h"
 #include "Utils.h"
+#include "Point.h"
 
 // Forward declaration of the handle_err function
 void handle_err(const std::string& message, const char* file, int line);
@@ -19,14 +20,17 @@ protected:
     // Constructor for the Entity class
     Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates dir = {0, 0});
 
-    const Board* board; // Reference to the original game board
+	// Pointer to the original game board
+    const Board* board;
 
-    char icon; // Character representation of the entity
+	// Point representation of the entity
+	Point point;
 
-    int last_dx = 0; // Last horizontal direction
+	// Last horizontal direction
+    int last_dx = 0;
 
-    Coordinates pos; // Default position of an entity
-    Coordinates dir; // Direction of the entity
+	// Direction of the entity
+    Coordinates dir;
 
     // Moves the entity by one step with an optional delay
     void step();
@@ -55,8 +59,8 @@ public:
     // Erases the entity from its current position
     void erase() const;
 
-	// Getter for the entity's icon
-	char curr_ch() const;
+	// Getter for the char in behind the entity
+	char behind_ch() const;
 
 	// Getter for the entity's icon
     char next_ch() const;
@@ -68,13 +72,13 @@ public:
 	char above_ch() const;
 
     // Getter for the x-coordinate of the entity's position
-    int get_x() const { return pos.x; }
+    int get_x() const { return point.pos.x; }
 
     // Getter for the y-coordinate of the entity's position
-    int get_y() const { return pos.y; }
+    int get_y() const { return point.pos.y; }
 
     // Getter for the entity's position
-    Coordinates get_pos() const { return pos; }
+    Coordinates get_pos() const { return point.pos; }
 
     // Getter for the entity's direction
     Coordinates get_dir() const { return dir; }

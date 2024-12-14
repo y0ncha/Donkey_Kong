@@ -5,12 +5,8 @@
  * Checks if the layout, board, and position are valid.
  */
 Entity::Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates init_dir)
-    : board(pBoard), icon(ch), pos(init_pos), dir(init_dir) {
+    : board(pBoard), point(ch, init_pos), dir(init_dir) {
     
-    if (!pos_inbound(init_pos)) { // Validate
-        clear_screen();
-        handle_err("SYSTEM ERROR: position is out of bound!", __FILE__, __LINE__);
-    }
 	if (board == nullptr) { // Validate
 		clear_screen();
 		handle_err("SYSTEM ERROR: board is not initialized!", __FILE__, __LINE__);
@@ -21,26 +17,24 @@ Entity::Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates i
  * Draws the entity at its current position.
  */
 void Entity::draw() const {
-    gotoxy(pos); // move the cursor to the entity's position
-    std::cout << icon; // Print the entity's character at the position
+	point.draw(); // Draw the entity at the current position    
 }
 
 /**
  * Erases the entity from its current position.
  */
 void Entity::erase() const {
-    gotoxy(pos); // move the cursor to the entity's position
-    std::cout << board->get_char(pos); // Restore the character from the board
+	point.erase(board->get_char(point.pos)); // Erase the entity from the current position
 }
 
 /**
  * Sets the position of the entity using x and y coordinates.
  */
 void Entity::set_pos(int _x, int _y) {
-	pos = { _x, _y };
+	point.pos = { _x, _y };
 }
 void Entity::set_pos(Coordinates coord) {
-    pos = coord;
+    point.pos = coord;
 }
 
 /**
@@ -62,7 +56,7 @@ void Entity::step() {
 
     if (handle_collision()) {
         ; // Handle collisions with other entities or obstacles
-        pos += dir; // move the entity by adding the direction to the position
+        point.pos += dir; // move the entity by adding the direction to the position
         draw(); // Draw the entity at the new position
     }
 }
@@ -71,28 +65,28 @@ void Entity::step() {
  * Gets the character at the destination position.
  */
 char Entity::next_ch() const {
-    return board->get_char(pos + dir);
+    return board->get_char(point.pos + dir);
 }
 
 /**
  * Checks the char beneath mario.
  */
 char Entity::beneath_ch() const {
-    return board->get_char(pos.x, pos.y + 1);
+    return board->get_char(point.pos.x, point.pos.y + 1);
 }
 
 /**
  * Checks the char above mario.
  */
 char Entity::above_ch() const {
-	return board->get_char(pos.x, pos.y - 1);
+	return board->get_char(point.pos.x, point.pos.y - 1);
 }
 
 /**
  * Gets the character at the current position.
  */
-char Entity::curr_ch() const {
-    return board->get_char(pos);
+char Entity::behind_ch() const {
+    return board->get_char(point.pos);
 }
 
 /**

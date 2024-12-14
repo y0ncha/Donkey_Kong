@@ -41,7 +41,7 @@ private:
     void print_data() const;
 
 	// Method to update print the board and the game's data
-	void print_screen() const;
+	void print_game() const;
 
 	// Method to advance the entities in the game
 	void advance_entities(); 
@@ -51,6 +51,9 @@ private:
 
 	// Method to finish the game unsuccessfully
 	void finish_failure();
+
+	// Method to try again
+	void try_again();
 
 	// For exercise 2 and 3 
     //int level = 1; // Current game level

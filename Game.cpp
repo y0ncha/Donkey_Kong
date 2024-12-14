@@ -16,27 +16,26 @@ Game::Game() : mario(&board), barrels(&board) {}
 void Game::play(int max_barrels, int sapwn_interval) {
 
     show_cursor(false); // Hide the console cursor for better visuals
-    
+
     // Run the menu and check if the user wants to exit
     if (menu.run(Menu::START_MENU) == Menu::EXIT)
         return;
-    
-	print_screen(); // Update the game screen
+
+    print_game(); // Update the game screen
 
     mario.draw(); // Draw Mario at its default position
 
-	while (mario.get_lives() > 0) { // Main game loop
+    while (mario.get_lives() > 0) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
-			handle_input(); // Handle the key input
+            handle_input(); // Handle the key input
         }
-		else { // If no key is pressed
-			advance_entities(); // Advance the entities in the game
+        else { // If no key is pressed
+            advance_entities(); // Advance the entities in the game
             Sleep(100); // Delay for 100 milliseconds
         }
-		frames++; // Increment the frame counter
+        frames++; // Increment the frame counter
     }
-    
 }
 
 void Game::handle_input() {
@@ -59,13 +58,6 @@ void Game::reset_level() {
 	mario.reset(); // Draw Mario at its default position
 	barrels.reset(); // Reset the barrels
     frames = 0;
-
-    // todo print success screen
-	clear_screen(); // Clear the screen
-    std::cout << "###PRINT RESET SCREEN###" << std::endl; // Print the reset message (opiional "press key to continue")
-	Sleep(1000); // Delay for 1 second
-
-	print_screen(); // Update the game screen
 }
 
 /**
@@ -85,7 +77,7 @@ void Game::print_data() const {
 /**
  * Updates the game screen by printing the board and the game data.
  */
-void Game::print_screen() const {
+void Game::print_game() const {
 	board.print(); // Draw the game board
 	print_data(); // Update the lives display
 }
@@ -98,23 +90,34 @@ void Game::advance_entities() {
     barrels.move(frames); // Move the barrels
 
     if (mario.is_hit() || barrels.hitted_mario()) { // Check if Mario was hit by a barrel
-        reset_level(); // Reset the level if Mario was hit
+		mario.get_lives() > 1 ? try_again() : finish_failure(); // Reset the level if Mario has more lives, else finish the game
     }
 	else if (mario.is_rescued_pauline()) { // Check if Mario saved Pauline
         finish_success(); // Finish the game successfully
     }
 }
 
+void Game::try_again() {
+	reset_level(); // Reset the game
+    // todo print success screen
+    clear_screen(); // Clear the screen
+    std::cout << "###PRINT RESET SCREEN###" << std::endl; // Print the reset message (opiional "press key to continue")
+    Sleep(1000); // Delay for 1 second
+
+    print_game(); // Update the game screen
+}
 /*
 * Finish the game successfully.
 */
 void Game::finish_success() {
+    reset_level(); // Reset the game
 	// todo print success screen
 	clear_screen(); // Clear the screen
 	std::cout << "###PRINT SUCCESS SCREEN###" << std::endl; // Print the success message
 }
 
 void Game::finish_failure(){
+    reset_level(); // Reset the game
 	// todo print failure screen
 	clear_screen(); // Clear the screen
 	std::cout << "###PRINT FAILURE SCREEN###" << std::endl; // Print the success message
