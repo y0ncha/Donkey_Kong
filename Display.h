@@ -3,6 +3,7 @@
 #include <conio.h>
 #include "Utils.h"
 #include "Board.h"
+#include "Mario.h"
 
 /**
  * @class Display
@@ -59,6 +60,12 @@ public:
 
     // Print the keys
     void keys_menu(Menu_types type) const;
+
+    // Method to update the Head-Up Display (in the future will use to keep track on score, time etc.)
+	void render_hud(const Mario& mario) const;
+
+    // Method to update and print the board and the game's data
+	void render_game(const Mario& mario, const Board& board) const;
 
 private:
 

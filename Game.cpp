@@ -28,7 +28,7 @@ void Game::play() {
     }
 
 	set_level(); // Set the game level based on the user's choice
-    print_game(); // Update the game screen
+    display.render_game(mario, board); // Update the game screen
     mario.set(); // Draw Mario at its default position
 
     while (mario.get_lives() > 0 && !mario.is_rescued_pauline()) { // Main game loop
@@ -60,7 +60,7 @@ void Game::handle_input() {
             return;
         }
         else
-            print_game(); // Update the game screen
+            display.render_game(mario, board); // Update the game screen
     } else {
         mario.update_dir(key); // Update Mario's direction based on the key input
     }
@@ -74,28 +74,6 @@ void Game::reset_level() {
     mario.reset(); // Draw Mario at its default position
     barrels.reset(); // Reset the barrels
     frames = 0;
-}
-
-/**
- * @brief Updates the lives display by printing the hearts in the right location.
- */
-void Game::print_data() const {
-    int n = mario.get_lives(); // Get the number of lives Mario has left
-    gotoxy(Board::HRTS_DISP_X, Board::HRTS_DISP_Y); // Move the cursor to the position where lives are displayed
-
-    // Print the lives
-    for (int i = 0; i < n; ++i) {
-        std::cout << "<3 ";
-    }
-}
-
-/**
- * @brief Updates the game screen by printing the board and the game data.
- */
-void Game::print_game() const {
-    mario.set(); // Draw Mario
-    board.print(); // Draw the game board
-    print_data(); // Update the lives display
 }
 
 /**
@@ -120,7 +98,7 @@ void Game::try_again() {
     clear_screen(); // Clear the screen
     display.strike_messege(); // Print the try again message
 
-    print_game(); // Update the game screen
+    display.render_game(mario, board); // Update the game screen
 }
 
 /**

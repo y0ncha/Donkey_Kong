@@ -6,8 +6,6 @@
 #include "Board.h"
 #include "Barrels.h"
 
-// Forward declaration of the Game class
-class Barrels;
 
 /**
  * @class Game
@@ -53,12 +51,6 @@ private:
 
     // Resets the level
     void reset_level();
-
-    // Method to update the lives display
-    void print_data() const;
-
-    // Method to update and print the board and the game's data
-    void print_game() const;
 
     // Method to advance the entities in the game
     void advance_entities();

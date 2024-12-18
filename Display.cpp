@@ -144,6 +144,28 @@ void Display::success_messege() const {
 	print_layout(success_layout);
 }
 
+/**
+ * @brief Updates the lives display by printing the hearts in the right location.
+ */
+void Display::render_hud(const Mario& mario) const {
+	int n = mario.get_lives(); // Get the number of lives Mario has left
+	gotoxy(Board::HRTS_DISP_X, Board::HRTS_DISP_Y); // Move the cursor to the position where lives are displayed
+
+	// Print the lives
+	for (int i = 0; i < n; ++i) {
+		std::cout << "<3 ";
+	}
+}
+
+/*
+* @brief Updates and prints the board and the game's data.
+*/
+void Display::render_game(const Mario& mario, const Board& board) const {
+	mario.set(); // Draw Mario
+	board.print(); // Draw the game board
+	render_hud(mario); // Update the lives display
+}
+
 //Main menu layout
 char Display::main_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 	//01234567890123456789012345678901234567890123456789012345678901234567890123456789

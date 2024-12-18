@@ -55,7 +55,7 @@ char getch_console(Coordinates pos) {
     SMALL_RECT readRegion = { (SHORT)pos.x, (SHORT)pos.y, (SHORT)pos.x, (SHORT)pos.y };
     COORD bufferSize = { 1, 1 };
 
-    if (!ReadConsoleOutput(hConsole, &charInfo, bufferSize, { 0, 0 }, &readRegion) || !pos_inbound(pos)) {
+    if (!ReadConsoleOutput(hConsole, &charInfo, bufferSize, { 0, 0 }, &readRegion) || !Board::pos_inbound(pos)) {
         return Board::ERR;
     }
 
@@ -94,31 +94,6 @@ void clear_screen() {
     SetConsoleCursorPosition(hConsole, homeCoords);
 }
 
-/**
- * @brief Checks if the x-coordinate is within the game bounds.
- * @param x The x-coordinate to check.
- * @return True if the x-coordinate is within the game bounds, false otherwise.
- */
-bool x_inbound(int x) {
-    return (x >= 0 && x < Screen_dim::X); // Check if the x-coordinate is within the game bounds
-}
 
-/**
- * @brief Checks if the y-coordinate is within the game bounds.
- * @param y The y-coordinate to check.
- * @return True if the y-coordinate is within the game bounds, false otherwise.
- */
-bool y_inbound(int y) {
-    return (y >= 0 && y < Screen_dim::Y); // Check if the y-coordinate is within the game bounds
-}
-
-/**
- * @brief Checks if the position is within the game bounds.
- * @param pos The coordinates to check.
- * @return True if the position is within the game bounds, false otherwise.
- */
-bool pos_inbound(Coordinates pos) {
-    return (x_inbound(pos.x) && y_inbound(pos.y)); // Check if the position is within the game bounds
-}
 
 

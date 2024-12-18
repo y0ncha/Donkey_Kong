@@ -6,7 +6,7 @@
  * @param init_pos The initial position of the point.
  */
 Point::Point(char ch, Coordinates init_pos) : icon(ch), pos(init_pos) {
-    if (!pos_inbound(init_pos)) { // Validate
+    if (!Board::pos_inbound(init_pos)) { // Validate
         clear_screen();
         handle_err("SYSTEM ERROR: position is out of bound!", __FILE__, __LINE__);
     }
