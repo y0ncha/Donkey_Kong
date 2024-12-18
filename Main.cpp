@@ -6,13 +6,15 @@
 /**
  * Main function that initializes the game and starts the game loop.
  */
-void main() {
+int main() {
 
 	// Seed the random number generator
 	srand(static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
 
 	// Initialize the game
-	Game myGame; 
-	myGame.play();
+	Game my_game; 
+	my_game.play();
+
+	return 0;
 }
 

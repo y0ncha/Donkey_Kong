@@ -15,40 +15,28 @@ Game::Game() : mario(&board), barrels(&board) {}
  * @param max_barrels Maximum number of barrels.
  * @param spawn_interval Interval for spawning barrels.
  */
-void Game::play(int max_barrels, int spawn_interval,int game_status) {
+void Game::play() {
+
     show_cursor(false); // Hide the console cursor for better visuals
+    status = Status::RUN;
 
     // Run the menu and check if the user wants to exit
-    if (menu.run(Menu::START_MENU) == Menu::EXIT) {
-        menu.printExitLayOut();
+    if (display.run(Display::START_MENU) == Display::EXIT) {
+		status = Status::EXIT;
+        display.exit_messege();
         return;
     }
 
-    // Set the maximum number of barrels and the spawn interval based on the chosen level
-    switch(menu.choseLevel()) {
-    case Menu::EASY:
-			this->max_barrels = 10;
-			this->spawn_interval = 30;
-			break;
-		case Menu::MEDIUM:
-			this->max_barrels = 15;
-			this->spawn_interval = 20;
-			break;
-		case Menu::HARD:
-			this->max_barrels = 20;
-			this->spawn_interval = 10;
-			break;
-	}
-
+	set_level(); // Set the game level based on the user's choice
     print_game(); // Update the game screen
-
     mario.set(); // Draw Mario at its default position
 
     while (mario.get_lives() > 0 && !mario.is_rescued_pauline()) { // Main game loop
+
         if (_kbhit()) { // Check if a key is pressed
             handle_input(); // Handle the key input
-            if (this->game_status == Status::EXIT) { // If the game status is exit
-                menu.printExitLayOut();
+            if (status == Status::EXIT) { // If the game status is exit
+                display.exit_messege();
                 return; // Exit the game
             }
         } else { // If no key is pressed
@@ -67,8 +55,8 @@ void Game::handle_input() {
 
     // If the key is ESC, open the pause menu
     if (key == ESC) { 
-        if (menu.run(Menu::PAUSE_MENU) == Menu::EXIT) { // Run the pause menu and check if the user wants to exit
-            this->game_status = Status::EXIT; // Set the game status to exit
+        if (display.run(Display::PAUSE_MENU) == Display::EXIT) { // Run the pause menu and check if the user wants to exit
+            this->status = Status::EXIT; // Set the game status to exit
             return;
         }
         else
@@ -129,9 +117,8 @@ void Game::advance_entities() {
  */
 void Game::try_again() {
     reset_level(); // Reset the game
-    // TODO: Print success screen
     clear_screen(); // Clear the screen
-    menu.printTryAgainLayOut(); // Print the try again message
+    display.strike_messege(); // Print the try again message
 
     print_game(); // Update the game screen
 }
@@ -141,9 +128,8 @@ void Game::try_again() {
  */
 void Game::finish_success() {
     reset_level(); // Reset the game
-    // TODO: Print success screen
     clear_screen(); // Clear the screen
-    menu.printSuccessLayOut(); // Print the success message
+    display.success_messege(); // Print the success message
 }
 
 /**
@@ -151,7 +137,25 @@ void Game::finish_success() {
  */
 void Game::finish_failure() {
     reset_level(); // Reset the game
-    // TODO: Print failure screen
     clear_screen(); // Clear the screen
-    menu.printFailLayOut(); // Print the exit message
+    display.failure_messege(); // Print the exit message
+}
+
+/*
+* @brief sets the game level
+*/
+void Game::set_level() {
+
+    // Set the maximum number of barrels and the spawn interval based on the chosen level
+    switch (display.levels_menu()) {
+
+    case Display::MEDIUM: // Set the maximum number of barrels and the spawn interval for the MEDIUM level
+		barrels.update(Barrels::MED_AMOUNT, Barrels::MED_INTERVAL);
+        break;
+    case Display::HARD: // Set the maximum number of barrels and the spawn interval for the HARD level
+		barrels.update(Barrels::MED_AMOUNT, Barrels::HARD_INTERVAL);
+        break;
+    default: // Default to EASY (already set to the default values)
+        break;
+    }
 }
