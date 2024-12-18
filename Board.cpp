@@ -10,9 +10,9 @@ void Board::print(int lives_left) const {
 
     // Print the rest of the layout
     for (int i = 0; i < Screen_dim::Y - 1; i++) {
-        std::cout << layout[i] << std::endl; // Print each row of the preset board
+        std::cout << board_layout[i] << std::endl; // Print each row of the preset board
     }
-    std::cout << layout[Screen_dim::Y - 1]; // Print the last row without a newline
+    std::cout << board_layout[Screen_dim::Y - 1]; // Print the last row without a newline
 }
 
 /**
@@ -25,7 +25,7 @@ char Board::get_char(Coordinates coord) const {
     if (!pos_inbound(coord))
         return ERR; // Return error character if out of bounds
 
-    return layout[coord.y][coord.x]; // Return the character at the specified position
+    return board_layout[coord.y][coord.x]; // Return the character at the specified position
 }
 
 /**
@@ -47,7 +47,7 @@ char Board::get_char(int x, int y) const {
  */
 void Board::set_char(Coordinates coord, char ch) {
     if (pos_inbound(coord)) { // Check if the position is within the game bounds
-        layout[coord.y][coord.x] = ch; // Set the character at the specified position
+        board_layout[coord.y][coord.x] = ch; // Set the character at the specified position
     }
 }
 
@@ -102,3 +102,60 @@ bool Board::path_clear(Coordinates coord) const {
 bool Board::path_clear(int x, int y) const {
     return path_clear({ x, y }); // Delegate to the other path_clear method
 }
+
+/**
+* @brief Checks if the x-coordinate is within the game bounds.
+* @param x The x-coordinate to check.
+* @return True if the x-coordinate is within the game bounds, false otherwise.
+*/
+bool Board::x_inbound(int x) {
+    return (x >= 0 && x < Screen_dim::X); // Check if the x-coordinate is within the game bounds
+}
+
+/**
+ * @brief Checks if the y-coordinate is within the game bounds.
+ * @param y The y-coordinate to check.
+ * @return True if the y-coordinate is within the game bounds, false otherwise.
+ */
+bool Board::y_inbound(int y) {
+    return (y >= 0 && y < Screen_dim::Y); // Check if the y-coordinate is within the game bounds
+}
+
+/**
+ * @brief Checks if the position is within the game bounds.
+ * @param pos The coordinates to check.
+ * @return True if the position is within the game bounds, false otherwise.
+ */
+bool Board::pos_inbound(Coordinates pos) {
+    return (x_inbound(pos.x) && y_inbound(pos.y)); // Check if the position is within the game bounds
+}
+
+// Layout of the game board, represented as a 2D array of characters
+char Board::board_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+    // 01234567890123456789012345678901234567890123456789012345678901234567890123456789
+      "             LIVES:                   LEVEL 1        POINTS : 00                ",// 0
+      "================================================================================",// 1
+      "                                                                                ",// 2
+      "                                   $                                            ",// 3
+      "     =============            ==========                                        ",// 4
+      "        H                      H                                                ",// 5    
+      "        H                      H   &                                            ",// 6 
+      "==================>====== =======<<=>>===============  =======================  ",// 7
+      "                                     H                                  H       ",// 8
+      "                                     H                                  H       ",// 9
+      "                          ============             ====================<<<==    ",// 10
+      "                 ========                                      H                ",// 11
+      "                        H             ======>>>======          H                ",// 12
+      "                        H               H          H           H                ",// 13
+      "                        H               H      ===========   ==========         ",// 14
+      "             ===============            H                H         H            ",// 15
+      "                H                       H                H         H            ",// 16
+      "                H          =================<<<==============<<<   H            ",// 17
+      "                H           H                                      H            ",// 18
+      "                H           H                           ==================      ",// 19
+      "              >>>===============                                                ",// 20
+      "                              H                                                 ",// 21
+      "                              H                                                 ",// 22
+      "                              H                                                 ",// 23
+      "=============================================================================<<<" // 24
+};

@@ -39,27 +39,6 @@ char getch_console(Coordinates pos);
 void show_cursor(bool showFlag);
 
 /**
- * @brief Checks if the x-coordinate is within the game bounds.
- * @param _x The x-coordinate to check.
- * @return True if the x-coordinate is within the game bounds, false otherwise.
- */
-bool x_inbound(int _x);
-
-/**
- * @brief Checks if the y-coordinate is within the game bounds.
- * @param _y The y-coordinate to check.
- * @return True if the y-coordinate is within the game bounds, false otherwise.
- */
-bool y_inbound(int _y);
-
-/**
- * @brief Checks if the position is within the game bounds.
- * @param pos The coordinates to check.
- * @return True if the position is within the game bounds, false otherwise.
- */
-bool pos_inbound(Coordinates pos);
-
-/**
  * @brief Handles errors by throwing an exception with the file and line number.
  * @param message The error message.
  * @param file The file where the error occurred.
@@ -68,3 +47,4 @@ bool pos_inbound(Coordinates pos);
 inline void handle_err(const std::string& message, const char* file, int line) {
     throw std::runtime_error(message + " in file " + file + " at line " + std::to_string(line));
 }
+

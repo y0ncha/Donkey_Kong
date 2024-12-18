@@ -13,7 +13,7 @@ class Barrels {
 
 public:
     // Constructor to initialize the Barrels class
-    Barrels(const Board* pBoard, int max_barrels = 10, int spawn_intvl = 30);
+    Barrels(const Board* pBoard);
 
     // Moves all active barrels and returns if Mario was hit
     void move(int frames);
@@ -24,19 +24,26 @@ public:
     // Checks if Mario was hit by a barrel
     bool hitted_mario() const;
 
-private:
-    // Pointer to the game board
-    const Board* board;
+	// Initializes the barrels with the defficulty level
+    void update(int max_barrels, int spawn_interval);
 
-    // Vector to store the barrels
+    enum consts {
+		DEF_AMOUNT = 10,
+		MED_AMOUNT = 15,
+		HARD_AMOUNT = 20,
+
+		DEF_INTERVAL = 30,
+		MED_INTERVAL = 20,
+		HARD_INTERVAL = 15,
+    };
+
+private:
+
+	// Vector to store the barrels (using unique pointers for fututere preperation)
     std::vector<std::unique_ptr<Barrel>> barrels;
 
-    // Maximum number of barrels
-    int max_barrels;
-
-    // Interval for spawning barrels
-    int spawn_intvl;
-
-    // Flag to check if Mario was hit
-    bool hit_mario = false;
+    const Board* board; // Pointer to the game board
+    int amount = DEF_AMOUNT;  // Maximum number of barrels
+    int interval = DEF_INTERVAL; // Interval for spawning barrels
+    bool hit_mario = false; // Flag to check if Mario was hit
 };

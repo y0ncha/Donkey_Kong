@@ -6,11 +6,11 @@
  * @param max_barrels Maximum number of barrels.
  * @param spawn_intvl Interval for spawning barrels.
  */
-Barrels::Barrels(const Board* pBoard, int max_barrels, int spawn_intvl)
-    : board(pBoard), max_barrels(max_barrels), spawn_intvl(spawn_intvl) {
+Barrels::Barrels(const Board* pBoard)
+    : board(pBoard) {
     // Initialize the barrels with the board pointer
-    for (int i = 0; i < max_barrels; i++) {
-        barrels.emplace_back(std::make_unique<Barrel>(pBoard));
+    for (size_t i = 0; i < DEF_AMOUNT; i++) {
+		barrels.emplace_back(std::make_unique<Barrel>(pBoard)); // Unique pointer used as a preperatuion for the next exercises
     }
 }
 
@@ -29,7 +29,7 @@ void Barrels::move(int frames) {
                 hit_mario = true;
                 break;
             }
-        } else if (frames % spawn_intvl == 0 && !spawn_flag) { // If the barrel is not active and the interval has passed
+        } else if (frames % interval == 0 && !spawn_flag) { // If the barrel is not active and the interval has passed
             spawn_flag = true;
             barrel->spawn();
         }
@@ -53,4 +53,19 @@ void Barrels::reset() {
  */
 bool Barrels::hitted_mario() const {
     return hit_mario;
+}
+
+/*
+* @brief updates the barrels with the defficulty level prefrences
+* @param max_barrels Maximum number of barrels.
+* @param spawn_interval Interval for spawning barrels.
+*/
+void Barrels::update(int max_barrels, int spawn_interval) {
+
+    amount = max_barrels;
+    interval = spawn_interval;
+
+    for (size_t i = DEF_AMOUNT; i < amount; i++) {
+        barrels.emplace_back(std::make_unique<Barrel>(board));
+    }
 }

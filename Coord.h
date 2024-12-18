@@ -3,6 +3,7 @@
 /**
  * @struct Coordinates
  * Represents a generic Coordinates with x and y values.
+ * Definded as a struct to allow public access to its members, to be held in private section of a class.
  */
 struct Coordinates {
 
