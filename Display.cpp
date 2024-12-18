@@ -63,15 +63,34 @@ void Display::keys_menu(Menu_types type) const {
  * @return The selected menu option (START, KEYS, or EXIT).
  */
 int Display::run(Menu_types type) const {
-	this->print(type);
+	
+	// Print the menu
+	print(type);
 
+	// Wait for user input
 	while (true) {
-		if (_kbhit()) { // Check if a key is pressed
+		if (_kbhit()) {
 			char key = _getch(); // Get the key input
-			if (key == START || key == EXIT)
-				return key; // Return the key value (START or EXIT)
-			else if (key == KEYS)
-				this->keys_menu(type);
+
+			switch (key) { // 
+			case EXIT: // If the user wants to exit
+				return key;
+			case START: // If the user wants to start a new game
+				if (type == START_MENU) {
+					return key;
+				}
+				break;
+			case RESUME: // If the user wants to resume the game
+				if (type == PAUSE_MENU) {
+					return key;
+				}
+				break;
+			case KEYS: // If the user wants to see the keys
+				keys_menu(type);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 }
@@ -278,7 +297,7 @@ char Display::pause_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 	 "                                                                                ",//14
 	 "                                                                                ",//15
 	 "********************************************************************************",//16
-	 "                                RESUME GAME     - 1                             ",//17
+	 "                                RESUME GAME     - ESC                           ",//17
 	 "                            INSTRUCTIONS & KEYS - 8                             ",//18
 	 "                                   EXIT         - 9                             ",//19
 	 "********************************************************************************",//20

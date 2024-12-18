@@ -56,7 +56,7 @@ void Game::handle_input() {
     // If the key is ESC, open the pause menu
     if (key == ESC) { 
         if (display.run(Display::PAUSE_MENU) == Display::EXIT) { // Run the pause menu and check if the user wants to exit
-            this->status = Status::EXIT; // Set the game status to exit
+            status = Status::EXIT; // Set the game status to exit
             return;
         }
         else

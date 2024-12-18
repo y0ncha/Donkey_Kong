@@ -21,7 +21,8 @@ public:
     enum Entry_menu {
         START = '1', // Start the game
         KEYS = '8',  // Show the keys
-        EXIT = '9'   // Exit the game
+        EXIT = '9',   // Exit the game
+		RESUME = 27, // Resume the game
     };
 
     // Enum for the menu types
