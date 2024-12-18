@@ -15,12 +15,30 @@ Game::Game() : mario(&board), barrels(&board) {}
  * @param max_barrels Maximum number of barrels.
  * @param spawn_interval Interval for spawning barrels.
  */
-void Game::play(int max_barrels, int spawn_interval) {
+void Game::play(int max_barrels, int spawn_interval,int game_status) {
     show_cursor(false); // Hide the console cursor for better visuals
 
     // Run the menu and check if the user wants to exit
-    if (menu.run(Menu::START_MENU) == Menu::EXIT)
+    if (menu.run(Menu::START_MENU) == Menu::EXIT) {
+        menu.printExitLayOut();
         return;
+    }
+
+    // Set the maximum number of barrels and the spawn interval based on the chosen level
+    switch(menu.choseLevel()) {
+    case Menu::EASY:
+			this->max_barrels = 10;
+			this->spawn_interval = 30;
+			break;
+		case Menu::MEDIUM:
+			this->max_barrels = 15;
+			this->spawn_interval = 20;
+			break;
+		case Menu::HARD:
+			this->max_barrels = 20;
+			this->spawn_interval = 10;
+			break;
+	}
 
     print_game(); // Update the game screen
 
@@ -29,6 +47,10 @@ void Game::play(int max_barrels, int spawn_interval) {
     while (mario.get_lives() > 0 && !mario.is_rescued_pauline()) { // Main game loop
         if (_kbhit()) { // Check if a key is pressed
             handle_input(); // Handle the key input
+            if (this->game_status == Status::EXIT) { // If the game status is exit
+                menu.printExitLayOut();
+                return; // Exit the game
+            }
         } else { // If no key is pressed
             advance_entities(); // Advance the entities in the game
             Sleep(Consts::DEF_DELAY); // Delay for 100 milliseconds
@@ -43,9 +65,14 @@ void Game::play(int max_barrels, int spawn_interval) {
 void Game::handle_input() {
     char key = _getch(); // Get the key input
 
-    if (key == ESC) { // If the key is ESC, open the pause menu
-        if (menu.run(Menu::PAUSE_MENU) == Menu::EXIT)
+    // If the key is ESC, open the pause menu
+    if (key == ESC) { 
+        if (menu.run(Menu::PAUSE_MENU) == Menu::EXIT) { // Run the pause menu and check if the user wants to exit
+            this->game_status = Status::EXIT; // Set the game status to exit
             return;
+        }
+        else
+            print_game(); // Update the game screen
     } else {
         mario.update_dir(key); // Update Mario's direction based on the key input
     }
@@ -104,8 +131,7 @@ void Game::try_again() {
     reset_level(); // Reset the game
     // TODO: Print success screen
     clear_screen(); // Clear the screen
-    std::cout << "###PRINT RESET SCREEN###" << std::endl; // Print the reset message (optional "press key to continue")
-    Sleep(Consts::PROMPT_DELAY); // Delay for 1 second
+    menu.printTryAgainLayOut(); // Print the try again message
 
     print_game(); // Update the game screen
 }
@@ -117,7 +143,7 @@ void Game::finish_success() {
     reset_level(); // Reset the game
     // TODO: Print success screen
     clear_screen(); // Clear the screen
-    std::cout << "###PRINT SUCCESS SCREEN###" << std::endl; // Print the success message
+    menu.printSuccessLayOut(); // Print the success message
 }
 
 /**
@@ -127,5 +153,5 @@ void Game::finish_failure() {
     reset_level(); // Reset the game
     // TODO: Print failure screen
     clear_screen(); // Clear the screen
-    std::cout << "###PRINT FAILURE SCREEN###" << std::endl; // Print the failure message
+    menu.printFailLayOut(); // Print the exit message
 }

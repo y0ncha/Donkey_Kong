@@ -17,7 +17,7 @@ public:
     Game();
 
     // Starts the game loop and handles user input
-    void play(int max_barrels = 10, int spawn_interval = 30);
+    void play(int max_barrels = 10, int spawn_interval = 30,int game_status=RUN);
 
     // Enum for game constants
     enum Consts {
@@ -25,11 +25,18 @@ public:
         KILLED_DELAY = 800, // Delay for the killed animation
         PROMPT_DELAY = 1000, // Delay for the prompt message
     };
+    enum Status
+    {
+        RUN = 1,
+        EXIT = 2
+    };
+
 
 private:
     // Maximum number of barrels and the interval for spawning barrels
     int max_barrels = 10;
     int spawn_interval = 30;
+    int game_status = RUN;
 
     // Game components
     Menu menu; // Initialize the menu
