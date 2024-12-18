@@ -34,6 +34,12 @@ public:
     // Method to spawn the barrel
     void spawn();
 
+    enum Consts {
+        MAX_FALL_H = 8, // Max height of a fall
+        EXPLOSION_RADIUS = 2, // Radius of the explosion
+        EXPLOSSION_DELAY = 60, // Delay for the explosion
+    };
+
 private:
     // Method to handle the direction change when the barrel is on different types of floors
     void update_dir(char beneath) override;
@@ -55,15 +61,6 @@ private:
 
     // State of the barrel
     enum class State { IDLE, FALLING, HIT_MARIO } state = State::IDLE;
-
-    // Maximum fall height before the barrel explodes
-    static constexpr int MAX_FALL_H = 8;
-
-    // Explosion radius
-    static constexpr int EXPLOSION_RADIUS = 2;
-
-    // Explosion delay in milliseconds
-    static constexpr int EXPLOSION_DELAY = 100;
 
     // Fall count
     int fall_count = 0;

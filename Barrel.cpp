@@ -70,7 +70,7 @@ void Barrel::explode() {
     for (int i = 0; i <= EXPLOSION_RADIUS; i++) {
         print_explosion_phase(i);
         clear_explosion_phase(i - 1);
-        Sleep(EXPLOSION_DELAY);
+        Sleep(EXPLOSSION_DELAY);
     }
     clear_explosion_phase(EXPLOSION_RADIUS);
 }

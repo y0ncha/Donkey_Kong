@@ -68,3 +68,4 @@ bool pos_inbound(Coordinates pos);
 inline void handle_err(const std::string& message, const char* file, int line) {
     throw std::runtime_error(message + " in file " + file + " at line " + std::to_string(line));
 }
+

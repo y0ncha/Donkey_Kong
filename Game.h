@@ -1,10 +1,13 @@
 #pragma once
 
 #include <conio.h>
-#include "Menu.h"
+#include "Display.h"
 #include "Mario.h"
 #include "Board.h"
 #include "Barrels.h"
+
+// Forward declaration of the Game class
+class Barrels;
 
 /**
  * @class Game
@@ -17,22 +20,27 @@ public:
     Game();
 
     // Starts the game loop and handles user input
-    void play(int max_barrels = 10, int spawn_interval = 30);
+    void play();
 
     // Enum for game constants
     enum Consts {
         DEF_DELAY = 100, // Default delay for the game
-        KILLED_DELAY = 800, // Delay for the killed animation
-        PROMPT_DELAY = 1000, // Delay for the prompt message
+		KILLED_DELAY = 500, // Delay for the killed animation
+    };
+
+	// Enum for game status
+    enum Status {
+		DEF, // Default status
+		RUN, // Game is running
+		EXIT // Game is exiting
     };
 
 private:
-    // Maximum number of barrels and the interval for spawning barrels
-    int max_barrels = 10;
-    int spawn_interval = 30;
+
+    int status = DEF;
 
     // Game components
-    Menu menu; // Initialize the menu
+    Display display; // Initialize the menu
     Board board; // Initialize a board to hold the original layout
     Mario mario; // Initialize Mario
     Barrels barrels; // Initialize the barrels
@@ -63,6 +71,9 @@ private:
 
     // Method to try again
     void try_again();
+
+	// Method to choose the game level
+	void set_level();
 
     // For exercise 2 and 3
     // int level = 1; // Current game level

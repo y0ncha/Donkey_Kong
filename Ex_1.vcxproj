@@ -35,7 +35,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mario.cpp" />
-    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Display.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
@@ -48,7 +48,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Mario.h" />
-    <ClInclude Include="Menu.h" />
+    <ClInclude Include="Display.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
