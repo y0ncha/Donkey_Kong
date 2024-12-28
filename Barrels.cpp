@@ -9,6 +9,8 @@
 Barrels::Barrels(const Board* pBoard)
     : board(pBoard) {
     // Initialize the barrels with the board pointer
+	barrels.reserve(DEF_AMOUNT);
+
     for (size_t i = 0; i < DEF_AMOUNT; i++) {
 		barrels.emplace_back(std::make_unique<Barrel>(pBoard)); // Unique pointer used as a preperatuion for the next exercises
     }
