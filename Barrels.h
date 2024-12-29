@@ -5,6 +5,9 @@
 #include "Barrel.h"
 #include "Board.h"
 
+// Forward declaration of the Barrel class
+class Barrel;
+
 /**
  * @class Barrels
  * Manages a collection of barrels in the game.
@@ -13,7 +16,7 @@ class Barrels {
 
 public:
     // Constructor to initialize the Barrels class
-    Barrels(const Board* pBoard);
+    Barrels(const Board* pBoard, int nof_barrels);
 
     // Moves all active barrels and returns if Mario was hit
     void move(int frames);
@@ -23,9 +26,6 @@ public:
 
     // Checks if Mario was hit by a barrel
     bool hitted_mario() const;
-
-	// Initializes the barrels with the defficulty level
-    void update(int max_barrels, int spawn_interval);
 
     enum consts {
 		DEF_AMOUNT = 10,
@@ -43,7 +43,7 @@ private:
     std::vector<std::unique_ptr<Barrel>> barrels;
 
     const Board* board; // Pointer to the game board
-    int amount = DEF_AMOUNT;  // Maximum number of barrels
     int interval = DEF_INTERVAL; // Interval for spawning barrels
+	int amount = DEF_AMOUNT; // Maximum number of barrels
     bool hit_mario = false; // Flag to check if Mario was hit
 };

@@ -13,7 +13,7 @@ int main() {
 
 	// Initialize the game
 	Game my_game; 
-	my_game.play();
+	my_game.start();
 
 	return 0;
 }

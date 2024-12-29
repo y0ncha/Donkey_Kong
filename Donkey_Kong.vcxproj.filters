@@ -34,6 +34,9 @@
     <ClCompile Include="Utils.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Barrel.h">
@@ -51,9 +54,6 @@
     <ClInclude Include="Coord.h">
       <Filter>hdr</Filter>
     </ClInclude>
-    <ClInclude Include="Display.h">
-      <Filter>hdr</Filter>
-    </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>hdr</Filter>
     </ClInclude>
@@ -67,6 +67,9 @@
       <Filter>hdr</Filter>
     </ClInclude>
     <ClInclude Include="Utils.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
       <Filter>hdr</Filter>
     </ClInclude>
   </ItemGroup>

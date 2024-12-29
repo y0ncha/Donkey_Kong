@@ -7,6 +7,14 @@
 Mario::Mario(const Board* pBoard) : Entity(pBoard, Board::MARIO, { Board::MARIO_X0, Board::MARIO_Y0 }) {}
 
 /**
+* @brief Sets mario's board pointer.
+* @param pBoard The board pointer to set.
+*/
+void Mario::set_board(const Board* pBoard) {
+	board = pBoard;
+}
+
+/**
  * @brief Updates Mario's direction based on the key input.
  * @param key The key input to determine the direction.
  */

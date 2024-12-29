@@ -1,5 +1,32 @@
 #include "Board.h"
 
+// todo delete
+#include <iostream>
+#include <filesystem>
+
+void Board::load(std::string fname) {
+
+	std::ifstream file(fname); // Open the file with the given filename for reading
+
+	if (!file.is_open()) {
+		handle_err("Error opening file", __FILE__, __LINE__); // Handle the error if the file cannot be opened
+	}
+
+	std::string line; // String to hold each line of the file
+
+	int row = 0; // Counter for the current row
+
+	while (std::getline(file, line)) { // Read each line of the file
+		if (row >= Screen_dim::Y) {
+			break; // Break if the number of lines exceeds the screen height
+		}
+		strncpy_s(board_layout[row], line.c_str(), Screen_dim::X); // Copy the line to the current row
+		board_layout[row][Screen_dim::X] = '\0'; // Null-terminate the string
+        row++; // Increment the row counter
+	}
+	file.close(); // Close the file
+}
+
 /**
  * @brief Draws the game board by printing each row of the layout.
  * Loops through all rows (from 0 to Screen_dim::Y-1) and prints each line to the console.
@@ -130,6 +157,7 @@ bool Board::pos_inbound(Coordinates pos) {
     return (x_inbound(pos.x) && y_inbound(pos.y)); // Check if the position is within the game bounds
 }
 
+/*
 // Layout of the game board, represented as a 2D array of characters
 char Board::board_layout[Screen_dim::Y][Screen_dim::X + 1] = {
     // 01234567890123456789012345678901234567890123456789012345678901234567890123456789
@@ -159,3 +187,4 @@ char Board::board_layout[Screen_dim::Y][Screen_dim::X + 1] = {
       "                              H                                                 ",// 23
       "=============================================================================<<<" // 24
 };
+*/

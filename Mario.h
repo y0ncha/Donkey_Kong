@@ -40,6 +40,9 @@ public:
     // Checks if Mario saved Pauline
     bool is_rescued_pauline() const;
 
+	// Setter for the board
+    void set_board(const Board* pBoard);
+
 private:
     // Enum for Mario's State
     enum class State {
