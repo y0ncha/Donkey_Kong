@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "Board.h"
+#include "Game.h"
 
 /**
  * @class Barrel

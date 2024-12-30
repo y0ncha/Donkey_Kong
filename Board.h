@@ -4,6 +4,8 @@
 #include "Utils.h"
 #include "Coord.h"
 #include "Config.h"
+#include <string>
+#include <fstream>
 
 /**
  * @class Board
@@ -18,6 +20,7 @@ public:
         DONKEY_KONG = '&', // Character representing Donkey Kong
         PAULINE = '$', // Character representing Pauline
 
+		WALL = 'Q', // Character representing a wall
         LADDER = 'H', // Character representing a ladder
         BARREL = 'O', // Character representing a barrel
         AIR = ' ',  // Representation of air (empty space)
@@ -37,6 +40,9 @@ public:
         HRTS_DISP_X = 20, // Initial x-coordinate for the hearts display
         HRTS_DISP_Y = 0, // Initial y-coordinate for the hearts display
     };
+
+	// Loads the board from a givven file
+	void load(std::string fname);
 
     // Prints the board on the console
     void print(int lives_left = 3) const;
@@ -68,7 +74,7 @@ public:
 
 private:
     // Layout of the game board, represented as a 2D array of characters
-    static char board_layout[Screen_dim::Y][Screen_dim::X + 1];
+    char board_layout[Screen_dim::Y][Screen_dim::X + 1];
 };
 
 

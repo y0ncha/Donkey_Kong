@@ -10,10 +10,6 @@
  */
 Entity::Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates init_dir)
     : board(pBoard), point(ch, init_pos), dir(init_dir) {
-    if (board == nullptr) { // Validate
-        clear_screen();
-        handle_err("SYSTEM ERROR: board is not initialized!", __FILE__, __LINE__);
-    }
 }
 
 /**

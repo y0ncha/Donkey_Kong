@@ -4,7 +4,8 @@
 #include "Utils.h"
 #include "Board.h"
 #include "Mario.h"
-
+#include "Level.h"
+#include "Game.h"
 /**
  * @class Display
  * Handles the display and interaction of the game's menus and messegaes.
@@ -17,32 +18,41 @@ class Display {
 
 public:
 
+    // Get the singleton instance of Display
+    static const Display& getInstance() {
+        static Display instance;
+        return instance;
+    }
+
     // Enum for the menu options
-    enum Entry_menu {
+    enum Main {
         START = '1', // Start the game
         KEYS = '8',  // Show the keys
         EXIT = '9',   // Exit the game
-		RESUME = 27, // Resume the game
     };
 
-    // Enum for the menu types
-    enum Menu_types {
-        START_MENU = 0, // Show the start menu
-        PAUSE_MENU = 1  // Show the pause menu
+    enum Pause {
+        RESUME = 27, // Resume the game
+        KEYS = '8',  // Show the keys
+        EXIT = '9',   // Exit the game
     };
 
     // Enum for the game levels
-    enum Level {
+    enum Difficulty {
         EASY = '1',
         MEDIUM = '2',
         HARD = '3'
     };
 
     // Run the menu
-    int run(Menu_types type) const;
+    //int run(Menu_types type) const;
+
+    Game::Status pause_menu(const Mario* mario, const Board& board) const;
+
+    Game::Status main_menu() const;
 
     // Choose the level
-    int levels_menu() const;
+    Difficulty difficulty_menu() const;
 
     // Print the exit layout
     void exit_messege() const;
@@ -57,18 +67,21 @@ public:
     void success_messege() const;
 
     // Print the menu
-    void print(Menu_types type) const;
+    //void print(Menu_types type) const;
 
     // Print the keys
-    void keys_menu(Menu_types type) const;
+    void keys_menu() const;
 
     // Method to update the Head-Up Display (in the future will use to keep track on score, time etc.)
-	void render_hud(const Mario& mario) const;
+	void render_hud(const Mario* mario) const;
 
     // Method to update and print the board and the game's data
-	void render_game(const Mario& mario, const Board& board) const;
+	void render_level(const Mario* mario, const Board& board) const;
 
 private:
+
+	// Singlton design pattern - preventing multiple instances of Display
+	Display() = default;
 
     // Print a given layout
     void print_layout(const char layout[Screen_dim::Y][Screen_dim::X + 1]) const;
@@ -86,7 +99,7 @@ private:
     // Success message layout
     static char success_layout[Screen_dim::Y][Screen_dim::X + 1];
     // Levels layout
-    static char levels_layout[Screen_dim::Y][Screen_dim::X + 1];
+    static char difficulty_layout[Screen_dim::Y][Screen_dim::X + 1];
     // Strike message layout
     static char strike_layout[Screen_dim::Y][Screen_dim::X + 1];
 };
