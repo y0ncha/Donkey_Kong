@@ -22,3 +22,4 @@ enum Screen_dim {
     X = 80, // Maximum width of the game area
     Y = 25  // Maximum height of the game area
 };
+

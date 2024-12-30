@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Barrel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Barrels.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Board.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Coord.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Display.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Mario.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Point.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Barrel.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Barrels.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Board.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Coord.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Mario.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="txt">
+      <UniqueIdentifier>{31c6339e-e5a3-4474-a11f-68f520867d92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{cebffe99-d875-4ed7-bc88-38eeefa0b73a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hdr">
+      <UniqueIdentifier>{9bd03cce-c07c-4787-8396-6def4ef2bca6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Readme.txt">
+      <Filter>txt</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
