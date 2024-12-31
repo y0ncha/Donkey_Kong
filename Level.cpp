@@ -1,14 +1,13 @@
 #include "Level.h"
-
+#include "Display.h"
 /**
  * @brief Constructor for the Level class.
- * @param filename The name of the file that holds the board layout.
- * @param mario The Mario object.
- * @param display The Display object.
+ * @param fname The name of the file that holds the board layout.
+ * @param mario Reference to the Mario object.
+ * @param dif_lvl The difficulty level of the game.
  */
-Level::Level(std::string fname, const Game::Display& display, Mario& mario, Game::Difficulty dif_lvl)
-    : display(display), mario(mario), barrels(&board, dif_lvl) {
-	board.load(fname); // Load the board layout from the file
+Level::Level(std::string fname, Mario& mario, Difficulty dif_lvl)
+    : board(fname), mario(mario), barrels(&board, dif_lvl) {
     mario.set_board(&board);
 }
 
@@ -25,30 +24,31 @@ void Level::advance_level(const std::string& fname) {
 /**
  * @brief Starts the game loop.
  */
-Game::Status Level::start() {
+Game_State Level::start() {
 
-	Game::Status status = Game::RUN; // Set the game status to RUN
+    Game_State state = RUN; // Set the game status to RUN
     char key;
 
-    display.render_level(mario, board); // Update the game screen
+    Display::render_level(mario, board); // Update the game screen
 
-    while (status == Game::RUN) { // Main game loop
+    while (state == RUN) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
             key = _getch();
 
 			if (key == ESC) { // If the key is ESC, open the pause menu
-				status = Game::PAUSE;
+                state = PAUSE;
+                break;
 			}
 			else {
 				mario.update_dir(key); // Update Mario's direction based on the key input
 			}
         }
-        advance_entities(); // Advance all the entities in the game
-        Sleep(Consts::DEF_DELAY); // Delay for 100 milliseconds
+        state = advance_entities(); // Advance all the entities in the game
+        Sleep(DEF_DELAY); // Delay for 100 milliseconds
         frames++; // Increment the frame counter
     }
-	return status;
+	return state;
 }
 
 /**
@@ -56,7 +56,7 @@ Game::Status Level::start() {
  */
 void Level::reset_level() {
 
-    Sleep(Consts::KILLED_DELAY); // Delay for 1 second
+    Sleep(KILLED_DELAY); // Delay for 1 second
     mario.reset(); // Draw Mario at its default position
     barrels.reset(); // Reset the barrels
     frames = 0;
@@ -65,42 +65,23 @@ void Level::reset_level() {
 /**
  * @brief Advances the entities in the game.
  */
-void Level::advance_entities() {
+Game_State Level::advance_entities() {
+
     mario.move(); // Move Mario if he is on a floor element
     barrels.move(frames); // Move the barrels
+	Game_State state = RUN; // Check the game state
 
     if (mario.is_hit() || barrels.hitted_mario()) { // Check if Mario was hit by a barrel
-        mario.get_lives() > 1 ? try_again() : finish_failure(); // Reset the level if Mario has more lives, else finish the game
+        state = mario.get_lives() > 1 ? LVL_RESET : FIN_FAIL; // Reset the level if Mario has more lives, else finish the game
     } else if (mario.is_rescued_pauline()) { // Check if Mario saved Pauline
-        finish_success(); // Finish the game successfully
+		state = FIN_SUC; // Finish the game successfully
     }
+	return state;
 }
 
 /**
- * @brief Handles the logic for trying again after Mario is hit.
+ * @brief Getter for the board.
  */
-void Level::try_again() {
-    reset_level(); // Reset the game
-    clear_screen(); // Clear the screen
-    display.strike_messege(); // Print the try again message
-
-    display.render_level(mario, board); // Update the game screen
-}
-
-/**
- * @brief Finishes the game successfully.
- */
-void Level::finish_success() {
-    reset_level(); // Reset the game
-    clear_screen(); // Clear the screen
-    display.success_messege(); // Print the success message
-}
-
-/**
- * @brief Finishes the game with failure.
- */
-void Level::finish_failure() {
-    reset_level(); // Reset the game
-    clear_screen(); // Clear the screen
-    display.failure_messege(); // Print the exit message
+const Board& Level::get_board() const {
+	return board;
 }

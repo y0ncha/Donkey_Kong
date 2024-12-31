@@ -1,8 +1,6 @@
-// Mario.h
 #pragma once
 
 #include "Entity.h"
-#include "Utils.h"
 #include "Config.h"
 
 /**
@@ -75,6 +73,9 @@ private:
 
     // Checks if Mario can climb
     bool can_climb() const;
+
+	// Checks if Mario can jump
+	bool can_jump() const;
 
     // Handles Mario's jumping logic
     void handle_jumping();

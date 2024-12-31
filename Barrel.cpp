@@ -4,7 +4,8 @@
  * @brief Constructor for the Barrel class.
  * @param pBoard Pointer to the game board.
  */
-Barrel::Barrel(const Board* pBoard) : Entity(pBoard, Board::BARREL, init_pos()) {}
+Barrel::Barrel(const Board* pBoard) 
+    : Entity(pBoard, Board::BARREL, init_pos()) {}
 
 /**
  * @brief Method to handle the movement logic of the barrel.

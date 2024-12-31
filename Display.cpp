@@ -1,10 +1,21 @@
-#include "Game.h"
+#include "Display.h"
+#include "Level.h"
+
+/**
+* @brief Get the singleton instance of Display.
+* @return The singleton instance of Display.
+*/
+Display& Display::get_instance(Game* pGame) {
+    static Display instance;
+	if (pGame) instance.game = pGame;
+    return instance;
+}
 
 /**
 * @brief Prints the layout to the console.
 * @param layout The layout to print.
 */
-void Game::Display::print_layout(const char layout[Screen_dim::Y][Screen_dim::X + 1]) const {
+void Display::print_layout(const char layout[Screen_dim::Y][Screen_dim::X + 1]) const {
     gotoxy(0, 0);
     for (int i = 0; i < Screen_dim::Y - 1; i++) {
         std::cout << layout[i] << std::endl;
@@ -16,34 +27,36 @@ void Game::Display::print_layout(const char layout[Screen_dim::Y][Screen_dim::X 
 * @brief Prints the main menu and handles the user input.
 * @return A "Game::status" to update the status if needed
 */
-void Game::Display::main_menu(Game& game) {
+void Display::main_menu() const {
 
     print_layout(main_layout);
+	int input = DEF;
 	bool pending = true;
-    char key;
 
     while (pending) {
         if (_kbhit()) {
-            key = _getch(); // Get the key input
 
-            switch (key) {
-            case Menu_Options::START:
-                difficulty_menu(game);
-                game.status = Game::RUN;
-				pending = false;
-                break;
+            input = _getch(); // Get the key input
+    
+            switch (input) {
 			case Menu_Options::LEVELS:
-				levels_menu(game);
-                print_layout(main_layout);
+				levels_menu();
+				print_layout(main_layout);
 				break;
             case Menu_Options::KEYS:
                 keys_menu();
                 print_layout(main_layout);
                 break;
+            case Menu_Options::START:
+                difficulty_menu();
+                game->set_state(RUN);
+                pending = false;
+                break;
             case Menu_Options::EXIT:
                 exit_messege();
-                game.status = Game::EXIT;
+                game->set_state(TERMINATE);
 				pending = false;
+                break;
             default:
                 break;
             }
@@ -51,22 +64,24 @@ void Game::Display::main_menu(Game& game) {
     }
 }
 
-void Game::Display::levels_menu(Game& game) {
+void Display::levels_menu() const {
 
     print_layout(levels_layout);
+    int input = DEF;
     bool pending = true;
-    char key;
 
     while (pending) {
 
         if (_kbhit()) {
 
-            key = _getch(); // Get the key input
-            if (0 < key - '0' && key - '0' < NOF_LEVELS) {
-                game.lvl_ind = key - '0';
+			// Get the key input
+            input = _getch();
+            short ind = input - '0' - 1;
+
+            if (game->set_level(ind)) {
                 pending = false;
             }
-			else if (key == ESC) {
+			else if (input == ESC) {
 				pending = false;
 			}
         }
@@ -78,15 +93,15 @@ void Game::Display::levels_menu(Game& game) {
 * @brief Prints the pause menu and handles the user input.
 * @return A "Game::status" to update the status if needed
 */
-void Game::Display::pause_menu(Game& game) {
+void Display::pause_menu() const {
 
     print_layout(pause_layout);
+    int input = DEF;
 	bool pending = true;
-    char key;
-	Game::Status status = Game::PAUSE;
 
     while (pending) {
 
+        // todo add flash_message function to display
         gotoxy(28, 22);
         std::cout << "Press ESC to resume";
         Sleep(700);
@@ -95,12 +110,12 @@ void Game::Display::pause_menu(Game& game) {
         Sleep(300);
 
         if (_kbhit()) {
-            key = _getch(); // Get the key input
+            input = _getch(); // Get the key input
 
-            switch (key) {
+            switch (input) {
             case Menu_Options::RESUME:
 				pending = false;
-				game.status = Game::RUN;
+				game->set_state(RUN);
 				break;
             case Menu_Options::KEYS:
                 keys_menu();
@@ -108,7 +123,7 @@ void Game::Display::pause_menu(Game& game) {
                 break;
             case Menu_Options::EXIT:
 				pending = false;
-				game.status = Game::EXIT;
+				game->set_state(TERMINATE);
 				break;
             default:
                 break;
@@ -117,10 +132,11 @@ void Game::Display::pause_menu(Game& game) {
     }
 }
 
-void Game::Display::keys_menu() const {
+void Display::keys_menu() const {
+
     print_layout(keys_layout);
+    int input = DEF;
 	bool pending = true;
-    char key;
 
     while (pending) {
 
@@ -135,29 +151,31 @@ void Game::Display::keys_menu() const {
     }
 }
 
-void Game::Display::difficulty_menu(Game& game) {
+void Display::difficulty_menu() const {
+
     print_layout(difficulty_layout);
+    int input = DEF;
     bool pending = true;
-    char key;
 
     while (pending) {
         if (_kbhit()) {
-            key = _getch(); // Get the key input
-            switch (key) {
+            input = _getch(); // Get the key input
+            switch (input) {
             case EASY:
-                game.dif_lvl = EASY;
+                game->set_difficulty(EASY);
                 pending = false;
                 break;
             case MEDIUM:
-                game.dif_lvl = MEDIUM;
+                game->set_difficulty(MEDIUM);
                 pending = false;
                 break;
             case HARD:
-				game.dif_lvl = HARD;
+				game->set_difficulty(HARD);
                 pending = false;
                 break;
-			case ESC:
+            case Display::RESUME:
 				pending = false;
+                break;
             default:
                 break;
             }
@@ -165,11 +183,11 @@ void Game::Display::difficulty_menu(Game& game) {
     }
 }
 
-void Game::Display::exit_messege() const {
+void Display::exit_messege() const {
     print_layout(exit_layout);
 }
 
-void Game::Display::strike_messege() const {
+void Display::strike_messege() const {
     print_layout(strike_layout);
 
     while (true) {
@@ -189,32 +207,56 @@ void Game::Display::strike_messege() const {
     }
 }
 
-void Game::Display::failure_messege() const {
+void Display::failure_messege() const {
     print_layout(fail_layout);
 }
 
-void Game::Display::success_messege() const {
+void Display::success_messege() const {
     print_layout(success_layout);
+
+    while (true) {
+        if (_kbhit())  // Check if a key is pressed
+            break;
+
+        gotoxy(27, 23);
+        std::cout << "Press any key to continue";
+
+        Sleep(700);
+        if (_kbhit()) { // Check if a key is pressed (again to make it run faster between two "sleep")
+            break;
+        }
+        gotoxy(27, 23);
+        std::cout << "                         ";
+        Sleep(300);
+    }
+
 }
 
-void Game::Display::render_hud(const Mario& mario) const {
-    int n = mario.get_lives(); // Get the number of lives Mario has left
+/**
+* @brief Renders the HUD (Heads Up Display) with the number of lives.
+* @param mario_lives The number of lives Mario has left.
+*/
+void Display::render_hud(int mario_lives) {
     gotoxy(Board::HRTS_DISP_X, Board::HRTS_DISP_Y); // Move the cursor to the position where lives are displayed
 
-    // Print the lives
-    for (int i = 0; i < n; ++i) {
+    // Print the lives in the legend
+    for (int i = 0; i < mario_lives; ++i) {
         std::cout << "<3 ";
     }
 }
 
-void Game::Display::render_level(const Mario& mario, const Board& board) const {
+/**
+* @brief Renders the game level with the board and Mario.
+* @param mario The Mario object to render.
+*/
+void Display::render_level(const Mario& mario, const Board& board) {
     board.print(); // Draw the game board
     mario.set(); // Draw Mario
-    render_hud(mario); // Update the lives display
+    render_hud(mario.get_lives()); // Update the lives display
 }
 
 // Main menu layout
-char Game::Display::main_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::main_layout[Screen_dim::Y][Screen_dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "================================================================================",// 0
      "                                                                                ",// 1
@@ -234,17 +276,17 @@ char Game::Display::main_layout[Screen_dim::Y][Screen_dim::X + 1] = {
   R"!({  (,(oYo),) }}         | . \  | |__| | | |\  | | |__| |                        )!",// 15
   R"!({{ |   "   |} }         |_|\_\  \____/  |_| \_|  \_____|                        )!",// 16
   R"!({ { \(---)/  }}                                                                 )!",// 17
-     "{{  }'-=-'{ } }              START A NEW GAME   - 1                             ",// 18
-     "{ { }._:_.{  }}                 CHOOSE LEVEL    - 2                             ",// 19
-     "{{  } -:- { } }             INSTRUCTIONS & KEYS - 8                             ",// 20
-     "{_{ }`===`{  _}                    EXIT         - 9                             ",// 21
+     "{{  }'-=-'{ } }              START A NEW GAME     - 1                           ",// 18
+     "{ { }._:_.{  }}           (OPTIONAL) CHOOSE LEVEL - 2                           ",// 19
+     "{{  } -:- { } }             INSTRUCTIONS & KEYS   - 8                           ",// 20
+     "{_{ }`===`{  _}                    EXIT           - 9                           ",// 21
   R"!((((\)    (/))))                                                                 )!",// 22
      "================================================================================", // 23
      "                                                                                ", // 24
 };
 
 //Keys instructions layout
-char Game::Display::keys_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::keys_layout[Screen_dim::Y][Screen_dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "================================================================================",// 0
   R"!(//****************************************************************************\\)!",// 1
@@ -275,22 +317,22 @@ char Game::Display::keys_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Difficulty selection layout
-char Game::Display::difficulty_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::difficulty_layout[Screen_dim::Y][Screen_dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
-     "            _                                    _                       _      ",// 0
-     "      ___  | |__    ___    ___    ___   ___     | |  ___  __   __  ___  | |     ",//1
-  R"!(     / __| | '_ \  / _ \  / _ \  / __| / _ \    | | / _ \ \ \ / / / _ \ | |     )!",//2
-  R"!(     | (__ | | | || (_) || (_) | \__ \ | __/    | | | __/  \ V /  | __/ | |     )!",//3
-  R"!(     \___| |_| |_| \___/  \___/  |___/ \___|    |_| \___|   \_/   \___| |_|     )!",//4
-     "                                                                                ",// 5
-     "                                                                                ",// 6
-     "                                                                                ",// 7
-     "                       ________________________________                         ",// 8
-     "                      |                                |                        ",// 9
-     "                      |         MONKEY     -    1      |                        ",// 10
-     "                      |          APE       -    2      |                        ",// 11
-     "                      |      DONKEY KONG   -    3      |                        ",// 12
-     "                      |________________________________|                        ",// 13
+     "                       ____ _                                                   ",// 0
+     "                      / ___| |__   ___   ___  ___  ___                          ",//1
+  R"!(                     | |   | '_ \ / _ \ / _ \/ __|/ _ \                         )!",//2
+  R"!(                     | |___| | | | (_) | (_) \__ \  __/                         )!",//3
+  R"!(                      \____|_| |_|\___/ \___/|___/\___|                         )!",//4
+     "                   ____  _  __  __ _            _ _                             ",// 5
+  R"!(                  |  _ \(_)/ _|/ _(_) ___ _   _| | |_ _   _                     )!",// 6
+     "                  | | | | | |_| |_| |/ __| | | | | __| | | |                    ",// 7
+     "                  | |_| | |  _|  _| | (__| |_| | | |_| |_| |                    ",// 8
+  R"!(                  |____/|_|_| |_| |_|\___|\__,_|_|\__|\__, |                    )!",// 9
+     "                                                       |___/                    ",// 10
+     "                               MONKEY     -    1                                ",// 11
+     "                                APE       -    2                                ",// 12
+     "                            DONKEY KONG   -    3                                ",// 13
      "                                                                                ",// 14
      "                                                                                ",// 15
      "                                                                                ",// 16
@@ -306,7 +348,7 @@ char Game::Display::difficulty_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Pause menu layout
-char Game::Display::pause_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::pause_layout[Screen_dim::Y][Screen_dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
   R"!(                      _____              __  __   ______                        )!",//0
   R"!(                     / ____|     /\     |  \/  | |  ____|                       )!",//1
@@ -336,7 +378,7 @@ char Game::Display::pause_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Exit messege layout
-char Game::Display::exit_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::exit_layout[Screen_dim::Y][Screen_dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
   R"!(                          ############################                          )!",//0
   R"!(                          #                      _   #               / \ ____   )!",//1
@@ -366,7 +408,7 @@ char Game::Display::exit_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Try again messege layout
-char Game::Display::strike_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::strike_layout[Screen_dim::Y][Screen_dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "                                   :=*%@@@%*=:                                  ",//0
      "                               =@@@@=       =@@@@+                              ",//1
@@ -397,7 +439,7 @@ char Game::Display::strike_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Fail messege layout
-char Game::Display::fail_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::fail_layout[Screen_dim::Y][Screen_dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "                                                                                ", // 0
      "                                                                                ", // 1
@@ -427,8 +469,7 @@ char Game::Display::fail_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Success messege layout
-char Game::Display::success_layout[Screen_dim::Y][Screen_dim::X + 1] = {
-"                                                                                ", // 0
+char Display::success_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 "                                   :=*####*=                                    ", // 1
 "                                -*##*-   =*####.                                ", // 2
 "                              -###*  **:*#: +####                               ", // 3
@@ -450,13 +491,14 @@ char Game::Display::success_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 "                              :::::::--==========                               ", // 19
 "                                 .::::::---===.                                 ", // 20
 "                                    .:::::.                                     ", // 21
-"                                                                                ", // 22
-"                    CONGRATULATIONS, YOU HAVE SAVED PAULINE!                    ", // 23
+"                                                                                ", // 0
+"                    CONGRATULATIONS, YOU HAVE SAVED PAULINE!                    ", // 22
+"                                                                                ", // 23
 "                                                                                ", // 24
 };
 
 // Levels selection layout
-char Game::Display::levels_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::levels_layout[Screen_dim::Y][Screen_dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "            _                                    _                       _      ", // 0
      "      ___  | |__    ___    ___    ___   ___     | |  ___  __   __  ___  | |     ", // 1
@@ -468,17 +510,17 @@ char Game::Display::levels_layout[Screen_dim::Y][Screen_dim::X + 1] = {
      "                                                                                ", // 7
      "                       ________________________________                         ", // 8
      "                      |                                |                        ", // 9
-     "                      |          LEVEL I (1)           |                        ", // 10
-     "                      |          LEVEL II (2)          |                        ", // 11
-     "                      |         LEVEL III (3)          |                        ", // 12
+     "                      |          LEVEL I   - 1         |                        ", // 10
+     "                      |          LEVEL II  - 2         |                        ", // 11
+     "                      |         LEVEL III  - 3         |                        ", // 12
      "                      |________________________________|                        ", // 13
      "                                                                                ", // 14
      "                                                                                ", // 15
      "                                                                                ", // 16
      "                                                                                ", // 17
      "********************************************************************************", // 18
-  R"!(|                         CHOOSE WHAT LEVEL TO START WITH.                     |)!", // 19
-     "|                                  GOOD LUCK !                                 |", // 20
+  R"!(|                        CHOOSE WHAT LEVEL TO START WITH.                      |)!", // 19
+     "|            AFTER YOU CHOSE THE WANTED LEVEL START THE GAME FROM MAIN         |", // 20
      "********************************************************************************", // 21
      "                                                                                ", // 22
      "                                                                                ", // 23

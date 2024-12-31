@@ -1,11 +1,13 @@
 #pragma once
 
 #include <iostream>
-#include "Utils.h"
-#include "Coord.h"
-#include "Config.h"
 #include <string>
 #include <fstream>
+#include <iostream>
+#include <map>
+#include "Coord.h"
+#include "Config.h"
+#include "Utils.h"
 
 /**
  * @class Board
@@ -14,12 +16,19 @@
 class Board {
 
 public:
+
+	// Constructor for the Board class
+    Board(std::string fname);
+
     // Enum for game elements
-    enum Consts {
+    enum Icons {
         MARIO = '@', // Character representing Mario
         DONKEY_KONG = '&', // Character representing Donkey Kong
         PAULINE = '$', // Character representing Pauline
+		HAMMER = 'p', // Character representing a hammer
+		GHOST = 'x', // Character representing a ghost
 
+		LEGEND = 'L', // Character representing the legend
 		WALL = 'Q', // Character representing a wall
         LADDER = 'H', // Character representing a ladder
         BARREL = 'O', // Character representing a barrel
@@ -75,6 +84,9 @@ public:
 private:
     // Layout of the game board, represented as a 2D array of characters
     char board_layout[Screen_dim::Y][Screen_dim::X + 1];
+
+    // Map to store the positions of entities
+    std::map<Icons, Coordinates> entities_pos;
 };
 
 
