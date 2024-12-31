@@ -9,7 +9,9 @@
  * @param init_dir Initial direction of the entity.
  */
 Entity::Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates init_dir)
-    : board(pBoard), point(ch, init_pos), dir(init_dir) {
+    : board(pBoard),
+    point(ch, init_pos),
+    dir(init_dir) {
 }
 
 /**

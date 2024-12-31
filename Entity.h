@@ -1,9 +1,7 @@
 #pragma once
 
-#include <iostream>
 #include "Board.h"
 #include "Coord.h"
-#include "Utils.h"
 #include "Point.h"
 
 // Forward declaration of the handle_err function

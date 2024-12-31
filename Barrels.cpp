@@ -3,33 +3,71 @@
 /**
  * @brief Constructor to initialize the Barrels class.
  * @param pBoard Pointer to the game board.
- * @param max_barrels Maximum number of barrels.
- * @param spawn_intvl Interval for spawning barrels.
+ * @param dif_lvl Difficulty level.
  */
-Barrels::Barrels(const Board* pBoard, int dif_lvl)
+Barrels::Barrels(const Board* pBoard, Difficulty dif_lvl)
     : board(pBoard) {
 
     switch (dif_lvl) {
-	case Game::EASY:
-		amount = DEF_AMOUNT;
-		interval = DEF_INTERVAL;
-		break;
-	case Game::MEDIUM:
-		amount = MED_AMOUNT;
-		interval = MED_INTERVAL;
-		break;
-	case Game::HARD:
-		amount = HARD_AMOUNT;
-		interval = HARD_INTERVAL;
-		break;
-    default:
-        break;
+        case EASY:
+            amount = DEF_AMOUNT;
+            interval = DEF_INTERVAL;
+            break;
+        case MEDIUM:
+            amount = MED_AMOUNT;
+            interval = MED_INTERVAL;
+            break;
+        case HARD:
+            amount = HARD_AMOUNT;
+            interval = HARD_INTERVAL;
+            break;
+        default:
+            break;
     }
+
     // Initialize the barrels with the board pointer
-	barrels.reserve(amount);
+    barrels.reserve(amount);
+
     for (size_t i = 0; i < amount; i++) {
-		barrels.emplace_back(std::make_unique<Barrel>(pBoard)); // Unique pointer used as a preperatuion for the next exercises
+        barrels.emplace_back(std::make_unique<Barrel>(pBoard)); // Unique pointer used as a preparation for the next exercises
     }
+}
+
+/**
+ * @brief Copy constructor for the Barrels class.
+ * @param other The Barrels object to copy from.
+ */
+Barrels::Barrels(const Barrels& other)
+    : board(other.board),
+      interval(other.interval),
+      amount(other.amount),
+      hit_mario(other.hit_mario) {
+
+    barrels.reserve(other.barrels.size());
+    for (const auto& barrel : other.barrels) {
+        barrels.emplace_back(std::make_unique<Barrel>(*barrel));
+    }
+}
+
+/**
+ * @brief Copy assignment operator for the Barrels class.
+ * @param other The Barrels object to copy from.
+ * @return A reference to this Barrels object.
+ */
+Barrels& Barrels::operator=(const Barrels& other) {
+    if (this != &other) {
+        board = other.board;
+        interval = other.interval;
+        amount = other.amount;
+        hit_mario = other.hit_mario;
+
+        barrels.clear();
+        barrels.reserve(other.barrels.size());
+        for (const auto& barrel : other.barrels) {
+            barrels.emplace_back(std::make_unique<Barrel>(*barrel));
+        }
+    }
+    return *this;
 }
 
 /**

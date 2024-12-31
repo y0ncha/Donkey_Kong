@@ -1,9 +1,18 @@
 #include "Board.h"
 
-// todo delete
-#include <iostream>
-#include <filesystem>
+/**
+* @brief Default constructor for the Board class.
+* Initializes the board layout with empty characters.
+*/
+Board::Board(std::string fname) {
+	load(fname); // Load the board from the given file
+}
 
+/**
+* @brief Loads the board layout from a file.
+* Opens the file with the given filename and reads each line to fill the board layout.
+* @param fname The name of the file to load.
+*/
 void Board::load(std::string fname) {
 
 	std::ifstream file(fname); // Open the file with the given filename for reading
@@ -15,6 +24,8 @@ void Board::load(std::string fname) {
 	std::string line; // String to hold each line of the file
 
 	int row = 0; // Counter for the current row
+
+	clear_screen(); // Clear the screen before printing the board
 
 	while (std::getline(file, line)) { // Read each line of the file
 		if (row >= Screen_dim::Y) {
@@ -156,35 +167,3 @@ bool Board::y_inbound(int y) {
 bool Board::pos_inbound(Coordinates pos) {
     return (x_inbound(pos.x) && y_inbound(pos.y)); // Check if the position is within the game bounds
 }
-
-/*
-// Layout of the game board, represented as a 2D array of characters
-char Board::board_layout[Screen_dim::Y][Screen_dim::X + 1] = {
-    // 01234567890123456789012345678901234567890123456789012345678901234567890123456789
-      "             LIVES:                   LEVEL 1        POINTS : 00                ",// 0
-      "================================================================================",// 1
-      "                                                                                ",// 2
-      "                                   $                                            ",// 3
-      "     =============            ==========                                        ",// 4
-      "        H                      H                                                ",// 5    
-      "        H                      H   &                                            ",// 6 
-      "==================>====== =======<<=>>===============  =======================  ",// 7
-      "                                     H                                  H       ",// 8
-      "                                     H                                  H       ",// 9
-      "                          ============         ========================<<<==    ",// 10
-      "                 ========                                      H                ",// 11
-      "                        H             ======>>>                H                ",// 12
-      "                        H               H                      H                ",// 13
-      "                        H               H      ===========   ==========         ",// 14
-      "         ==================             H                H         H            ",// 15
-      "                H                       H                H         H            ",// 16
-      "                H          =================<<<==============<<<   H            ",// 17
-      "                H           H                                      H            ",// 18
-      "                H           H                                      H            ",// 19
-      "              >>>===============                        ==================      ",// 20
-      "                              H                                                 ",// 21
-      "                              H                                                 ",// 22
-      "                              H                                                 ",// 23
-      "=============================================================================<<<" // 24
-};
-*/
