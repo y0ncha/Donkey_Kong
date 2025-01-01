@@ -92,11 +92,12 @@ private:
     std::unordered_map <Icon, std::vector<Coordinates>> map;
 
     // Handles the input character while loading the board
-    bool is_valid (Icon ch);
+    bool is_valid (Icon icon);
+     
+	// Maps the icon to its position on the board
+	Icon map_icon(Icon icon, Coordinates pos);
 
-	void map_icon(Icon ch, int x, int y);
-
-	void handle_input(char ch, int i, int j);
+	// Handles the input character while loading the board
+	void handle_input(std::string, int i);
 };
-
 

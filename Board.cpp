@@ -2,34 +2,41 @@
 
 /**
 * @brief Default constructor for the Board class.
+* Initializes the map with the valid entities and their corresponding characters.
 * Initializes the board layout with empty characters.
 */
-Board::Board(std::string fname) {
-	load(fname); // Load the board from the given file
+Board::Board(std::string fname) : map{
+    {MARIO, {}},
+    {DONKEY_KONG, {}},
+    {PAULINE, {}},
+    {HAMMER, {}},
+    {GHOST, {}},
+    {LEGEND, {}},
+} {
+    load(fname); // Load the board from the given file
 }
 
 /**
-* @brief Loads the board layout from a file.
-* Opens the file with the given filename and reads each line to fill the board layout.
-* @param fname The name of the file to load.
+* @brief Loads the board layout from a given file while validating the input.
+* Reads the file line by line and stores the layout in the board_layout vector.
+* Throws an error if the file could not be opened.
+* @param fname The name of the file to load the board layout from.
 */
 void Board::load(std::string fname) {
 
+	std::string buffer; // Buffer to store each line of the file
 	std::ifstream file(fname); // Open the file with the given filename for reading
-    char ch;
 
 	if (file.is_open()) { // Check if the file is open
 		for (int i = 0; i < Screen_Dim::Y; i++) {
-			for (int j = 0; j < Screen_Dim::X; j++) {
-				file.get(ch);
-				handle_input(ch, i, j);
-			} 
+			std::getline(file, buffer); // Read each line of the file into the buffer
+			handle_input(buffer, i); // Handle the input line
 		}
 	}
 	else {
-        // todo add relevant error screen
 		throw std::runtime_error("Error: Could not open file " + fname); // Throw an error if the file could not be opened
 	}
+
 }
 
 /**
@@ -179,9 +186,9 @@ Coordinates Board::get_pos(Icon ch, short ind) {
  * @param row The row index of the character.
  * @param col The column index of the character.
  */
-bool Board::is_valid(Icon ch) {
+bool Board::is_valid(Icon icon) {
 
-    switch (ch) {
+    switch (icon) {
     case MARIO:
     case DONKEY_KONG:
     case PAULINE:
@@ -204,36 +211,49 @@ bool Board::is_valid(Icon ch) {
 }
 
 /**
- * @brief Maps the icon to its position on the board.
- * @param ch The icon to map.
- * @param x The x-coordinate of the position.
- * @param y The y-coordinate of the position.
- */
-void Board::map_icon(Icon ch, int x, int y) {
-    if (ch == GHOST || map[ch].size() < 1) {
-        map[ch].emplace_back(x, y);
+* @brief Handles the input character while loading the board.
+* @param icon The character to handle.
+* @param pos The position of the character.
+*/
+Board::Icon Board::map_icon(Icon icon, Coordinates pos) {
+    
+    if (map.find(icon) != map.end()) {
+
+        if (icon == GHOST || map[icon].empty()) {
+            map[icon].push_back(pos);
+        }
+        return AIR;
     }
-    else {
-        board_layout[x][y] = AIR;
-    }
+	return icon;
 }
 
 /**
- * @brief Handles the input character while loading the board.
- * @param ch The character to handle.
- * @param x The x-coordinate of the character.
- * @param y The y-coordinate of the character.
- */
-void Board::handle_input(char ch, int x, int y) {
+* @brief Handles the input character while loading the board.
+* @param line The line to handle.
+* @param i The row index of the line.
+*/
+void Board::handle_input(std::string line, int i) {
 
-    Icon icon = static_cast<Icon>(ch);
+    // Loop through each character in the line
+    int j = 0;
 
-    if (is_valid(icon)) {
-        map_icon(icon, x, y);
-        board_layout[x][y] = ch;
+    while (j < Screen_Dim::X && j < line.size()) {
+
+        Icon icon = static_cast<Icon>(line[j]);
+
+        if (is_valid(icon)) { // Check if the character is valid
+
+            board_layout[i][j] = map_icon(icon, { i, j });
+        }
+        else { // Set the character to AIR if it is invalid
+            board_layout[i][j] = AIR;
+        }
+        j++;
     }
-    else {
-        board_layout[x][y] = AIR;
+
+    // Fill the rest of the row with AIR if the line is shorter than Screen_Dim::X
+    while (j < Screen_Dim::X) {
+        board_layout[i][j++] = AIR;
     }
 }
 
