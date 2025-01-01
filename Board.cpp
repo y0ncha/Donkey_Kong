@@ -171,13 +171,20 @@ bool Board::pos_inbound(Coordinates pos) {
 
 /**
 * @brief Retrieves the position of the specified entity.
+* @param icon The character representing the entity.
+* @param ind The index of the entity in the map.
+* @return The position of the entity (if failed, returns {-1, -1}).
 */
-Coordinates Board::get_pos(Icon ch, short ind) {
+Coordinates Board::get_pos(Icon icon, size_t ind) const {
 
-    if (0 <= ind && ind < map[ch].size()) {
-        return Board::map[ch][ind];
+	auto it = map.find(icon);
+
+	if (it != map.end() && ind < map[icon].size()) {
+        return map[icon][ind];
+	}
+    else {
+        return { -1, -1 };
     }
-	return { -1, -1 };
 }
 
 /**
@@ -249,7 +256,6 @@ void Board::handle_input(std::string line, int i) {
         }
         j++;
     }
-
     // Fill the rest of the row with AIR if the line is shorter than Screen_Dim::X
     while (j < Screen_Dim::X) {
         board_layout[i][j++] = AIR;

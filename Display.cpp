@@ -1,5 +1,4 @@
 #include "Display.h"
-#include "Level.h"
 
 /**
 * @brief Get the singleton instance of Display.

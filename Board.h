@@ -24,6 +24,7 @@ public:
     enum Icon {
         MARIO = '@', // Character representing Mario
         DONKEY_KONG = '&', // Character representing Donkey Kong
+        BARREL = 'O', // Character representing a barrel
         PAULINE = '$', // Character representing Pauline
 		HAMMER = 'p', // Character representing a hammer
 		GHOST = 'x', // Character representing a ghost
@@ -31,7 +32,6 @@ public:
 		LEGEND = 'L', // Character representing the legend
 		WALL = 'Q', // Character representing a wall
         LADDER = 'H', // Character representing a ladder
-        BARREL = 'O', // Character representing a barrel
         AIR = ' ',  // Representation of air (empty space)
 
         FLOOR = '=', // Character representing a floor
@@ -39,12 +39,6 @@ public:
         FLOOR_R = '>', // Character representing a right-sloping floor
 
         ERR = '\0', // Error character
-
-        MARIO_X0 = 40, // Default Mario's position on the x-axis
-        MARIO_Y0 = 23, // Default Mario's position on the y-axis
-
-        DKONG_X0 = 35, // Default Donkey Kong's position on the x-axis
-        DKONG_Y0 = 6,   // Default Donkey Kong's position on the y-axis
 
         HRTS_DISP_X = 20, // Initial x-coordinate for the hearts display
         HRTS_DISP_Y = 0, // Initial y-coordinate for the hearts display
@@ -72,7 +66,7 @@ public:
     bool path_clear(Coordinates coord) const;
     bool path_clear(int x, int y) const;
 
-    Coordinates get_pos(Icon ch, short ind = 0);
+    Coordinates get_pos(Icon icon, size_t ind = 0) const;
 
     // Checks if the x-coordinate is within the game bounds
     static bool y_inbound(int y);
@@ -89,7 +83,7 @@ private:
     char board_layout[Screen_Dim::Y][Screen_Dim::X + 1];
 
     // Map to store the positions of entities
-    std::unordered_map <Icon, std::vector<Coordinates>> map;
+    mutable std::unordered_map <Icon, std::vector<Coordinates>> map;
 
     // Handles the input character while loading the board
     bool is_valid (Icon icon);

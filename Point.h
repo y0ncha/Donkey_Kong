@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Utils.h"
 #include "Coord.h"
+#include "Board.h"
 
 /**
  * @class Point
@@ -20,10 +21,10 @@ public:
     Point(char ch, Coordinates init_pos);
 
     // Character representation of the point
-    char icon;
+    Board::Icon icon;
 
     // Position of the point
-    Coordinates pos;
+	mutable Coordinates pos;
 
     /**
      * @brief Draws the point at the current position.

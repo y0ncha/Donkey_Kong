@@ -5,19 +5,14 @@
  * @param ch The character representing the point.
  * @param init_pos The initial position of the point.
  */
-Point::Point(char ch, Coordinates init_pos) : icon(ch), pos(init_pos) {
-    if (!Board::pos_inbound(init_pos)) { // Validate
-        clear_screen();
-        handle_err("SYSTEM ERROR: position is out of bound!", __FILE__, __LINE__);
-    }
-}
+Point::Point(char ch, Coordinates init_pos) : icon(static_cast<Board::Icon>(ch)), pos(init_pos) {}
 
 /**
  * @brief Draws the point at the current position.
  */
 void Point::draw() const {
     gotoxy(pos); // Move the cursor to the point's position
-    std::cout << icon; // Print the point's character at the position
+    std::cout << static_cast<char>(icon); // Print the point's character at the position
 }
 
 /**

@@ -5,7 +5,7 @@
  * @param pBoard Pointer to the game board.
  */
 Mario::Mario(const Board* pBoard) 
-    : Entity(pBoard, Board::MARIO, { Board::MARIO_X0, Board::MARIO_Y0 }) {}
+    : Entity(pBoard, Board::MARIO, { -1, -1}) {}
 
 /**
 * @brief Sets mario's board pointer.
@@ -252,7 +252,7 @@ int Mario::get_lives() const {
  */
 void Mario::reset() {
     lives_left--;
-    point.pos = { Board::MARIO_X0, Board::MARIO_Y0 };
+    point.pos = board->get_pos(Board::MARIO);
     mario_hit = false;
     state = State::IDLE;
     fall_count = 0;

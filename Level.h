@@ -1,9 +1,10 @@
-// Level.h
 #pragma once
+
 #include "Config.h"
 #include "Mario.h"
 #include "Board.h"
 #include "Barrels.h"
+#include "Display.h"
 
 /**
 * @class Level
