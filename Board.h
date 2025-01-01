@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <iostream>
-#include <map>
+#include <vector>
+#include <unordered_map>
 #include "Coord.h"
 #include "Config.h"
 #include "Utils.h"
@@ -21,7 +21,7 @@ public:
     Board(std::string fname);
 
     // Enum for game elements
-    enum Icons {
+    enum Icon {
         MARIO = '@', // Character representing Mario
         DONKEY_KONG = '&', // Character representing Donkey Kong
         PAULINE = '$', // Character representing Pauline
@@ -72,6 +72,8 @@ public:
     bool path_clear(Coordinates coord) const;
     bool path_clear(int x, int y) const;
 
+    Coordinates get_pos(Icon ch, short ind = 0);
+
     // Checks if the x-coordinate is within the game bounds
     static bool y_inbound(int y);
 
@@ -82,11 +84,19 @@ public:
     static bool pos_inbound(Coordinates pos);
 
 private:
+
     // Layout of the game board, represented as a 2D array of characters
-    char board_layout[Screen_dim::Y][Screen_dim::X + 1];
+    char board_layout[Screen_Dim::Y][Screen_Dim::X + 1];
 
     // Map to store the positions of entities
-    std::map<Icons, Coordinates> entities_pos;
+    std::unordered_map <Icon, std::vector<Coordinates>> map;
+
+    // Handles the input character while loading the board
+    bool is_valid (Icon ch);
+
+	void map_icon(Icon ch, int x, int y);
+
+	void handle_input(char ch, int i, int j);
 };
 
 

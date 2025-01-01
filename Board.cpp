@@ -16,41 +16,35 @@ Board::Board(std::string fname) {
 void Board::load(std::string fname) {
 
 	std::ifstream file(fname); // Open the file with the given filename for reading
+    char ch;
 
-	if (!file.is_open()) {
-		handle_err("Error opening file", __FILE__, __LINE__); // Handle the error if the file cannot be opened
-	}
-
-	std::string line; // String to hold each line of the file
-
-	int row = 0; // Counter for the current row
-
-	clear_screen(); // Clear the screen before printing the board
-
-	while (std::getline(file, line)) { // Read each line of the file
-		if (row >= Screen_dim::Y) {
-			break; // Break if the number of lines exceeds the screen height
+	if (file.is_open()) { // Check if the file is open
+		for (int i = 0; i < Screen_Dim::Y; i++) {
+			for (int j = 0; j < Screen_Dim::X; j++) {
+				file.get(ch);
+				handle_input(ch, i, j);
+			} 
 		}
-		strncpy_s(board_layout[row], line.c_str(), Screen_dim::X); // Copy the line to the current row
-		board_layout[row][Screen_dim::X] = '\0'; // Null-terminate the string
-        row++; // Increment the row counter
 	}
-	file.close(); // Close the file
+	else {
+        // todo add relevant error screen
+		throw std::runtime_error("Error: Could not open file " + fname); // Throw an error if the file could not be opened
+	}
 }
 
 /**
  * @brief Draws the game board by printing each row of the layout.
- * Loops through all rows (from 0 to Screen_dim::Y-1) and prints each line to the console.
+ * Loops through all rows (from 0 to Screen_Dim::Y-1) and prints each line to the console.
  * @param lives_left The number of lives left (default is 3).
  */
 void Board::print(int lives_left) const {
     gotoxy(0, 0); // Move the cursor to the top-left corner of the console
 
     // Print the rest of the layout
-    for (int i = 0; i < Screen_dim::Y - 1; i++) {
+    for (int i = 0; i < Screen_Dim::Y - 1; i++) {
         std::cout << board_layout[i] << std::endl; // Print each row of the preset board
     }
-    std::cout << board_layout[Screen_dim::Y - 1]; // Print the last row without a newline
+    std::cout << board_layout[Screen_Dim::Y - 1]; // Print the last row without a newline
 }
 
 /**
@@ -147,7 +141,7 @@ bool Board::path_clear(int x, int y) const {
 * @return True if the x-coordinate is within the game bounds, false otherwise.
 */
 bool Board::x_inbound(int x) {
-    return (x >= 0 && x < Screen_dim::X); // Check if the x-coordinate is within the game bounds
+    return (x >= 0 && x < Screen_Dim::X); // Check if the x-coordinate is within the game bounds
 }
 
 /**
@@ -156,7 +150,7 @@ bool Board::x_inbound(int x) {
  * @return True if the y-coordinate is within the game bounds, false otherwise.
  */
 bool Board::y_inbound(int y) {
-    return (y >= 0 && y < Screen_dim::Y); // Check if the y-coordinate is within the game bounds
+    return (y >= 0 && y < Screen_Dim::Y); // Check if the y-coordinate is within the game bounds
 }
 
 /**
@@ -167,3 +161,80 @@ bool Board::y_inbound(int y) {
 bool Board::pos_inbound(Coordinates pos) {
     return (x_inbound(pos.x) && y_inbound(pos.y)); // Check if the position is within the game bounds
 }
+
+/**
+* @brief Retrieves the position of the specified entity.
+*/
+Coordinates Board::get_pos(Icon ch, short ind) {
+
+    if (0 <= ind && ind < map[ch].size()) {
+        return Board::map[ch][ind];
+    }
+	return { -1, -1 };
+}
+
+/**
+ * @brief Handles the input character while loading the board.
+ * @param ch The character to handle.
+ * @param row The row index of the character.
+ * @param col The column index of the character.
+ */
+bool Board::is_valid(Icon ch) {
+
+    switch (ch) {
+    case MARIO:
+    case DONKEY_KONG:
+    case PAULINE:
+    case HAMMER:
+    case GHOST:
+    case LEGEND:
+    case WALL:
+    case LADDER:
+    case BARREL:
+    case AIR:
+    case FLOOR:
+    case FLOOR_L:
+    case FLOOR_R:
+        return true;
+        break;
+    default:
+        return false;
+        break;
+    }
+}
+
+/**
+ * @brief Maps the icon to its position on the board.
+ * @param ch The icon to map.
+ * @param x The x-coordinate of the position.
+ * @param y The y-coordinate of the position.
+ */
+void Board::map_icon(Icon ch, int x, int y) {
+    if (ch == GHOST || map[ch].size() < 1) {
+        map[ch].emplace_back(x, y);
+    }
+    else {
+        board_layout[x][y] = AIR;
+    }
+}
+
+/**
+ * @brief Handles the input character while loading the board.
+ * @param ch The character to handle.
+ * @param x The x-coordinate of the character.
+ * @param y The y-coordinate of the character.
+ */
+void Board::handle_input(char ch, int x, int y) {
+
+    Icon icon = static_cast<Icon>(ch);
+
+    if (is_valid(icon)) {
+        map_icon(icon, x, y);
+        board_layout[x][y] = ch;
+    }
+    else {
+        board_layout[x][y] = AIR;
+    }
+}
+
+

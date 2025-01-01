@@ -15,12 +15,12 @@ Display& Display::get_instance(Game* pGame) {
 * @brief Prints the layout to the console.
 * @param layout The layout to print.
 */
-void Display::print_layout(const char layout[Screen_dim::Y][Screen_dim::X + 1]) const {
+void Display::print_layout(const char layout[Screen_Dim::Y][Screen_Dim::X + 1]) const {
     gotoxy(0, 0);
-    for (int i = 0; i < Screen_dim::Y - 1; i++) {
+    for (int i = 0; i < Screen_Dim::Y - 1; i++) {
         std::cout << layout[i] << std::endl;
     }
-    std::cout << layout[Screen_dim::Y - 1];
+    std::cout << layout[Screen_Dim::Y - 1];
 }
 
 /*
@@ -256,7 +256,7 @@ void Display::render_level(const Mario& mario, const Board& board) {
 }
 
 // Main menu layout
-char Display::main_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::main_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "================================================================================",// 0
      "                                                                                ",// 1
@@ -286,7 +286,7 @@ char Display::main_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 //Keys instructions layout
-char Display::keys_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::keys_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "================================================================================",// 0
   R"!(//****************************************************************************\\)!",// 1
@@ -317,7 +317,7 @@ char Display::keys_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Difficulty selection layout
-char Display::difficulty_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::difficulty_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "                       ____ _                                                   ",// 0
      "                      / ___| |__   ___   ___  ___  ___                          ",//1
@@ -348,7 +348,7 @@ char Display::difficulty_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Pause menu layout
-char Display::pause_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::pause_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
   R"!(                      _____              __  __   ______                        )!",//0
   R"!(                     / ____|     /\     |  \/  | |  ____|                       )!",//1
@@ -378,7 +378,7 @@ char Display::pause_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Exit messege layout
-char Display::exit_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::exit_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
   R"!(                          ############################                          )!",//0
   R"!(                          #                      _   #               / \ ____   )!",//1
@@ -408,7 +408,7 @@ char Display::exit_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Try again messege layout
-char Display::strike_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::strike_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "                                   :=*%@@@%*=:                                  ",//0
      "                               =@@@@=       =@@@@+                              ",//1
@@ -439,7 +439,7 @@ char Display::strike_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Fail messege layout
-char Display::fail_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::fail_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "                                                                                ", // 0
      "                                                                                ", // 1
@@ -469,7 +469,7 @@ char Display::fail_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Success messege layout
-char Display::success_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::success_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
 "                                   :=*####*=                                    ", // 1
 "                                -*##*-   =*####.                                ", // 2
 "                              -###*  **:*#: +####                               ", // 3
@@ -498,7 +498,7 @@ char Display::success_layout[Screen_dim::Y][Screen_dim::X + 1] = {
 };
 
 // Levels selection layout
-char Display::levels_layout[Screen_dim::Y][Screen_dim::X + 1] = {
+char Display::levels_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "            _                                    _                       _      ", // 0
      "      ___  | |__    ___    ___    ___   ___     | |  ___  __   __  ___  | |     ", // 1

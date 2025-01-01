@@ -51,15 +51,15 @@ private:
 	Game* game = nullptr;
 
 	// Prints the layout to the console
-    void print_layout(const char layout[Screen_dim::Y][Screen_dim::X + 1]) const;
+    void print_layout(const char layout[Screen_Dim::Y][Screen_Dim::X + 1]) const;
 
-    static char main_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char keys_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char pause_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char exit_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char fail_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char success_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char difficulty_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char strike_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char levels_layout[Screen_dim::Y][Screen_dim::X + 1];
+    static char main_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char keys_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char pause_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char exit_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char fail_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char success_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char difficulty_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char strike_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char levels_layout[Screen_Dim::Y][Screen_Dim::X + 1];
 };
