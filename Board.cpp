@@ -181,11 +181,10 @@ Coordinates Board::get_pos(Icon ch, short ind) {
 }
 
 /**
- * @brief Handles the input character while loading the board.
- * @param ch The character to handle.
- * @param row The row index of the character.
- * @param col The column index of the character.
- */
+* @brief Checks if the character is valid.
+* @param icon The character to check.
+* @return True if the character is valid, false otherwise.
+*/
 bool Board::is_valid(Icon icon) {
 
     switch (icon) {
