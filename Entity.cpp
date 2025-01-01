@@ -23,7 +23,7 @@ void Entity::set(size_t i) const {
 	// initialized the position of the entity if needed
 	if (get_pos() == Coordinates {-1, -1}) {
 
-		Coordinates pos = board->get_pos(point.icon, i);
+        Coordinates pos = board->get_pos((point.icon), i);
 		set_pos(pos); // Set the position of the entity
 
 		while (off_ground()) { // Check if the entity is off the ground

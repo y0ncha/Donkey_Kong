@@ -30,6 +30,7 @@ public:
     // Get the singleton instance of Display
     static Display& get_instance(Game* pGame = nullptr);
 
+
     void pause_menu() const;
     void main_menu() const;
     void difficulty_menu() const;
@@ -39,8 +40,6 @@ public:
     void failure_messege() const;
     void success_messege() const;
     void keys_menu() const;
-    static void render_hud(int mario_lives);
-    static void render_level(const Mario& mario, const Board& board);
 
 private:
 

@@ -231,29 +231,6 @@ void Display::success_messege() const {
 
 }
 
-/**
-* @brief Renders the HUD (Heads Up Display) with the number of lives.
-* @param mario_lives The number of lives Mario has left.
-*/
-void Display::render_hud(int mario_lives) {
-    gotoxy(Board::HRTS_DISP_X, Board::HRTS_DISP_Y); // Move the cursor to the position where lives are displayed
-
-    // Print the lives in the legend
-    for (int i = 0; i < mario_lives; ++i) {
-        std::cout << "<3 ";
-    }
-}
-
-/**
-* @brief Renders the game level with the board and Mario.
-* @param mario The Mario object to render.
-*/
-void Display::render_level(const Mario& mario, const Board& board) {
-    board.print(); // Draw the game board
-    mario.set(); // Draw Mario
-    render_hud(mario.get_lives()); // Update the lives display
-}
-
 // Main menu layout
 char Display::main_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789

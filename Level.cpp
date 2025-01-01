@@ -7,7 +7,12 @@
  * @param dif_lvl The difficulty level of the game.
  */
 Level::Level(std::string fname, Mario& mario, Difficulty dif_lvl)
-    : board(fname), mario(mario), barrels(&board, dif_lvl) {
+    : board(fname),
+    mario(mario),
+    barrels(&board, dif_lvl), 
+    legend(Board::LEGEND, board.get_pos(Board::LEGEND)),
+    pauline(Board::PAULINE, board.get_pos(Board::PAULINE)),
+    donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG)){
     mario.set_board(&board);
 }
 
@@ -29,7 +34,7 @@ Game_State Level::start() {
     Game_State state = RUN; // Set the game status to RUN
     char key;
 
-    Display::render_level(mario, board); // Update the game screen
+    render_level(); // Update the game screen
 
     while (state == RUN) { // Main game loop
 
@@ -83,4 +88,26 @@ Game_State Level::advance_entities() {
  */
 const Board& Level::get_board() const {
 	return board;
+}
+
+/**
+* @brief Renders the HUD (Heads Up Display) with the number of lives.
+*/
+void Level::render_hud() const{
+    gotoxy(Board::HRTS_DISP_X, Board::HRTS_DISP_Y); // Move the cursor to the position where lives are displayed
+	int n = mario.get_lives(); // Get the number of lives Mario has left
+    // Print the lives in the legend
+    for (int i = 0; i < n; ++i) {
+        std::cout << "<3 ";
+    }
+}
+
+/**
+* @brief Renders the level by drawing the board, Mario, and the HUD.
+*/
+void Level::render_level() const{
+    board.print(); // Draw the game board
+    mario.set(); // Draw Mario
+	std::cout << pauline << donkey_kong << legend; // Draw the game elements
+    render_hud(); // Update the lives display
 }
