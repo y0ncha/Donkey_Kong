@@ -24,7 +24,7 @@ public:
     virtual void reset() = 0;
 
 	// Draws the entity at its current position
-    void set() const;
+    void set(size_t i = 0) const;
 
     // Erases the entity from its current position
     void vanish() const;
@@ -60,8 +60,8 @@ protected:
     bool set_dir(Coordinates coord);
 
     // Setter for the entity's position using x and y coordinates
-    bool set_pos(int _x, int _y) const;
-    bool set_pos(Coordinates coord) const;
+    Coordinates set_pos(int _x, int _y) const;
+    Coordinates set_pos(Coordinates coord) const;
 
     // Pointer to the original game board
     const Board* board;

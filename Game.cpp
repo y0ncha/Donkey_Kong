@@ -8,8 +8,9 @@ Game::Game()
 
 /**
  * @brief Starts the game loop and handles user input.
+ * @return The game state after the game loop ends (FIN_SUC, FIN_FAIL, TERMINATE).
  */
-void Game::start() {
+Game_State Game::start() {
 
     show_cursor(false); // Hide the console cursor for better visuals
     display.main_menu();
@@ -52,6 +53,7 @@ void Game::start() {
         }
     }
     display.exit_messege();
+	return state;
 }
 
 /**

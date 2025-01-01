@@ -19,11 +19,11 @@ Entity::Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates i
  * Get the position of the entity if it is not initialized.
  * If initial potion is off ground move the entity down until it is on the ground.
  */
-void Entity::set() const {
+void Entity::set(size_t i) const {
 	// initialized the position of the entity if needed
 	if (get_pos() == Coordinates {-1, -1}) {
 
-		Coordinates pos = board->get_pos(point.icon);
+		Coordinates pos = board->get_pos(point.icon, i);
 		set_pos(pos); // Set the position of the entity
 
 		while (off_ground()) { // Check if the entity is off the ground
@@ -46,7 +46,7 @@ void Entity::vanish() const {
  * @param _y The y-coordinate of the new position.
  * @return True if the position is valid, false otherwise.
  */
-bool Entity::set_pos(int _x, int _y) const {
+Coordinates Entity::set_pos(int _x, int _y) const {
 	return set_pos({ _x, _y });
 }
 
@@ -55,13 +55,12 @@ bool Entity::set_pos(int _x, int _y) const {
  * @param coord The new position.
  * @return True if the position is valid, false otherwise.
  */
-bool Entity::set_pos(Coordinates coord) const {
+Coordinates Entity::set_pos(Coordinates coord) const {
     if (board->pos_inbound(coord)) {
-        point.pos = coord;
-        return true;
+        return point.pos = coord;
     }
 	else {
-		return false;
+        return { -1, -1 };
 	}
 }
 

@@ -37,8 +37,7 @@ Game_State Level::start() {
             key = _getch();
 
 			if (key == ESC) { // If the key is ESC, open the pause menu
-                state = PAUSE;
-                break;
+                return PAUSE;
 			}
 			else {
 				mario.update_dir(key); // Update Mario's direction based on the key input

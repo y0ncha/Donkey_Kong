@@ -91,14 +91,5 @@
     <Text Include="Readme.txt">
       <Filter>txt</Filter>
     </Text>
-    <Text Include="dkong_01.screen.txt">
-      <Filter>txt</Filter>
-    </Text>
-    <Text Include="dkong_02.screen.txt">
-      <Filter>txt</Filter>
-    </Text>
-    <Text Include="dkong_03.screen.txt">
-      <Filter>txt</Filter>
-    </Text>
   </ItemGroup>
 </Project>

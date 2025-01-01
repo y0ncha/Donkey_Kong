@@ -25,7 +25,7 @@ public:
     };
 
     // Starts the game loop and handles user input
-    void start();
+    Game_State start();
 
 	// Setter for the game status
     bool set_state(Game_State _state);

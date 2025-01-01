@@ -55,9 +55,6 @@
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="dkong_01.screen.txt" />
-    <Text Include="dkong_02.screen.txt" />
-    <Text Include="dkong_03.screen.txt" />
     <Text Include="Readme.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

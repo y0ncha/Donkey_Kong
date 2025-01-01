@@ -28,9 +28,9 @@ void Board::load(std::string fname) {
 	std::ifstream file(fname); // Open the file with the given filename for reading
 
 	if (file.is_open()) { // Check if the file is open
-		for (int i = 0; i < Screen_Dim::Y; i++) {
+		for (int y = 0; y_inbound(y); y++) {
 			std::getline(file, buffer); // Read each line of the file into the buffer
-			handle_input(buffer, i); // Handle the input line
+			handle_input(buffer, y); // Handle the input line
 		}
 	}
 	else {
@@ -238,27 +238,27 @@ Board::Icon Board::map_icon(Icon icon, Coordinates pos) {
 * @param line The line to handle.
 * @param i The row index of the line.
 */
-void Board::handle_input(std::string line, int i) {
+void Board::handle_input(std::string line, int y) {
 
     // Loop through each character in the line
-    int j = 0;
+    int x = 0;
 
-    while (j < Screen_Dim::X && j < line.size()) {
+    while (x_inbound(x) && x < line.size()) {
 
-        Icon icon = static_cast<Icon>(line[j]);
+        Icon icon = static_cast<Icon>(line[x]);
 
         if (is_valid(icon)) { // Check if the character is valid
 
-            board_layout[i][j] = map_icon(icon, { i, j });
+            board_layout[y][x] = map_icon(icon, { x, y });
         }
         else { // Set the character to AIR if it is invalid
-            board_layout[i][j] = AIR;
+            board_layout[y][x] = AIR;
         }
-        j++;
+        x++;
     }
     // Fill the rest of the row with AIR if the line is shorter than Screen_Dim::X
-    while (j < Screen_Dim::X) {
-        board_layout[i][j++] = AIR;
+    while (x_inbound(x)) {
+        board_layout[y][x++] = AIR;
     }
 }
 

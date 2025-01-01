@@ -92,6 +92,6 @@ private:
 	Icon map_icon(Icon icon, Coordinates pos);
 
 	// Handles the input character while loading the board
-	void handle_input(std::string, int i);
+	void handle_input(std::string, int y);
 };
 
