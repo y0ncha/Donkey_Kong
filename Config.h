@@ -1,9 +1,6 @@
 #pragma once
 
-/**
- * @enum Ctrl
- * Represents character controls for the game.
- */
+// Enum for the control keys
 enum Ctrl {
     UP = 'w',    // Move up
     DOWN = 'x',  // Move down
@@ -14,11 +11,26 @@ enum Ctrl {
     DEF = '\0'   // Default control
 };
 
-/**
- * @enum Screen_dim
- * Represents the dimensions of the game screen.
- */
-enum Screen_dim {
+// Enum for game state
+enum Game_State {
+	TERMINATE, // Game is terminated
+    RUN, // Game is running
+    PAUSE, // Game is paused
+	LVL_RESET, // Level is reset
+    FIN_FAIL, // Game finished unsuccessfully
+    FIN_SUC, // Game finished successfully
+	IDLE, // Game is idle
+};
+
+// Enum for the game levels
+enum Difficulty {
+    EASY = '1',
+    MEDIUM = '2',
+    HARD = '3'
+};
+
+// Enum for the game levels
+enum Screen_Dim {
     X = 80, // Maximum width of the game area
     Y = 25  // Maximum height of the game area
 };

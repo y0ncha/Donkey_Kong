@@ -72,6 +72,9 @@
     <ClInclude Include="Level.h">
       <Filter>hdr</Filter>
     </ClInclude>
+    <ClInclude Include="Display.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="txt">

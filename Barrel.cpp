@@ -4,7 +4,10 @@
  * @brief Constructor for the Barrel class.
  * @param pBoard Pointer to the game board.
  */
-Barrel::Barrel(const Board* pBoard) : Entity(pBoard, Board::BARREL, init_pos()) {}
+Barrel::Barrel(const Board* pBoard) 
+    : Entity(pBoard, Board::BARREL, {-1, -1}) { 
+	init_pos();
+}
 
 /**
  * @brief Method to handle the movement logic of the barrel.
@@ -130,7 +133,13 @@ bool Barrel::is_active() const {
  * @return The initial position of the barrel.
  */
 Coordinates Barrel::init_pos() {
-    return (point.pos = {(rand() % 2 == 0) ? Board::DKONG_X0 + 1 : Board::DKONG_X0 - 1, Board::DKONG_Y0});
+    // Get the potion of Donkey Kong
+	Coordinates pos_l, pos_r, pos = board->get_pos(Board::DONKEY_KONG);
+
+	pos_r = board->x_inbound(pos.x + 1) ? pos + Coordinates{ 1, 0 } : pos;
+	pos_l = board->x_inbound(pos.x - 1) ? pos + Coordinates{ -1, 0 } : pos;
+
+    return set_pos((rand() % 2 == 0) ? pos_r : pos_l);
 }
 
 /**

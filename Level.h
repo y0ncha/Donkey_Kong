@@ -1,17 +1,30 @@
 #pragma once
 
-#include "Game.h"
+#include "Config.h"
+#include "Mario.h"
+#include "Board.h"
+#include "Barrels.h"
+#include "Display.h"
 
-// Forward declaration of the Game class
-class Game;
-
+/**
+* @class Level
+* Represents the game level and controls the game's logic.
+*/
 class Level {
+
 public:
+
     // Constructor for the Level class
-    Level(std::string fname, const Game::Display& display, Mario& mario, Game::Difficulty dif_lvl);
+    Level(std::string fname, Mario& mario, Difficulty dif_lvl);
 
     // Starts the level loop and handles user input
-    Game::Status start();
+    Game_State start();
+
+    // Resets the level
+    void reset_level();
+
+	// Getter for the board (const by reference)
+    const Board& get_board() const;
 
     enum Consts {
         DEF_DELAY = 100, // Default delay in milliseconds
@@ -19,30 +32,29 @@ public:
     };
 
 private:
-    // Game components
-    const Game::Display& display; // Reference to the display
-    Board board; // Initialize the board
-    Mario& mario; // Reference to Mario
-    Barrels barrels; // Initialize the barrels
   
+	// Game board
+    Board board;
+
+	// Game's mario by reference, same mario will continue to the next levels
+    Mario& mario;
+
+	// Hold a set of barrels
+    Barrels barrels; 
+
+    const Point legend;
+    const Point pauline;
+    const Point donkey_kong;
+
     // Frame counter used to follow the level frames for barrel control (can be used for future level features)
     unsigned long int frames = 0;
 
-    // Resets the level
-    void reset_level();
-
-	// Advances to the next level
-	void advance_level(const std::string& fname);
+    // Advances to the next level
+    void advance_level(const std::string& fname);
 
     // Method to advance the entities in the game
-    void advance_entities();
+    Game_State advance_entities();
 
-    // Method to finish the game successfully
-    void finish_success();
-
-    // Method to finish the game unsuccessfully
-    void finish_failure();
-
-    // Method to try again
-    void try_again();
+	void render_hud() const;
+	void render_level() const;
 };

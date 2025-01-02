@@ -4,7 +4,8 @@
  * @brief Constructor for the Mario class, initializing the base Entity class with the given parameters.
  * @param pBoard Pointer to the game board.
  */
-Mario::Mario(const Board* pBoard) : Entity(pBoard, Board::MARIO, { Board::MARIO_X0, Board::MARIO_Y0 }) {}
+Mario::Mario(const Board* pBoard) 
+    : Entity(pBoard, Board::MARIO, { -1, -1}) {}
 
 /**
 * @brief Sets mario's board pointer.
@@ -136,8 +137,11 @@ void Mario::handle_idle() {
             if (can_climb()) { // If Mario can climb
                 handle_climbing();
             }
-            else { // If Mario can't climb
+			else if (can_jump()) { // If Mario can't climb check if he can jump
                 handle_jumping();
+            }
+            else {
+				dir.y = 0; // If Mario can't climb or jump, reset the vertcal direction
             }
             break;
         case 1: // If Mario is moving down
@@ -207,6 +211,10 @@ bool Mario::can_climb() const {
     return (dir.y == -1 && behind_ch() == Board::LADDER) || (dir.y == 1 && board->get_char(point.pos.x, point.pos.y + 2) == Board::LADDER);
 }
 
+bool Mario::can_jump() const {
+    return (!board->is_floor(above_ch()) && on_ground());
+}
+
 /**
  * @brief Checks if Mario hits something and returns the type of object he hits.
  * @return The type of object Mario hits.
@@ -244,7 +252,7 @@ int Mario::get_lives() const {
  */
 void Mario::reset() {
     lives_left--;
-    point.pos = { Board::MARIO_X0, Board::MARIO_Y0 };
+    point.pos = board->get_pos(Board::MARIO);
     mario_hit = false;
     state = State::IDLE;
     fall_count = 0;

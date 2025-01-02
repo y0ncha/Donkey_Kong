@@ -1,9 +1,7 @@
 #pragma once
 
-#include <iostream>
 #include "Board.h"
 #include "Coord.h"
-#include "Utils.h"
 #include "Point.h"
 
 // Forward declaration of the handle_err function
@@ -25,8 +23,8 @@ public:
     // Virtual method to reset the Entity
     virtual void reset() = 0;
 
-    // Draws the entity at its current position
-    void set() const;
+	// Draws the entity at its current position
+    void set(size_t i = 0) const;
 
     // Erases the entity from its current position
     void vanish() const;
@@ -49,14 +47,6 @@ public:
     // Getter for the entity's direction
     Coordinates get_dir() const { return dir; }
 
-    // Setter for the entity's position using x and y coordinates
-    void set_pos(int _x, int _y);
-    void set_pos(Coordinates coord);
-
-    // Setter for the entity's direction using dx and dy values
-    void set_dir(int dx, int dy);
-    void set_dir(Coordinates coord);
-
     // Checks if the entity is off the ground
     bool off_ground() const;
 
@@ -64,6 +54,15 @@ public:
     bool on_ground() const;
 
 protected:
+
+    // Setter for the entity's direction using dx and dy values
+    bool set_dir(int dx, int dy);
+    bool set_dir(Coordinates coord);
+
+    // Setter for the entity's position using x and y coordinates
+    Coordinates set_pos(int _x, int _y) const;
+    Coordinates set_pos(Coordinates coord) const;
+
     // Pointer to the original game board
     const Board* board;
 

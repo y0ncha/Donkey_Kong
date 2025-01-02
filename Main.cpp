@@ -10,7 +10,7 @@ int main() {
 
 	// Seed the random number generator
 	srand(static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
-
+	
 	// Initialize the game
 	Game my_game; 
 	my_game.start();

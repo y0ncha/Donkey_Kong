@@ -2,7 +2,6 @@
 
 #include "Entity.h"
 #include "Board.h"
-#include "Game.h"
 
 /**
  * @class Barrel
@@ -12,7 +11,7 @@ class Barrel : public Entity {
 
 public:
     // Constructor for the Barrel class
-    Barrel(const Board* pBoard);
+    Barrel(const Board* pBoard = nullptr);
 
     // Method to handle the movement logic of the barrel
     void move() override;
@@ -65,7 +64,6 @@ private:
 
     // Fall count
     int fall_count = 0;
-
 
     // Flag to check if the barrel is active
     bool active = false;
