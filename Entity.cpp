@@ -135,6 +135,7 @@ char Entity::behind_ch() const {
  * @brief Checks if the entity is off the ground.
  * @return True if the entity is off the ground, false otherwise.
  */
+
 bool Entity::off_ground() const {
     char bellow = beneath_ch();
     return (bellow != Board::FLOOR && bellow != Board::FLOOR_L && bellow != Board::FLOOR_R);

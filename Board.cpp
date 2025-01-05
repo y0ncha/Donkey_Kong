@@ -67,6 +67,8 @@ char Board::get_char(Coordinates coord) const {
     return board_layout[coord.y][coord.x]; // Return the character at the specified position
 }
 
+
+
 /**
  * @brief Retrieves the character at the specified position on the board.
  * Returns ERR if the position is out of bounds.
@@ -260,6 +262,10 @@ void Board::handle_input(std::string line, int y) {
     while (x_inbound(x)) {
         board_layout[y][x++] = AIR;
     }
+}
+size_t Board::icon_size(Icon icon) const
+{
+   return map[icon].size();
 }
 
 

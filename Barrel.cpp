@@ -136,6 +136,8 @@ Coordinates Barrel::init_pos() {
     // Get the potion of Donkey Kong
 	Coordinates pos_l, pos_r, pos = board->get_pos(Board::DONKEY_KONG);
 
+
+    //TODO: in case of (pos.x + 1) not inbound it return pos and then the barrel goes directly from dKhong position, not good
 	pos_r = board->x_inbound(pos.x + 1) ? pos + Coordinates{ 1, 0 } : pos;
 	pos_l = board->x_inbound(pos.x - 1) ? pos + Coordinates{ -1, 0 } : pos;
 
