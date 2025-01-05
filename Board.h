@@ -68,6 +68,7 @@ public:
 
     Coordinates get_pos(Icon icon, size_t ind = 0) const;
 
+
     // Checks if the x-coordinate is within the game bounds
     static bool y_inbound(int y);
 
@@ -77,7 +78,11 @@ public:
     // Checks if the position is within the game bounds
     static bool pos_inbound(Coordinates pos);
 
+	size_t icon_size(Icon icon) const;
+
+
 private:
+
 
     // Layout of the game board, represented as a 2D array of characters
     char board_layout[Screen_Dim::Y][Screen_Dim::X + 1];

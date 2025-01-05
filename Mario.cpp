@@ -226,6 +226,9 @@ char Mario::handle_collision() {
     case Board::BARREL: // If Mario hits a barrel
         mario_hit = true; // Set Mario as hit
         break;
+	case Board::GHOST: // If Mario hits a ghost
+		mario_hit = true; // Set Mario as hit
+		break;
     case Board::PAULINE: // If Mario hits Pauline
         rescued_pauline = true; // Set Mario as saved Pauline
         break;

@@ -37,6 +37,7 @@ Barrels::Barrels(const Board* pBoard, Difficulty dif_lvl)
  * @brief Copy constructor for the Barrels class.
  * @param other The Barrels object to copy from.
  */
+
 Barrels::Barrels(const Barrels& other)
     : board(other.board),
       interval(other.interval),

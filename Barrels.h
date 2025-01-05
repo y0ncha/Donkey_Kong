@@ -52,4 +52,5 @@ private:
 
     // Vector to store the barrels (using unique pointers for future preparation)
     std::vector<std::unique_ptr<Barrel>> barrels;
+
 };
