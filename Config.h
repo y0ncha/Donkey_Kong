@@ -1,6 +1,5 @@
 #pragma once
 
-
 // Enum for the control keys
 enum Ctrl {
     UP = 'w',    // Move up
@@ -31,7 +30,7 @@ enum Difficulty {
 };
 
 // Enum for the game levels
-enum Screen_dim {
+enum Screen_Dim {
     X = 80, // Maximum width of the game area
     Y = 25  // Maximum height of the game area
 };

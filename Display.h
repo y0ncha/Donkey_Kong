@@ -30,6 +30,7 @@ public:
     // Get the singleton instance of Display
     static Display& get_instance(Game* pGame = nullptr);
 
+
     void pause_menu() const;
     void main_menu() const;
     void difficulty_menu() const;
@@ -39,8 +40,6 @@ public:
     void failure_messege() const;
     void success_messege() const;
     void keys_menu() const;
-    static void render_hud(int mario_lives);
-    static void render_level(const Mario& mario, const Board& board);
 
 private:
 
@@ -51,15 +50,15 @@ private:
 	Game* game = nullptr;
 
 	// Prints the layout to the console
-    void print_layout(const char layout[Screen_dim::Y][Screen_dim::X + 1]) const;
+    void print_layout(const char layout[Screen_Dim::Y][Screen_Dim::X + 1]) const;
 
-    static char main_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char keys_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char pause_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char exit_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char fail_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char success_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char difficulty_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char strike_layout[Screen_dim::Y][Screen_dim::X + 1];
-    static char levels_layout[Screen_dim::Y][Screen_dim::X + 1];
+    static char main_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char keys_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char pause_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char exit_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char fail_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char success_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char difficulty_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char strike_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char levels_layout[Screen_Dim::Y][Screen_Dim::X + 1];
 };

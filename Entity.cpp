@@ -16,9 +16,21 @@ Entity::Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates i
 
 /**
  * @brief Draws the entity at its current position.
+ * Get the position of the entity if it is not initialized.
+ * If initial potion is off ground move the entity down until it is on the ground.
  */
-void Entity::set() const {
-    point.draw(); // Draw the entity at the current position
+void Entity::set(size_t i) const {
+	// initialized the position of the entity if needed
+	if (get_pos() == Coordinates {-1, -1}) {
+
+        Coordinates pos = board->get_pos((point.icon), i);
+		set_pos(pos); // Set the position of the entity
+
+		while (off_ground()) { // Check if the entity is off the ground
+			point.pos.y++; // Move the entity down until it is on the ground
+		}
+	}
+	point.draw(); // Draw the entity at the current position
 }
 
 /**
@@ -32,17 +44,24 @@ void Entity::vanish() const {
  * @brief Sets the position of the entity using x and y coordinates.
  * @param _x The x-coordinate of the new position.
  * @param _y The y-coordinate of the new position.
+ * @return True if the position is valid, false otherwise.
  */
-void Entity::set_pos(int _x, int _y) {
-    point.pos = { _x, _y };
+Coordinates Entity::set_pos(int _x, int _y) const {
+	return set_pos({ _x, _y });
 }
 
 /**
  * @brief Sets the position of the entity using a Coordinates object.
  * @param coord The new position.
+ * @return True if the position is valid, false otherwise.
  */
-void Entity::set_pos(Coordinates coord) {
-    point.pos = coord;
+Coordinates Entity::set_pos(Coordinates coord) const {
+    if (board->pos_inbound(coord)) {
+        return point.pos = coord;
+    }
+	else {
+        return { -1, -1 };
+	}
 }
 
 /**
@@ -50,16 +69,20 @@ void Entity::set_pos(Coordinates coord) {
  * @param dx The x-direction value.
  * @param dy The y-direction value.
  */
-void Entity::set_dir(int dx, int dy) {
-    dir = { dx, dy };
+bool Entity::set_dir(int dx, int dy) {
+    if (-1 <= dx && dx <= 1 && -1 <= dy && dy <= 1) {
+        dir = { dx, dy };
+        return true;
+    }
+    return false;
 }
 
 /**
  * @brief Sets the direction of the entity using a Coordinates object.
  * @param coord The new direction.
  */
-void Entity::set_dir(Coordinates coord) {
-    dir = coord;
+bool Entity::set_dir(Coordinates coord) {
+	return set_dir(coord.x, coord.y);
 }
 
 /**
@@ -112,6 +135,7 @@ char Entity::behind_ch() const {
  * @brief Checks if the entity is off the ground.
  * @return True if the entity is off the ground, false otherwise.
  */
+
 bool Entity::off_ground() const {
     char bellow = beneath_ch();
     return (bellow != Board::FLOOR && bellow != Board::FLOOR_L && bellow != Board::FLOOR_R);

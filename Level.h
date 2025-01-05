@@ -1,9 +1,11 @@
-// Level.h
 #pragma once
+
 #include "Config.h"
 #include "Mario.h"
 #include "Board.h"
 #include "Barrels.h"
+#include "Display.h"
+#include "Ghosts.h"
 
 /**
 * @class Level
@@ -40,7 +42,13 @@ private:
 
 	// Hold a set of barrels
     Barrels barrels; 
-  
+
+    Ghosts ghosts;
+
+    const Point legend;
+    const Point pauline;
+    const Point donkey_kong;
+
     // Frame counter used to follow the level frames for barrel control (can be used for future level features)
     unsigned long int frames = 0;
 
@@ -49,4 +57,10 @@ private:
 
     // Method to advance the entities in the game
     Game_State advance_entities();
+
+	void render_hud() const;
+	void render_level() const;
+
+
 };
+

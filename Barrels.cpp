@@ -29,7 +29,7 @@ Barrels::Barrels(const Board* pBoard, Difficulty dif_lvl)
     barrels.reserve(amount);
 
     for (size_t i = 0; i < amount; i++) {
-        barrels.emplace_back(std::make_unique<Barrel>(pBoard)); // Unique pointer used as a preparation for the next exercises
+        barrels.emplace_back(std::make_unique<Barrel>(board)); // Unique pointer used as a preparation for the next exercises
     }
 }
 
@@ -37,6 +37,7 @@ Barrels::Barrels(const Board* pBoard, Difficulty dif_lvl)
  * @brief Copy constructor for the Barrels class.
  * @param other The Barrels object to copy from.
  */
+
 Barrels::Barrels(const Barrels& other)
     : board(other.board),
       interval(other.interval),

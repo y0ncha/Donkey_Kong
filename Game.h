@@ -6,6 +6,7 @@
 #include "Display.h"
 #include "Level.h"
 
+
 class Level;
 class Display;
 
@@ -25,7 +26,7 @@ public:
     };
 
     // Starts the game loop and handles user input
-    void start();
+    Game_State start();
 
 	// Setter for the game status
     bool set_state(Game_State _state);
@@ -66,7 +67,7 @@ private:
 	std::unique_ptr<Level> curr_level = nullptr; 
 
 	// Array of level files to load the levels from
-    std::string level_files[Consts::NOF_LEVELS] = {"dkong_01.screen.txt", "dkong_02.screen.txt" , "dkong_03.screen.txt"};  // todo change to map
+    std::string level_files[Consts::NOF_LEVELS] = {"C:\\Users\\talziv\\projects VS\\dkong_01.screen.txt", "dkong_02.screen.txt" , "dkong_03.screen.txt"};  // todo change to map
    
     // int level = 1; // Current game level
     // int score = 0; // Current game score

@@ -1,8 +1,9 @@
 #pragma once
 
-#include <iostream>
+#include <iostream> 
 #include "Utils.h"
 #include "Coord.h"
+#include "Board.h"
 
 /**
  * @class Point
@@ -18,21 +19,19 @@ public:
      * @param init_pos The initial position of the point.
      */
     Point(char ch, Coordinates init_pos);
+	Point(Board::Icon icon, Coordinates init_pos);
 
     // Character representation of the point
-    char icon;
+	Board::Icon icon;
 
     // Position of the point
-    Coordinates pos;
+	mutable Coordinates pos;
 
-    /**
-     * @brief Draws the point at the current position.
-     */
+    friend std::ostream& operator<<(std::ostream& os, const Point& point);
+
+	// Draw the point on the console
     void draw() const;
 
-    /**
-     * @brief Erases the point from the current position.
-     * @param ch The character to restore at the point's position.
-     */
+	// Erase the point from the console
     void erase(char ch) const;
 };

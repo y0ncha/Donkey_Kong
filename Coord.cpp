@@ -1,5 +1,6 @@
 #include "Coord.h"
 
+
 /**
  * @brief Overloads the += operator to add the coordinates of another Coordinates object to this one.
  * Updates the x and y values of this object.
