@@ -133,16 +133,33 @@ bool Barrel::is_active() const {
  * @return The initial position of the barrel.
  */
 Coordinates Barrel::init_pos() {
-    // Get the potion of Donkey Kong
-	Coordinates pos_l, pos_r, pos = board->get_pos(Board::DONKEY_KONG);
+    // Get the position of Donkey Kong
+    Coordinates pos = board->get_pos(Board::DONKEY_KONG);
+    Coordinates pos_l = { pos.x - 1, pos.y };
+    Coordinates pos_r = { pos.x + 1, pos.y };
 
+    // Validate positions
+    bool valid_l = board->pos_inbound(pos_l) && board->path_clear(pos_l);
+    bool valid_r = board->pos_inbound(pos_r) && board->path_clear(pos_r);
 
-    //TODO: in case of (pos.x + 1) not inbound it return pos and then the barrel goes directly from dKhong position, not good
-	pos_r = board->x_inbound(pos.x + 1) ? pos + Coordinates{ 1, 0 } : pos;
-	pos_l = board->x_inbound(pos.x - 1) ? pos + Coordinates{ -1, 0 } : pos;
+    // If one side is invalid, set it to the other side
+    if (!valid_l && valid_r) {
+        pos_l = pos_r;
+    }
+    else if (!valid_r && valid_l) {
+        pos_r = pos_l;
+    }
 
+	// If both positions are invalid, set them to {-1, -1} so Entity's set wont spawn them
+    if (!valid_l && !valid_r) {
+        pos_l = pos_r = Coordinates{ -1, -1 }; // todo print error messege screen isnt valid
+    }
+
+    // Set the barrel's position randomly to either pos_l or pos_r
     return set_pos((rand() % 2 == 0) ? pos_r : pos_l);
 }
+
+
 
 /**
  * @brief Sets the original and current board for the barrel.
@@ -172,10 +189,19 @@ char Barrel::handle_collision() {
         case Board::MARIO:
             state = State::HIT_MARIO;
             break;
+		case Board::WALL:
+			reset();
+			break;
         case Board::ERR:
             reset();
             break;
     }
+
+	// If a barrel is about to colide a floor from the side, stop it
+	if (board->is_floor(next_ch())) {
+		dir.x = -dir.x;
+	}
+
     return obst;
 }
 

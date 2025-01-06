@@ -41,6 +41,12 @@ public:
     // Checks the character above the entity
     char above_ch() const;
 
+	// Getter for the char to the left of the entity
+	char left_ch() const;
+    
+	// Getter for the char to the right of the entity
+	char right_ch() const;
+
     // Getter for the entity's position
     Coordinates get_pos() const { return point.pos; }
 

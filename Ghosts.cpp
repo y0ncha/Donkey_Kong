@@ -59,7 +59,7 @@ void Ghosts::set_all()
 
 // Method to set amount of ghosts
 void Ghosts::set_amount() {
-    amount = board->icon_size(Board::GHOST);
+    amount = board->get_entity_count(Board::GHOST);
 }
 
 // Method to check ghosts collision

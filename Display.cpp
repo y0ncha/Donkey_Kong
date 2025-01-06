@@ -63,13 +63,39 @@ void Display::main_menu() const {
     }
 }
 
+/**
+ * @brief Prints the levels menu and handles the user input.
+ */
+void Display::print_levels() const {
+    short x = 28, y = 7, i = 1;
+
+    for (const auto& level : game->get_fnames()) {
+        gotoxy(x, y);
+        std::cout << remove_txt_ext(level);
+        gotoxy(x + 20, y++);
+        std::cout << " - " << i++ << std::endl << std::endl;
+    }
+}
+
+/**
+*  @brief Prints the levels menu and handles the user input.
+*/
 void Display::levels_menu() const {
 
     print_layout(levels_layout);
+    print_levels();
     int input = DEF;
     bool pending = true;
 
     while (pending) {
+
+        // todo add flash_message function to display
+        gotoxy(30, 22);
+        std::cout << "Press ESC to resume";
+        Sleep(700);
+        gotoxy(30, 22);
+        std::cout << "                   ";
+        Sleep(300);
 
         if (_kbhit()) {
 
@@ -90,7 +116,6 @@ void Display::levels_menu() const {
 
 /*
 * @brief Prints the pause menu and handles the user input.
-* @return A "Game::status" to update the status if needed
 */
 void Display::pause_menu() const {
 
@@ -484,12 +509,12 @@ char Display::levels_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
      "                                                                                ", // 5
      "                                                                                ", // 6
      "                                                                                ", // 7
-     "                       ________________________________                         ", // 8
-     "                      |                                |                        ", // 9
-     "                      |          LEVEL I   - 1         |                        ", // 10
-     "                      |          LEVEL II  - 2         |                        ", // 11
-     "                      |         LEVEL III  - 3         |                        ", // 12
-     "                      |________________________________|                        ", // 13
+     "                                                                                ", // 8
+     "                                                                                ", // 9
+     "                                                                                ", // 10
+     "                                                                                ", // 11
+     "                                                                                ", // 12
+     "                                                                                ", // 13
      "                                                                                ", // 14
      "                                                                                ", // 15
      "                                                                                ", // 16

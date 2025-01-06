@@ -20,6 +20,7 @@ Entity::Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates i
  * If initial potion is off ground move the entity down until it is on the ground.
  */
 void Entity::set(size_t i) const {
+
 	// initialized the position of the entity if needed
 	if (get_pos() == Coordinates {-1, -1}) {
 
@@ -129,6 +130,22 @@ char Entity::above_ch() const {
  */
 char Entity::behind_ch() const {
     return board->get_char(point.pos);
+}
+
+/**
+* @brief Gets the character to the left of the entity.
+* @return The character to the left of the entity.
+*/
+char Entity::left_ch() const {
+	return board->get_char(point.pos.x - 1, point.pos.y);
+}
+
+/**
+* @brief Gets the character to the right of the entity.
+* @return The character to the right of the entity.
+*/
+char Entity::right_ch() const {
+	return board->get_char(point.pos.x + 1, point.pos.y);
 }
 
 /**

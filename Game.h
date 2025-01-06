@@ -1,10 +1,14 @@
 #pragma once
 
 #include <string>
+#include <list> 
+#include <filesystem>
+#include <regex>
 #include "Config.h"
 #include "Mario.h"
 #include "Display.h"
 #include "Level.h"
+#include "Utils.h"
 
 
 class Level;
@@ -22,7 +26,7 @@ public:
 
     // Enum for game constants
     enum Consts {
-        NOF_LEVELS = 3 // Number of levels in the game
+        NOF_LEVELS = 10 // Number of levels in the game
     };
 
     // Starts the game loop and handles user input
@@ -46,6 +50,9 @@ public:
 	// Getter for the game level index
     int get_mario_lives() const;
 
+    // Method to get the level file names list
+    const std::list<std::string>& get_fnames() const;
+
 private:
 
 	// Game state
@@ -67,8 +74,19 @@ private:
 	std::unique_ptr<Level> curr_level = nullptr; 
 
 	// Array of level files to load the levels from
-    std::string level_files[Consts::NOF_LEVELS] = {"C:\\Users\\talziv\\projects VS\\dkong_01.screen.txt", "dkong_02.screen.txt" , "dkong_03.screen.txt"};  // todo change to map
-   
+    std::string level_files[Consts::NOF_LEVELS] = {"dkong_01.screen.txt", "dkong_02.screen.txt" , "dkong_03.screen.txt"};
+
+	// List to hold the level files names, sorted alphabetically
+    std::list<std::string> level_fnames;
+
+    // Method to scan for level files in the directory
+    void scan_for_fnames(const std::string& directory = std::filesystem::current_path().string());
+
+	// Method to push the level file names to the list
+	bool push_fname(const std::string& fname);
+
+    const std::string& pop_fname(int i = 0);
+
     // int level = 1; // Current game level
     // int score = 0; // Current game score
 };

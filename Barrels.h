@@ -26,10 +26,10 @@ public:
     Barrels& operator=(Barrels&&) noexcept = default;
 
     // Moves all active barrels and returns if Mario was hit
-    void move(int frames);
+    void move_all(int frames);
 
     // Resets the barrels
-    void reset();
+    void reset_all();
 
     // Checks if Mario was hit by a barrel
     bool hitted_mario() const;

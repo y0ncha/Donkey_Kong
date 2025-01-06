@@ -78,7 +78,8 @@ public:
     // Checks if the position is within the game bounds
     static bool pos_inbound(Coordinates pos);
 
-	size_t icon_size(Icon icon) const;
+	// Returns the number of entities of a given type
+	size_t get_entity_count(Icon icon) const;
 
 
 private:

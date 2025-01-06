@@ -60,7 +60,5 @@ private:
 
 	void render_hud() const;
 	void render_level() const;
-
-
 };
 
