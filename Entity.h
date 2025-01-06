@@ -17,6 +17,9 @@ public:
     // Constructor for the Entity class
     Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates dir = {0, 0});
 
+	// Virtual destructor for the Entity class
+	virtual ~Entity() = default;
+
     // Virtual method to move the Entity
     virtual void move() = 0;
 
