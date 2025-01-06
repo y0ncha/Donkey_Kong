@@ -57,7 +57,7 @@ Coordinates Entity::set_pos(int _x, int _y) const {
  * @return True if the position is valid, false otherwise.
  */
 Coordinates Entity::set_pos(Coordinates coord) const {
-    if (board->pos_inbound(coord)) {
+    if (board->pos_inbound(coord) || coord == Coordinates{-1,-1}) {
         return point.pos = coord;
     }
 	else {

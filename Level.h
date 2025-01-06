@@ -59,6 +59,6 @@ private:
     Game_State advance_entities();
 
 	void render_hud() const;
-	void render_level() const;
+	void render_level();
 };
 

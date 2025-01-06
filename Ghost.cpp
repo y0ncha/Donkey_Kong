@@ -48,7 +48,7 @@ Coordinates Ghost::init_dir() {
 /**
  * @brief Updates the direction of the ghost based on probability.
  */
-void Ghost::update_dirc() {
+void Ghost::update_dir(char) {
     int probability = rand() % 100;
     if (probability < 5) {
         dir.x = -dir.x;
@@ -67,7 +67,7 @@ void Ghost::update_dirc() {
  * @brief Moves the ghost by updating its direction and stepping.
  */
 void Ghost::move() {
-    update_dirc();
+    update_dir();
     step();
 }
 
@@ -76,6 +76,7 @@ void Ghost::move() {
  */
 void Ghost::reset() {
     vanish();
+    set_pos({-1,-1});
     dir = init_dir();
     active = true;
 }
@@ -94,22 +95,6 @@ void Ghost::handle_falling() {
 char Ghost::handle_collision() {
     // Implementation of handle_collision
     return ' ';
-}
-
-/**
- * @brief Updates the direction of the ghost based on a key input.
- * @param key The key input to update the direction.
- */
-void Ghost::update_dir(char key) {
-    // Implementation of update_dir
-}
-
-/**
- * @brief Sets the direction of the ghost.
- * @param coord The new direction coordinates.
- */
-void Ghost::set_dir(Coordinates coord) {
-    dir = coord;
 }
 
 /**
