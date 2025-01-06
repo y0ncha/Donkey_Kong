@@ -232,6 +232,10 @@ char Mario::handle_collision() {
     case Board::PAULINE: // If Mario hits Pauline
         rescued_pauline = true; // Set Mario as saved Pauline
         break;
+	case Board::WALL: // If Mario hits a wall
+		dir.x = -dir.x; // Reverse direction if path is not clear
+		obst = Board::AIR; // Return air to allow Mario to move
+		break;
     case Board::ERR: // If Mario's next step is out of bounds
         dir.x = -dir.x; // Reverse direction if path is not clear
         obst = Board::AIR; // Return air to allow Mario to move
@@ -239,6 +243,12 @@ char Mario::handle_collision() {
     default:
         break;
     }
+
+    // If a mario is about to colide a floor from the side, stop him
+    if (board->is_floor(next_ch())) {
+        dir.x = -dir.x;
+    }
+
     return obst; // Return the type of object Mario hits (optional for next exercises)
 }
 

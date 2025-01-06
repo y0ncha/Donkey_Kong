@@ -63,7 +63,7 @@ void Level::reset_level() {
 
     Sleep(KILLED_DELAY); // Delay for 1 second
     mario.reset(); // Draw Mario at its default position
-    barrels.reset(); // Reset the barrels
+    barrels.reset_all(); // Reset the barrels
 	ghosts.reset_all(); // Reset the ghosts
     frames = 0;
 }
@@ -74,7 +74,7 @@ void Level::reset_level() {
 Game_State Level::advance_entities() {
 
     mario.move(); // Move Mario if he is on a floor element
-    barrels.move(frames); // Move the barrels
+    barrels.move_all(frames); // Move the barrels
 	ghosts.move_all(); // Move the ghosts
 	Game_State state = RUN; // Check the game state
 
@@ -111,7 +111,7 @@ void Level::render_hud() const{
 void Level::render_level() const{
     board.print(); // Draw the game board
     mario.set(); // Draw Mario
-	std::cout << pauline << donkey_kong << legend; // Draw the game elements
+	std::cout << pauline << donkey_kong; // Draw the game elements
     render_hud(); // Update the lives display
 }
 
