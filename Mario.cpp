@@ -20,22 +20,23 @@ void Mario::set_board(const Board* pBoard) {
  * @param key The key input to determine the direction.
  */
 void Mario::update_dir(char key) {
+
     // Convert key to direction (ignore non-defined keys)
     switch (std::tolower(key)) {
     case Ctrl::UP:
-        dir.y = -1; // move up
+        set_dy(-1); // move up
         break;
     case Ctrl::DOWN:
-        dir.y = 1; // move down
+        set_dy(1); // move down
         break;
     case Ctrl::LEFT:
-        dir.x = -1; // move left
+        set_dx(-1); // move left
         break;
     case Ctrl::RIGHT:
-        dir.x = 1; // move right
+        set_dx(1); // move right
         break;
     case Ctrl::STAY:
-        dir = { 0, 0 }; // Stay in place
+        set_dir(0,0); // Stay in place
         break;
     }
 }

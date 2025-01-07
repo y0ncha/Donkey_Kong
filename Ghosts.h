@@ -36,7 +36,7 @@ public:
     void set_amount();
 
 	// Method to check ghost collision
-    void check_ghosts_collision() const;
+    void handle_colisions();
 
 	// Method to check if any ghost hit Mario
     bool hitted_mario() const;
