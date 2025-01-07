@@ -68,6 +68,10 @@ protected:
     bool set_dir(int dx, int dy);
     bool set_dir(Coordinates coord);
 
+	// Setter for the entity's dx and dy values
+	bool set_dy(int dy);
+	bool set_dx(int dx);
+
     // Setter for the entity's position using x and y coordinates
     Coordinates set_pos(int _x, int _y) const;
     Coordinates set_pos(Coordinates coord) const;

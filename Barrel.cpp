@@ -13,12 +13,14 @@ Barrel::Barrel(const Board* pBoard)
  * @brief Method to handle the movement logic of the barrel.
  */
 void Barrel::move() {
+
     char beneath = beneath_ch();
+    update_dir(beneath);
 
     if (state == State::FALLING) {
         handle_falling();
-    } else {
-        update_dir(beneath);
+    }
+    else {
         step();
     }
 }
@@ -28,17 +30,18 @@ void Barrel::move() {
  * @param beneath The character beneath the barrel.
  */
 void Barrel::update_dir(char beneath) {
+
     switch (beneath) {
         case Board::FLOOR_L:
-            last_dx = dir.x = -1; // Move left
+            set_dx(-1); // Move left
+			last_dx = -1;
             break;
         case Board::FLOOR_R:
-            last_dx = dir.x = 1; // Move right
+			set_dx(1); // Move right
+			last_dx = 1;
             break;
         case Board::AIR:
             state = State::FALLING; // Set the State to FALLING
-            dir = {0, 1}; // Move down
-            fall_count++;
             break;
         default:
             break;
@@ -49,9 +52,16 @@ void Barrel::update_dir(char beneath) {
  * @brief Method to handle the falling of the barrel.
  */
 void Barrel::handle_falling() {
+
     fall_count++;
     dir = {0, 1}; // Set the direction to fall and step
     step();
+
+	// If the barrel falls out of the screen
+	if (beneath_ch() == Board::ERR) {
+        reset();
+        return;
+	}
 
     if (on_ground() && !hitted_mario()) {
         if (fall_count >= MAX_FALL_H) {
@@ -83,20 +93,25 @@ void Barrel::explode() {
  * @param radius The radius of the explosion phase.
  */
 void Barrel::print_explosion_phase(int radius) {
+
     if (radius == 0) {
         gotoxy(point.pos);
         if (getch_console(point.pos) == Board::MARIO) {
             state = State::HIT_MARIO;
         }
         std::cout << "*";
-    } else {
+    } 
+    else {
         for (int i = -radius; i <= radius; i++) {
             for (int j = -radius; j <= radius; j++) {
-                if (getch_console({point.pos.x + i, point.pos.y + j}) == Board::MARIO) {
-                    state = State::HIT_MARIO;
-                }
-                gotoxy(point.pos.x + i, point.pos.y + j);
-                std::cout << "*";
+				Coordinates dest = { point.pos.x + i, point.pos.y + j };
+				if (board->pos_inbound(dest)) {
+					gotoxy(dest);
+					if (getch_console(dest) == Board::MARIO) {
+						state = State::HIT_MARIO;
+					}
+					std::cout << "*";
+				}
             }
         }
     }

@@ -20,22 +20,23 @@ void Mario::set_board(const Board* pBoard) {
  * @param key The key input to determine the direction.
  */
 void Mario::update_dir(char key) {
+
     // Convert key to direction (ignore non-defined keys)
     switch (std::tolower(key)) {
     case Ctrl::UP:
-        dir.y = -1; // move up
+        set_dy(-1); // move up
         break;
     case Ctrl::DOWN:
-        dir.y = 1; // move down
+        set_dy(1); // move down
         break;
     case Ctrl::LEFT:
-        dir.x = -1; // move left
+        set_dx(-1); // move left
         break;
     case Ctrl::RIGHT:
-        dir.x = 1; // move right
+        set_dx(1); // move right
         break;
     case Ctrl::STAY:
-        dir = { 0, 0 }; // Stay in place
+        set_dir(0,0); // Stay in place
         break;
     }
 }
@@ -44,6 +45,7 @@ void Mario::update_dir(char key) {
  * @brief Moves Mario based on the current direction and game state.
  */
 void Mario::move() {
+
     switch (state) {
     case State::JUMPING:
         handle_jumping();
@@ -111,7 +113,6 @@ void Mario::handle_falling() {
     state = State::FALLING;
     fall(); // Make Mario fall if not on the ground
 
-    // If Mario is on the ground
     if (on_ground()) {
         if (fall_count >= MAX_FALL_H) {
             mario_hit = true; // Set Mario as hit
@@ -244,6 +245,12 @@ char Mario::handle_collision() {
         if (board->is_floor(obst)) dir.x = -dir.x;
         break;
     }
+
+    // If Mario falls out of the screen
+    if (beneath_ch() == Board::ERR) {
+        mario_hit = true; // Set Mario as hit
+    }
+
     return obst; // Return the type of object Mario hits (optional for next exercises)
 }
 

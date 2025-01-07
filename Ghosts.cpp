@@ -48,7 +48,7 @@ Ghosts& Ghosts::operator=(const Ghosts& other) {
  * @brief Method to move all ghosts.
  */
 void Ghosts::move_all() {
-    check_ghosts_collision();
+    handle_colisions();
     for (auto& ghost : ghosts) {
         if (ghost->is_hit_mario()) {
             hit_mario = true;
@@ -87,7 +87,7 @@ void Ghosts::set_amount() {
 /**
  * @brief Method to check collisions between ghosts.
  */
-void Ghosts::check_ghosts_collision() const {
+void Ghosts::handle_colisions() {
 
     for (size_t i = 0; i < ghosts.size(); ++i) {
         for (size_t j = i + 1; j < ghosts.size(); ++j) {
