@@ -162,7 +162,7 @@ const std::list<std::string>& Game::get_fnames() const {
  */
 void Game::scan_for_fnames(const std::string& directory) {
 
-    std::regex pattern(R"(dkong_\d+\.screen(\.txt)?)");
+    std::regex pattern(R"(dkong_[a-zA-Z0-9]+\.screen(\.txt)?)");
     for (const auto& entry : std::filesystem::directory_iterator(directory)) {
         if (entry.is_regular_file()) {
             std::string filename = entry.path().filename().string();
@@ -184,4 +184,11 @@ const std::string& Game::pop_fname(int i) {
 	return *it;
 }
 
+/**
+ * @brief Gets the number of levels.
+ * @return The number of levels.
+ */
+int Game::get_nof_levels() const {
+    return level_fnames.size();
+}
 
