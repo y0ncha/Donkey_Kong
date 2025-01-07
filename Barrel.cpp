@@ -43,6 +43,12 @@ void Barrel::update_dir(char beneath) {
         case Board::AIR:
             state = State::FALLING; // Set the State to FALLING
             break;
+        case Board::ERR:
+            reset();
+            break;
+		case Board::WALL:
+			reset();
+            break;
         default:
             break;
     }
@@ -78,25 +84,25 @@ void Barrel::handle_falling() {
  * @brief Method to handle the explosion of the barrel.
  */
 void Barrel::explode() {
+	Coordinates pos = point.pos;
     reset();
-
     for (int i = 0; i <= EXPLOSION_RADIUS; i++) {
-        print_explosion_phase(i);
-        clear_explosion_phase(i - 1);
+        print_explosion_phase(i, pos);
+        clear_explosion_phase(i - 1, pos);
         Sleep(EXPLOSSION_DELAY);
     }
-    clear_explosion_phase(EXPLOSION_RADIUS);
+    clear_explosion_phase(EXPLOSION_RADIUS, pos);
 }
 
 /**
  * @brief Method to print the explosion phase within a given radius.
  * @param radius The radius of the explosion phase.
  */
-void Barrel::print_explosion_phase(int radius) {
+void Barrel::print_explosion_phase(int radius, Coordinates pos) {
 
     if (radius == 0) {
-        gotoxy(point.pos);
-        if (getch_console(point.pos) == Board::MARIO) {
+        gotoxy(pos);
+        if (getch_console(pos) == Board::MARIO) {
             state = State::HIT_MARIO;
         }
         std::cout << "*";
@@ -104,7 +110,7 @@ void Barrel::print_explosion_phase(int radius) {
     else {
         for (int i = -radius; i <= radius; i++) {
             for (int j = -radius; j <= radius; j++) {
-				Coordinates dest = { point.pos.x + i, point.pos.y + j };
+				Coordinates dest = { pos.x + i, pos.y + j };
 				if (board->pos_inbound(dest)) {
 					gotoxy(dest);
 					if (getch_console(dest) == Board::MARIO) {
@@ -121,15 +127,15 @@ void Barrel::print_explosion_phase(int radius) {
  * @brief Method to clear the explosion phase within a given radius.
  * @param radius The radius of the explosion phase to clear.
  */
-void Barrel::clear_explosion_phase(int radius) {
+void Barrel::clear_explosion_phase(int radius, Coordinates pos) {
     if (radius == -1) {
-        gotoxy(point.pos);
-        std::cout << board->get_char(point.pos);
+        gotoxy(pos);
+        std::cout << board->get_char(pos);
     } else {
         for (int i = -radius; i <= radius; i++) {
             for (int j = -radius; j <= radius; j++) {
-                gotoxy(point.pos.x + i, point.pos.y + j);
-                std::cout << board->get_char(point.pos.x + i, point.pos.y + j);
+                gotoxy(pos.x + i,pos.y + j);
+                std::cout << board->get_char(pos.x + i, pos.y + j);
             }
         }
     }
@@ -221,7 +227,9 @@ char Barrel::handle_collision() {
  */
 void Barrel::reset() {
     vanish();
+    set_pos(-1, -1);
     dir = {0, 0};
+    last_dx = 0;
     state = State::IDLE;
     fall_count = 0;
     active = false;

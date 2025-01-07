@@ -39,6 +39,9 @@ public:
 
 private:
 
+	// Flag to indicate if the ghost is active
+	bool active = false;
+
 	// Method to check if the ghost next step is valid
 	bool valid_move();
 
@@ -51,10 +54,8 @@ private:
 	//TODO add the following methods, and change the ghost hit_mario based on them
 	char handle_collision() override; 
 
+	// Method to update the direction of the ghost
 	void update_dir(char key = static_cast<char>(Ctrl::DEF)) override;
-	
-	bool active = false; // Flag to indicate if the ghost is active
-
 };
 
 

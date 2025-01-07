@@ -153,7 +153,6 @@ void Display::pause_menu() const {
                 break;
             }
         }
-		flash_message({ "Press ESC to resume" }, { {28, 22} });
     }
 }
 
@@ -204,7 +203,7 @@ bool Display::difficulty_menu() const {
                 break;
             }
         }
-		flash_message({ "Press ESC to return" }, { {25, 23} });
+		flash_message({ "Press ESC to return" }, { {27, 23} });
     }
     return true;
 }
@@ -214,11 +213,6 @@ bool Display::difficulty_menu() const {
 */
 void Display::exit_messege() const {
     print_layout(exit_layout);
-    while (true) {
-        if (_kbhit()) break;
-		flash_message({ "Press any key to exit..." }, { {1, 23} });
-		if (_kbhit()) break;
-    }
 }
 
 /**
@@ -226,7 +220,7 @@ void Display::exit_messege() const {
 */
 void Display::strike_messege() const {
     print_layout(strike_layout);
-
+    std::cout.flush();
     while (true) {
         if (_kbhit()) break; // Check if a key is pressed
 		flash_message({ "Press any key to continue" }, { {27, 23} });
@@ -240,7 +234,7 @@ void Display::failure_messege() const {
     print_layout(fail_layout);
     while (true) {
         if (_kbhit()) break; // Check if a key is pressed
-        flash_message({ "Press any key to exit" }, { {28, 23} });
+        flash_message({ "Press any key to exit" }, { {29, 23} });
     }
 }
 
@@ -269,12 +263,14 @@ void Display::flash_message(const std::vector<std::string>& messages, const std:
         gotoxy(positions[i]);
 		std::cout << messages[i];
     }
+    if (_kbhit()) return;
 	Sleep(700);
 	for (size_t i = 0; i < size; i++) { // Clear the messages
         size_t len = messages[i].size();
         gotoxy(positions[i]);
         while (len--) std::cout << " ";
     }
+    if (_kbhit()) return;
 	Sleep(200);
 }
 

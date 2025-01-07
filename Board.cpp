@@ -127,8 +127,15 @@ bool Board::is_floor(char ch) const {
  */
 bool Board::path_clear(Coordinates coord) const {
     char ch = get_char(coord); // Get the character at the specified position
-	return (ch == AIR || ch == LADDER);
-
+    switch (ch) {
+    case AIR:
+    case LADDER:
+    case DONKEY_KONG:
+    case PAULINE:
+        return true;
+    default:
+        return false;
+    }
 }
 
 /**

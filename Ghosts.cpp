@@ -89,12 +89,9 @@ void Ghosts::set_amount() {
  */
 void Ghosts::handle_colisions() {
 
-    for (size_t i = 0; i < ghosts.size(); ++i) {
-        for (size_t j = i + 1; j < ghosts.size(); ++j) {
-            if ((ghosts[i]->get_pos() + ghosts[i]->get_dir() == ghosts[j]->get_pos() + ghosts[j]->get_pos()) ||
-                (ghosts[i]->get_pos() == ghosts[j]->get_pos()) ||
-                (ghosts[i]->get_pos() == ghosts[j]->get_pos() + ghosts[j]->get_pos()) ||
-                (ghosts[i]->get_pos() + ghosts[i]->get_dir() == ghosts[j]->get_pos())) {
+    for (int i = 0; i < amount; i++) {
+        for (int j = i + 1; j < amount; j++) {
+            if (colide(ghosts[i], ghosts[j])) {
                 ghosts[i]->invert_dir();
                 ghosts[j]->invert_dir();
             }
@@ -102,6 +99,19 @@ void Ghosts::handle_colisions() {
     }
 }
 
+/**
+ * @brief Method to check if any ghost hit Mario.
+ * @param g1 ghost by const ref.
+ * @param g2 ghost by const ref.
+ * @return True if Mario was hit, false otherwise.
+ */
+bool Ghosts::colide(const std::unique_ptr<Ghost>& g1, const std::unique_ptr<Ghost>& g2) const {
+
+	return (g1->get_dest() == g2->get_dest() ||
+		g1->get_pos() == g2->get_pos() ||
+		g1->get_pos() == g2->get_dest() ||
+		g1->get_dest() == g2->get_pos());
+}
 /**
  * @brief Method to check if Mario was hit by any ghost.
  * @return True if Mario was hit, false otherwise.

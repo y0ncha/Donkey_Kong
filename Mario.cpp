@@ -212,6 +212,10 @@ bool Mario::can_climb() const {
     return (dir.y == -1 && behind_ch() == Board::LADDER) || (dir.y == 1 && board->get_char(point.pos.x, point.pos.y + 2) == Board::LADDER);
 }
 
+/**
+ * @brief Checks if Mario can jump.
+ * @return True if Mario can jump, false otherwise.
+ */
 bool Mario::can_jump() const {
     return (!board->is_floor(above_ch()) && on_ground());
 }
@@ -248,6 +252,7 @@ char Mario::handle_collision() {
 
     // If Mario falls out of the screen
     if (beneath_ch() == Board::ERR) {
+		set_dir(0, 0); // Stop Mario
         mario_hit = true; // Set Mario as hit
     }
 
