@@ -13,10 +13,11 @@ Game::Game()
 Game_State Game::start() {
 
     show_cursor(false); // Hide the console cursor for better visuals
+	scan_for_fnames(); // Scan for level files in the specified directory
     display.main_menu();
 
     // Dynamic allocation to ease the level incrementation and to initiate level only after all the needed data is available
-    curr_level = std::make_unique<Level>(level_files[lvl_ind], mario, dif_lvl);
+    curr_level = std::make_unique<Level>(pop_fname(lvl_ind), mario, dif_lvl);
 
     while (state != TERMINATE) {
 		// Main game loop mamging the different states of the game
@@ -39,15 +40,15 @@ Game_State Game::start() {
             break;
 		case FIN_SUC: // Finish the game successfully
             curr_level->reset_level();
-			if (lvl_ind < NOF_LEVELS - 1) { // Check if there are more levels
+			if (lvl_ind == level_fnames.size() - 1) { // Check if there are more levels
                 display.success_messege(); // todo change to fin game and fin level
-                state = RUN;
+                state = TERMINATE;
                 //lvl_ind++;
                 // todo advance level
 			}
 			else { // If all the levels are finished, exit the game
                 display.success_messege(); // todo change to fin game and fin level
-                state = TERMINATE;
+                state = RUN;
             }
             break;
         }
@@ -126,3 +127,61 @@ bool Game::set_level(short ind) {
 int Game::get_mario_lives() const {
     return mario.get_lives();
 }
+
+/**
+ * @brief Adds a filename to the list of level files in alphabetical order if it doesn't already exist.
+ * @param fname The filename to add.
+ * @return True if the filename was added, false if it already exists.
+ */
+bool Game::push_fname(const std::string& fname) {
+    // Find the position where the filename should be inserted to keep the list sorted
+    auto it = std::lower_bound(level_fnames.begin(), level_fnames.end(), fname);
+
+	// Check if the filename already exists in the list and if the list is not full
+    if (it != level_fnames.end() && *it == fname) {
+        return false; // File already exists in the list
+    }
+    else {
+        // Insert the filename at the correct position
+        level_fnames.insert(it, fname);
+        return true;
+    }
+}
+
+/**
+* @brief Gets the list of level filenames.
+* @return The list of level filenames.
+*/
+const std::list<std::string>& Game::get_fnames() const {
+    return level_fnames;
+}
+
+/**
+ * @brief Scans for level files in the specified directory that match the template "dkong_$number.screen".
+ * @param directory The directory to scan for level files.
+ */
+void Game::scan_for_fnames(const std::string& directory) {
+
+    std::regex pattern(R"(dkong_\d+\.screen(\.txt)?)");
+    for (const auto& entry : std::filesystem::directory_iterator(directory)) {
+        if (entry.is_regular_file()) {
+            std::string filename = entry.path().filename().string();
+            if (std::regex_match(filename, pattern)) {
+                push_fname(filename);
+            }
+        }
+    }
+}
+
+/**
+* @brief Pops the level filename at the specified index.
+ * @param i The index of the filename to pop.
+ * @return The filename at the specified index.
+ */
+const std::string& Game::pop_fname(int i) {
+	auto it = level_fnames.begin();
+	std::advance(it, i);
+	return *it;
+}
+
+

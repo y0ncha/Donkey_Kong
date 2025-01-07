@@ -94,6 +94,19 @@ void clear_screen() {
     SetConsoleCursorPosition(hConsole, homeCoords);
 }
 
+/**
+ * @brief Removes the .txt extension from a filename.
+ * @param filename The filename to process.
+ * @return The filename without the .txt extension.
+ */
+std::string remove_txt_ext(const std::string& filename) {
+    const std::string extension = ".txt";
+    if (filename.size() >= extension.size() &&
+        filename.compare(filename.size() - extension.size(), extension.size(), extension) == 0) {
+        return filename.substr(0, filename.size() - extension.size());
+    }
+    return filename; // Return the original filename if it doesn't end with .txt
+}
 
 
 

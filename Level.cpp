@@ -37,6 +37,7 @@ Game_State Level::start() {
     char key;
 
     render_level(); // Update the game screen
+
     while (state == RUN) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
@@ -63,7 +64,7 @@ void Level::reset_level() {
 
     Sleep(KILLED_DELAY); // Delay for 1 second
     mario.reset(); // Draw Mario at its default position
-    barrels.reset(); // Reset the barrels
+    barrels.reset_all(); // Reset the barrels
 	ghosts.reset_all(); // Reset the ghosts
     frames = 0;
 }
@@ -74,7 +75,7 @@ void Level::reset_level() {
 Game_State Level::advance_entities() {
 
     mario.move(); // Move Mario if he is on a floor element
-    barrels.move(frames); // Move the barrels
+    barrels.move_all(frames); // Move the barrels
 	ghosts.move_all(); // Move the ghosts
 	Game_State state = RUN; // Check the game state
 
@@ -96,7 +97,7 @@ const Board& Level::get_board() const {
 /**
 * @brief Renders the HUD (Heads Up Display) with the number of lives.
 */
-void Level::render_hud() const{
+void Level::render_hud() const {
     gotoxy(Board::HRTS_DISP_X, Board::HRTS_DISP_Y); // Move the cursor to the position where lives are displayed
 	int n = mario.get_lives(); // Get the number of lives Mario has left
     // Print the lives in the legend
@@ -108,10 +109,10 @@ void Level::render_hud() const{
 /**
 * @brief Renders the level by drawing the board, Mario, and the HUD.
 */
-void Level::render_level() const{
+void Level::render_level() const {
     board.print(); // Draw the game board
     mario.set(); // Draw Mario
-	std::cout << pauline << donkey_kong << legend; // Draw the game elements
+	ghosts.set_all(); // Draw the ghosts
     render_hud(); // Update the lives display
 }
 

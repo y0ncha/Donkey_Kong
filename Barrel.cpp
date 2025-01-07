@@ -133,15 +133,31 @@ bool Barrel::is_active() const {
  * @return The initial position of the barrel.
  */
 Coordinates Barrel::init_pos() {
-    // Get the potion of Donkey Kong
-	Coordinates pos_l, pos_r, pos = board->get_pos(Board::DONKEY_KONG);
+    // Get the position of Donkey Kong
+    Coordinates pos = board->get_pos(Board::DONKEY_KONG);
+    Coordinates pos_l = { pos.x - 1, pos.y };
+    Coordinates pos_r = { pos.x + 1, pos.y };
 
+    // Validate positions
+    bool valid_l = board->pos_inbound(pos_l) && board->path_clear(pos_l);
+    bool valid_r = board->pos_inbound(pos_r) && board->path_clear(pos_r);
 
-    //TODO: in case of (pos.x + 1) not inbound it return pos and then the barrel goes directly from dKhong position, not good
-	pos_r = board->x_inbound(pos.x + 1) ? pos + Coordinates{ 1, 0 } : pos;
-	pos_l = board->x_inbound(pos.x - 1) ? pos + Coordinates{ -1, 0 } : pos;
-
-    return set_pos((rand() % 2 == 0) ? pos_r : pos_l);
+    // If one side is invalid, set it to the other side
+	if (valid_r && valid_l) {
+        // Set the barrel's position randomly to either pos_l or pos_r
+        return set_pos((rand() % 2 == 0) ? pos_r : pos_l);
+	}
+    else if (!valid_l && valid_r) {
+        // Set the barrel's position randomly to either pos_l or pos_r
+        return set_pos(pos_r);
+	}
+	else if (!valid_r && valid_l) {
+		// Set the barrel's position randomly to either pos_l or pos_r
+		return set_pos(pos_l);
+	}
+    else {
+		return set_pos(-1, -1);
+    }
 }
 
 /**
@@ -169,11 +185,17 @@ char Barrel::handle_collision() {
     char obst = getch_console(point.pos + dir);
 
     switch (obst) {
-        case Board::MARIO:
+	    case Board::MARIO: // If the barrel hits Mario
             state = State::HIT_MARIO;
             break;
-        case Board::ERR:
+		case Board::WALL: // If the barrel hits a wall
+			reset();
+			break;
+		case Board::ERR: // If the barrel is out of bounds
             reset();
+            break;
+        default: // If a barrel is about to collide with a floor from the side, stop it
+            if (board->is_floor(obst)) dir.x = -dir.x;
             break;
     }
     return obst;

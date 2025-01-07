@@ -17,6 +17,9 @@ public:
     // Constructor for the Entity class
     Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates dir = {0, 0});
 
+	// Virtual destructor for the Entity class
+	virtual ~Entity() = default;
+
     // Virtual method to move the Entity
     virtual void move() = 0;
 
@@ -40,6 +43,12 @@ public:
 
     // Checks the character above the entity
     char above_ch() const;
+
+	// Getter for the char to the left of the entity
+	char left_ch() const;
+    
+	// Getter for the char to the right of the entity
+	char right_ch() const;
 
     // Getter for the entity's position
     Coordinates get_pos() const { return point.pos; }
@@ -82,7 +91,7 @@ protected:
     virtual char handle_collision() = 0;
 
     // Virtual method to update the entity's direction
-    virtual void update_dir(char key = static_cast<char>(Ctrl::DEF)) = 0; // Explicitly cast the default value
+    virtual void update_dir(char key = static_cast<char>(Ctrl::DEF)) = 0;
 
     // Virtual method to handle the direction change when the entity is on different types of floors
     virtual void handle_falling() = 0;

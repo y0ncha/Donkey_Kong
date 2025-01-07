@@ -33,7 +33,7 @@ public:
 
     void pause_menu() const;
     void main_menu() const;
-    void difficulty_menu() const;
+    bool difficulty_menu() const;
     void levels_menu() const;
     void exit_messege() const;
     void strike_messege() const;
@@ -51,6 +51,9 @@ private:
 
 	// Prints the layout to the console
     void print_layout(const char layout[Screen_Dim::Y][Screen_Dim::X + 1]) const;
+
+	// Prints the levels from the levels_fname list
+	void print_levels() const;
 
     static char main_layout[Screen_Dim::Y][Screen_Dim::X + 1];
     static char keys_layout[Screen_Dim::Y][Screen_Dim::X + 1];

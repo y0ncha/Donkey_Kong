@@ -48,3 +48,10 @@ inline void handle_err(const std::string& message, const char* file, int line) {
     throw std::runtime_error(message + " in file " + file + " at line " + std::to_string(line));
 }
 
+/**
+ * @brief Removes the ".txt" extension from a filename.
+ * @param filename The filename to remove the extension from.
+ * @return The filename without the ".txt" extension.
+ */
+std::string remove_txt_ext(const std::string& filename);
+

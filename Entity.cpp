@@ -20,6 +20,7 @@ Entity::Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates i
  * If initial potion is off ground move the entity down until it is on the ground.
  */
 void Entity::set(size_t i) const {
+
 	// initialized the position of the entity if needed
 	if (get_pos() == Coordinates {-1, -1}) {
 
@@ -56,7 +57,7 @@ Coordinates Entity::set_pos(int _x, int _y) const {
  * @return True if the position is valid, false otherwise.
  */
 Coordinates Entity::set_pos(Coordinates coord) const {
-    if (board->pos_inbound(coord)) {
+    if (board->pos_inbound(coord) || coord == Coordinates{-1,-1}) {
         return point.pos = coord;
     }
 	else {
@@ -132,13 +133,33 @@ char Entity::behind_ch() const {
 }
 
 /**
+* @brief Gets the character to the left of the entity.
+* @return The character to the left of the entity.
+*/
+char Entity::left_ch() const {
+	return board->get_char(point.pos.x - 1, point.pos.y);
+}
+
+/**
+* @brief Gets the character to the right of the entity.
+* @return The character to the right of the entity.
+*/
+char Entity::right_ch() const {
+	return board->get_char(point.pos.x + 1, point.pos.y);
+}
+
+/**
  * @brief Checks if the entity is off the ground.
  * @return True if the entity is off the ground, false otherwise.
  */
-
 bool Entity::off_ground() const {
     char bellow = beneath_ch();
-    return (bellow != Board::FLOOR && bellow != Board::FLOOR_L && bellow != Board::FLOOR_R);
+	if (bellow == Board::ERR) { // Check if the character beneath the entity is an error
+        return false;
+    }
+	else { // Check if the character beneath the entity is not a floor element
+        return (bellow != Board::FLOOR && bellow != Board::FLOOR_L && bellow != Board::FLOOR_R);
+    }
 }
 
 /**

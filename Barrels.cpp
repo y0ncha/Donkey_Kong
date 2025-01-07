@@ -9,15 +9,15 @@ Barrels::Barrels(const Board* pBoard, Difficulty dif_lvl)
     : board(pBoard) {
 
     switch (dif_lvl) {
-        case EASY:
+	    case EASY:
             amount = DEF_AMOUNT;
             interval = DEF_INTERVAL;
-            break;
-        case MEDIUM:
+            break; 
+		case MEDIUM:
             amount = MED_AMOUNT;
             interval = MED_INTERVAL;
             break;
-        case HARD:
+        case HARD: 
             amount = HARD_AMOUNT;
             interval = HARD_INTERVAL;
             break;
@@ -75,7 +75,7 @@ Barrels& Barrels::operator=(const Barrels& other) {
  * @brief Moves all active barrels and returns if Mario was hit.
  * @param frames The current frame count.
  */
-void Barrels::move(int frames) {
+void Barrels::move_all(int frames) {
     bool spawn_flag = false; // Flag to indicate if a new barrel should be spawned
 
     for (auto& barrel : barrels) {
@@ -96,7 +96,7 @@ void Barrels::move(int frames) {
 /**
  * @brief Resets the barrels.
  */
-void Barrels::reset() {
+void Barrels::reset_all() {
     hit_mario = false;
 
     for (auto& barrel : barrels) {

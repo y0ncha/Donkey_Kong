@@ -23,7 +23,7 @@ std::ostream& operator<<(std::ostream& os, const Point& point) {
  * @brief Draws the point at the current position.
  */
 void Point::draw() const {
-	std::cout << *this; // Print the point on the console
+	if (Board::pos_inbound(pos)) std::cout << *this; // Print the point on the console
 }
 
 /**
@@ -32,5 +32,5 @@ void Point::draw() const {
  */
 void Point::erase(char ch) const {
     gotoxy(pos); // Move the cursor to the point's position
-    std::cout << ch; // Restore the character from the board
+	if (Board::pos_inbound(pos)) std::cout << ch; // Restore the character from the board
 }

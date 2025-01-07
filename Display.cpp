@@ -38,20 +38,24 @@ void Display::main_menu() const {
             input = _getch(); // Get the key input
     
             switch (input) {
-			case Menu_Options::LEVELS:
+			case Menu_Options::LEVELS: // Choose the level
 				levels_menu();
 				print_layout(main_layout);
 				break;
-            case Menu_Options::KEYS:
+			case Menu_Options::KEYS: // Show the keys
                 keys_menu();
                 print_layout(main_layout);
                 break;
-            case Menu_Options::START:
-                difficulty_menu();
-                game->set_state(RUN);
-                pending = false;
+			case Menu_Options::START: // Start the game
+                if (difficulty_menu()) {
+                    game->set_state(RUN);
+                    pending = false;
+                }
+                else {
+					print_layout(main_layout);
+                }
                 break;
-            case Menu_Options::EXIT:
+			case Menu_Options::EXIT: // Exit the game
                 exit_messege();
                 game->set_state(TERMINATE);
 				pending = false;
@@ -63,13 +67,39 @@ void Display::main_menu() const {
     }
 }
 
+/**
+ * @brief Prints the levels menu and handles the user input.
+ */
+void Display::print_levels() const {
+    short x = 28, y = 7, i = 1;
+
+    for (const auto& level : game->get_fnames()) {
+        gotoxy(x, y);
+        std::cout << remove_txt_ext(level);
+        gotoxy(x + 20, y++);
+        std::cout << " - " << i++ << std::endl << std::endl;
+    }
+}
+
+/**
+*  @brief Prints the levels menu and handles the user input.
+*/
 void Display::levels_menu() const {
 
     print_layout(levels_layout);
+    print_levels();
     int input = DEF;
     bool pending = true;
 
     while (pending) {
+
+        // todo add flash_message function to display
+        gotoxy(30, 22);
+        std::cout << "Press ESC to resume";
+        Sleep(700);
+        gotoxy(30, 22);
+        std::cout << "                   ";
+        Sleep(300);
 
         if (_kbhit()) {
 
@@ -90,7 +120,6 @@ void Display::levels_menu() const {
 
 /*
 * @brief Prints the pause menu and handles the user input.
-* @return A "Game::status" to update the status if needed
 */
 void Display::pause_menu() const {
 
@@ -150,7 +179,7 @@ void Display::keys_menu() const {
     }
 }
 
-void Display::difficulty_menu() const {
+bool Display::difficulty_menu() const {
 
     print_layout(difficulty_layout);
     int input = DEF;
@@ -174,12 +203,14 @@ void Display::difficulty_menu() const {
                 break;
             case Display::RESUME:
 				pending = false;
+                return false;
                 break;
             default:
                 break;
             }
         }
     }
+    return true;
 }
 
 void Display::exit_messege() const {
@@ -484,12 +515,12 @@ char Display::levels_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
      "                                                                                ", // 5
      "                                                                                ", // 6
      "                                                                                ", // 7
-     "                       ________________________________                         ", // 8
-     "                      |                                |                        ", // 9
-     "                      |          LEVEL I   - 1         |                        ", // 10
-     "                      |          LEVEL II  - 2         |                        ", // 11
-     "                      |         LEVEL III  - 3         |                        ", // 12
-     "                      |________________________________|                        ", // 13
+     "                                                                                ", // 8
+     "                                                                                ", // 9
+     "                                                                                ", // 10
+     "                                                                                ", // 11
+     "                                                                                ", // 12
+     "                                                                                ", // 13
      "                                                                                ", // 14
      "                                                                                ", // 15
      "                                                                                ", // 16

@@ -24,7 +24,8 @@ Board::Board(std::string fname) : map{
 */
 void Board::load(std::string fname) {
 
-	std::string buffer; // Buffer to store each line of the file
+	bool valid = false; // Flag to check if the board layout is valid
+    std::string buffer; // Buffer to store each line of the file
 	std::ifstream file(fname); // Open the file with the given filename for reading
 
 	if (file.is_open()) { // Check if the file is open
@@ -130,7 +131,8 @@ bool Board::is_floor(char ch) const {
  */
 bool Board::path_clear(Coordinates coord) const {
     char ch = get_char(coord); // Get the character at the specified position
-    return (ch == AIR || ch == LADDER); // Check if the path is clear
+	return (ch == AIR || ch == LADDER);
+
 }
 
 /**
@@ -227,11 +229,16 @@ Board::Icon Board::map_icon(Icon icon, Coordinates pos) {
     
     if (map.find(icon) != map.end()) {
 
-        if (icon == GHOST || map[icon].empty()) {
+		if (icon == GHOST || map[icon].empty()) { // Check if the character is a ghost or the no position is stored for the character
             map[icon].push_back(pos);
         }
-        return AIR;
+		else { // Set the character to AIR if the character is already in the map and not a ghost
+			icon = AIR;
+        }
+		// Set the postion to AIR if the character is not a Pauline or Donkey Kong
+		icon = (icon == PAULINE || icon == DONKEY_KONG) ? icon : AIR;
     }
+	// return to set the character to the board
 	return icon;
 }
 
@@ -263,9 +270,12 @@ void Board::handle_input(std::string line, int y) {
         board_layout[y][x++] = AIR;
     }
 }
-size_t Board::icon_size(Icon icon) const
-{
+
+/**
+* @brief Returns the number of entities of a given type.
+* @param icon The entity type.
+* @return The number of entities of the given type.
+*/
+size_t Board::get_entity_count(Icon icon) const {
    return map[icon].size();
 }
-
-
