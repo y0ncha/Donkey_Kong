@@ -62,9 +62,7 @@ void Board::print(int lives_left) const {
  * @return The character at the specified position.
  */
 char Board::get_char(Coordinates coord) const {
-    if (!pos_inbound(coord))
-        return ERR; // Return error character if out of bounds
-
+    if (!pos_inbound(coord)) return ERR; // Return error character if out of bounds
     return board_layout[coord.y][coord.x]; // Return the character at the specified position
 }
 

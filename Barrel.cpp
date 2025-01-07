@@ -57,6 +57,12 @@ void Barrel::handle_falling() {
     dir = {0, 1}; // Set the direction to fall and step
     step();
 
+	// If the barrel falls out of the screen
+	if (beneath_ch() == Board::ERR) {
+        reset();
+        return;
+	}
+
     if (on_ground() && !hitted_mario()) {
         if (fall_count >= MAX_FALL_H) {
             explode();

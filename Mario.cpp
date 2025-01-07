@@ -45,6 +45,7 @@ void Mario::update_dir(char key) {
  * @brief Moves Mario based on the current direction and game state.
  */
 void Mario::move() {
+
     switch (state) {
     case State::JUMPING:
         handle_jumping();
@@ -112,7 +113,6 @@ void Mario::handle_falling() {
     state = State::FALLING;
     fall(); // Make Mario fall if not on the ground
 
-    // If Mario is on the ground
     if (on_ground()) {
         if (fall_count >= MAX_FALL_H) {
             mario_hit = true; // Set Mario as hit
@@ -245,6 +245,12 @@ char Mario::handle_collision() {
         if (board->is_floor(obst)) dir.x = -dir.x;
         break;
     }
+
+    // If Mario falls out of the screen
+    if (beneath_ch() == Board::ERR) {
+        mario_hit = true; // Set Mario as hit
+    }
+
     return obst; // Return the type of object Mario hits (optional for next exercises)
 }
 
