@@ -2,6 +2,10 @@
 #include "Entity.h"
 #include "Board.h"
 
+/**
+ * @class Ghost
+ * Represents a ghost entity in the game.
+ */
 class Ghost : public Entity {
 
 public:
@@ -26,6 +30,7 @@ public:
 private:
 	// Method to check if the ghost next step is valid
 	bool valid_move();
+
 	//method to set the initial direction of the ghost
 	Coordinates init_dir(); 
 

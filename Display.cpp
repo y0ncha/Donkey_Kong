@@ -38,20 +38,24 @@ void Display::main_menu() const {
             input = _getch(); // Get the key input
     
             switch (input) {
-			case Menu_Options::LEVELS:
+			case Menu_Options::LEVELS: // Choose the level
 				levels_menu();
 				print_layout(main_layout);
 				break;
-            case Menu_Options::KEYS:
+			case Menu_Options::KEYS: // Show the keys
                 keys_menu();
                 print_layout(main_layout);
                 break;
-            case Menu_Options::START:
-                difficulty_menu();
-                game->set_state(RUN);
-                pending = false;
+			case Menu_Options::START: // Start the game
+                if (difficulty_menu()) {
+                    game->set_state(RUN);
+                    pending = false;
+                }
+                else {
+					print_layout(main_layout);
+                }
                 break;
-            case Menu_Options::EXIT:
+			case Menu_Options::EXIT: // Exit the game
                 exit_messege();
                 game->set_state(TERMINATE);
 				pending = false;
@@ -175,7 +179,7 @@ void Display::keys_menu() const {
     }
 }
 
-void Display::difficulty_menu() const {
+bool Display::difficulty_menu() const {
 
     print_layout(difficulty_layout);
     int input = DEF;
@@ -199,12 +203,14 @@ void Display::difficulty_menu() const {
                 break;
             case Display::RESUME:
 				pending = false;
+                return false;
                 break;
             default:
                 break;
             }
         }
     }
+    return true;
 }
 
 void Display::exit_messege() const {

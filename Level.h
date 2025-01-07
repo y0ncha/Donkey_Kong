@@ -43,8 +43,10 @@ private:
 	// Hold a set of barrels
     Barrels barrels; 
 
+	// Hold a set of ghosts
     Ghosts ghosts;
 
+	// Entities in the game
     const Point legend;
     const Point pauline;
     const Point donkey_kong;
@@ -58,7 +60,10 @@ private:
     // Method to advance the entities in the game
     Game_State advance_entities();
 
+	// Method to render the HUD
 	void render_hud() const;
+  
+	// Method to render the level
 	void render_level();
 };
 

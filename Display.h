@@ -33,7 +33,7 @@ public:
 
     void pause_menu() const;
     void main_menu() const;
-    void difficulty_menu() const;
+    bool difficulty_menu() const;
     void levels_menu() const;
     void exit_messege() const;
     void strike_messege() const;

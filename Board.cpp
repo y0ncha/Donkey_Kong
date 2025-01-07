@@ -229,11 +229,16 @@ Board::Icon Board::map_icon(Icon icon, Coordinates pos) {
     
     if (map.find(icon) != map.end()) {
 
-        if (icon == GHOST || map[icon].empty()) {
+		if (icon == GHOST || map[icon].empty()) { // Check if the character is a ghost or the no position is stored for the character
             map[icon].push_back(pos);
         }
-        return AIR;
+		else { // Set the character to AIR if the character is already in the map and not a ghost
+			icon = AIR;
+        }
+		// Set the postion to AIR if the character is not a Pauline or Donkey Kong
+		icon = (icon == PAULINE || icon == DONKEY_KONG) ? icon : AIR;
     }
+	// return to set the character to the board
 	return icon;
 }
 

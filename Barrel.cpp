@@ -143,23 +143,22 @@ Coordinates Barrel::init_pos() {
     bool valid_r = board->pos_inbound(pos_r) && board->path_clear(pos_r);
 
     // If one side is invalid, set it to the other side
-    if (!valid_l && valid_r) {
-        pos_l = pos_r;
+	if (valid_r && valid_l) {
+        // Set the barrel's position randomly to either pos_l or pos_r
+        return set_pos((rand() % 2 == 0) ? pos_r : pos_l);
+	}
+    else if (!valid_l && valid_r) {
+        // Set the barrel's position randomly to either pos_l or pos_r
+        return set_pos(pos_r);
+	}
+	else if (!valid_r && valid_l) {
+		// Set the barrel's position randomly to either pos_l or pos_r
+		return set_pos(pos_l);
+	}
+    else {
+		return set_pos(-1, -1);
     }
-    else if (!valid_r && valid_l) {
-        pos_r = pos_l;
-    }
-
-	// If both positions are invalid, set them to {-1, -1} so Entity's set wont spawn them
-    if (!valid_l && !valid_r) {
-        pos_l = pos_r = Coordinates{ -1, -1 }; // todo print error messege screen isnt valid
-    }
-
-    // Set the barrel's position randomly to either pos_l or pos_r
-    return set_pos((rand() % 2 == 0) ? pos_r : pos_l);
 }
-
-
 
 /**
  * @brief Sets the original and current board for the barrel.
@@ -186,22 +185,19 @@ char Barrel::handle_collision() {
     char obst = getch_console(point.pos + dir);
 
     switch (obst) {
-        case Board::MARIO:
+	    case Board::MARIO: // If the barrel hits Mario
             state = State::HIT_MARIO;
             break;
-		case Board::WALL:
+		case Board::WALL: // If the barrel hits a wall
 			reset();
 			break;
-        case Board::ERR:
+		case Board::ERR: // If the barrel is out of bounds
             reset();
             break;
+        default: // If a barrel is about to collide with a floor from the side, stop it
+            if (board->is_floor(obst)) dir.x = -dir.x;
+            break;
     }
-
-	// If a barrel is about to colide a floor from the side, stop it
-	if (board->is_floor(next_ch())) {
-		dir.x = -dir.x;
-	}
-
     return obst;
 }
 
