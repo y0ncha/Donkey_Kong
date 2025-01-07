@@ -6,7 +6,12 @@
  */
 Ghosts::Ghosts(const Board* pBoard) : board(pBoard) {
     set_amount();
-    set_all();
+    ghosts.reserve(amount);
+    for (int i = 0; i < amount; i++) {
+        auto temp = std::make_unique<Ghost>(board);
+        temp->set(i);
+        ghosts.emplace_back(std::move(temp));
+    }
 }
 
 /**
@@ -45,10 +50,10 @@ Ghosts& Ghosts::operator=(const Ghosts& other) {
 void Ghosts::move_all() {
     check_ghosts_collision();
     for (auto& ghost : ghosts) {
-        ghost->move();
         if (ghost->is_hit_mario()) {
             hit_mario = true;
         }
+        ghost->move();
     }
 }
 
@@ -65,13 +70,11 @@ void Ghosts::reset_all() {
 /**
  * @brief Method to initialize all ghosts at the beginning of the level.
  */
-void Ghosts::set_all() {
-    ghosts.reserve(amount);
+void Ghosts::set_all() const {
     for (int i = 0; i < amount; i++) {
-        auto temp = std::make_unique<Ghost>(board);
-        temp->set(i);
-        ghosts.emplace_back(std::move(temp));
+        ghosts[i]->set(i);
     }
+
 }
 
 /**

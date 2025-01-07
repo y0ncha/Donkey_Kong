@@ -97,7 +97,7 @@ const Board& Level::get_board() const {
 /**
 * @brief Renders the HUD (Heads Up Display) with the number of lives.
 */
-void Level::render_hud() const{
+void Level::render_hud() const {
     gotoxy(Board::HRTS_DISP_X, Board::HRTS_DISP_Y); // Move the cursor to the position where lives are displayed
 	int n = mario.get_lives(); // Get the number of lives Mario has left
     // Print the lives in the legend
@@ -109,9 +109,10 @@ void Level::render_hud() const{
 /**
 * @brief Renders the level by drawing the board, Mario, and the HUD.
 */
-void Level::render_level() const{
+void Level::render_level() const {
     board.print(); // Draw the game board
     mario.set(); // Draw Mario
+	ghosts.set_all(); // Draw the ghosts
     render_hud(); // Update the lives display
 }
 

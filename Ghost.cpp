@@ -55,7 +55,7 @@ Coordinates Ghost::init_dir() {
  *        The ghost has a small chance to change direction randomly.
  */
 void Ghost::update_dir(char key) {
-    // Probability to change direction
+
     int probability = rand() % 100;
 
     // Small chance to change direction
@@ -85,6 +85,7 @@ void Ghost::move() {
  */
 void Ghost::reset() {
     vanish();
+    set_pos({-1,-1});
     dir = init_dir();
     active = true;
 }
