@@ -263,13 +263,23 @@ int Mario::get_lives() const {
 }
 
 /**
+* @brief Decreases the number of lives Mario has left.
+*/
+void Mario::lose_lives() {
+	lives_left--;
+}
+
+/**
  * @brief Resets Mario to its initial fields.
  */
 void Mario::reset() {
-    lives_left--;
-    point.pos = board->get_pos(Board::MARIO);
+
     mario_hit = false;
+    rescued_pauline = false;
+
+    point.pos = board->get_pos(Board::MARIO);
     state = State::IDLE;
+
     fall_count = 0;
     jump_ascend = 0;
     jump_descend = 0;

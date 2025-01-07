@@ -24,8 +24,7 @@ Board::Board(std::string fname) : map{
 */
 void Board::load(std::string fname) {
 
-	bool valid = false; // Flag to check if the board layout is valid
-    std::string buffer; // Buffer to store each line of the file
+     std::string buffer; // Buffer to store each line of the file
 	std::ifstream file(fname); // Open the file with the given filename for reading
 
 	if (file.is_open()) { // Check if the file is open
@@ -37,7 +36,6 @@ void Board::load(std::string fname) {
 	else {
 		throw std::runtime_error("Error: Could not open file " + fname); // Throw an error if the file could not be opened
 	}
-
 }
 
 /**
@@ -277,3 +275,4 @@ void Board::handle_input(std::string line, int y) {
 size_t Board::get_entity_count(Icon icon) const {
    return map[icon].size();
 }
+

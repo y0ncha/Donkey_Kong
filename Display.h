@@ -54,7 +54,10 @@ private:
     void print_layout(const char layout[Screen_Dim::Y][Screen_Dim::X + 1]) const;
 
 	// Prints the levels from the levels_fname list
-	void print_levels(int page_ind = 0) const;
+	void print_levels(int page_ind, int last_page) const;
+
+	// Displays a falshing message on the screen
+	void flash_message(const std::vector<std::string>& messages, const std::vector<Coordinates>& positions) const;
 
     static char main_layout[Screen_Dim::Y][Screen_Dim::X + 1];
     static char keys_layout[Screen_Dim::Y][Screen_Dim::X + 1];

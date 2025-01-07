@@ -7,29 +7,56 @@
  * @param dif_lvl The difficulty level of the game.
  */
 Level::Level(std::string fname, Mario& mario, Difficulty dif_lvl)
-    : board(fname),
+    : dif_lvl(dif_lvl),
+    board(fname),
     mario(mario),
-	ghosts(&board),
     barrels(&board, dif_lvl), 
+    ghosts(&board),
     legend(Board::LEGEND, board.get_pos(Board::LEGEND)),
     pauline(Board::PAULINE, board.get_pos(Board::PAULINE)),
     donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG)){
     mario.set_board(&board);
-
 }
 
 /**
- * @brief Advances to the next level by resetting and loading the new board.
- * @param next_level_file The name of the file that holds the next board layout.
+* @brief Move constructor for the Level class.
+* @param other The other Level object to move from.
+* @param fname The name of the file that holds the board layout.
+*/
+Level::Level(Level&& other, std::string fname) noexcept
+	: dif_lvl(other.dif_lvl),
+    board(fname),
+    mario(other.mario),
+    barrels(&board, other.dif_lvl),
+    ghosts(&board),
+    legend(Board::LEGEND, board.get_pos(Board::LEGEND)),
+    pauline(Board::PAULINE, board.get_pos(Board::PAULINE)),
+    donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG))
+    {
+	mario.set_board(&board);
+}
+
+/**
+ * @brief Move assignment operator for the Level class.
+ * @param other The other Level object to move from.
+ * @return A reference to this Level object.
  */
-void Level::advance_level(const std::string& fname) {
-    
-    board.load(fname); // Load the new board layout from the file
-    reset_level(); // Reset the current level
+Level& Level::operator=(Level&& other) noexcept {
+    if (this != &other) {
+        board = std::move(other.board);
+        barrels = std::move(other.barrels);
+        ghosts = std::move(other.ghosts);
+		legend = std::move(other.legend);
+        pauline = std::move(other.pauline);
+        donkey_kong = std::move(other.donkey_kong);
+        frames = other.frames;
+        mario.set_board(&board);
+    }
+    return *this;
 }
 
 /**
- * @brief Starts the game loop.
+ * @brief Starts the level loop.
  */
 Game_State Level::start() {
 
@@ -61,8 +88,6 @@ Game_State Level::start() {
  * @brief Resets the level and updates Mario's lives.
  */
 void Level::reset_level() {
-
-    Sleep(KILLED_DELAY); // Delay for 1 second
     mario.reset(); // Draw Mario at its default position
     barrels.reset_all(); // Reset the barrels
 	ghosts.reset_all(); // Reset the ghosts
@@ -80,8 +105,10 @@ Game_State Level::advance_entities() {
 	Game_State state = RUN; // Check the game state
 
 	if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) { // Check if Mario was hit by a barrel or a ghost
-        state = mario.get_lives() > 1 ? LVL_RESET : FIN_FAIL; // Reset the level if Mario has more lives, else finish the game
-    } else if (mario.is_rescued_pauline()) { // Check if Mario saved Pauline
+		mario.lose_lives(); // Decrease the number of lives Mario has left
+        state = mario.get_lives() > 0 ? LVL_RESET : FIN_FAIL; // Reset the level if Mario has more lives, else finish the game
+    } 
+    else if (mario.is_rescued_pauline()) { // Check if Mario saved Pauline
 		state = FIN_SUC; // Finish the game successfully
     }
 	return state;

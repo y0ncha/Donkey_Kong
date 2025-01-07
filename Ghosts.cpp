@@ -7,9 +7,9 @@
 Ghosts::Ghosts(const Board* pBoard) : board(pBoard) {
     set_amount();
     ghosts.reserve(amount);
+
     for (int i = 0; i < amount; i++) {
         auto temp = std::make_unique<Ghost>(board);
-        temp->set(i);
         ghosts.emplace_back(std::move(temp));
     }
 }

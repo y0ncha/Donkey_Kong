@@ -39,16 +39,15 @@ Game_State Game::start() {
             state = TERMINATE;
             break;
 		case FIN_SUC: // Finish the game successfully
-            curr_level->reset_level();
-			if (lvl_ind == level_fnames.size() - 1) { // Check if there are more levels
+            lvl_ind++;
+            if (lvl_ind < level_fnames.size()) { // Check if there are more levels
                 display.success_messege(); // todo change to fin game and fin level
-                state = TERMINATE;
-                //lvl_ind++;
-                // todo advance level
+                state = RUN;
+				advance_level(pop_fname(lvl_ind));
 			}
 			else { // If all the levels are finished, exit the game
                 display.success_messege(); // todo change to fin game and fin level
-                state = RUN;
+                state = TERMINATE;
             }
             break;
         }
@@ -56,6 +55,16 @@ Game_State Game::start() {
     display.exit_messege();
 	return state;
 }
+
+/**
+ * @brief Advances to the next level.
+ * @param fname The filename of the next level.
+ */
+void Game::advance_level(const std::string& fname) {
+    // Using move constructor to pass the current level to avoid memory reaclocation
+    curr_level->reset_level();
+    curr_level = std::make_unique<Level>(std::move(*curr_level), fname);
+ }
 
 /**
  * @brief Validates and sets the game status.
@@ -189,6 +198,6 @@ const std::string& Game::pop_fname(int i) {
  * @return The number of levels.
  */
 int Game::get_nof_levels() const {
-    return level_fnames.size();
+    return (int)level_fnames.size();
 }
 
