@@ -64,6 +64,6 @@ private:
 	void render_hud() const;
   
 	// Method to render the level
-	void render_level();
+	void render_level() const;
 };
 

@@ -27,7 +27,7 @@ public:
     void move_all();
 
     // Method to initialize all ghosts at the beginning of the level
-    void set_all();
+    void set_all() const;
 
     // Method to reset all ghosts
     void reset_all();
