@@ -91,7 +91,7 @@ protected:
     virtual char handle_collision() = 0;
 
     // Virtual method to update the entity's direction
-    virtual void update_dir(char key = static_cast<char>(Ctrl::DEF)) = 0; // Explicitly cast the default value
+    virtual void update_dir(char key = static_cast<char>(Ctrl::DEF)) = 0;
 
     // Virtual method to handle the direction change when the entity is on different types of floors
     virtual void handle_falling() = 0;

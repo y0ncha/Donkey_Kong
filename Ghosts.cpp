@@ -70,7 +70,7 @@ void Ghosts::reset_all() {
 /**
  * @brief Method to initialize all ghosts at the beginning of the level.
  */
-void Ghosts::set_all() {
+void Ghosts::set_all() const {
     for (int i = 0; i < amount; i++) {
         ghosts[i]->set(i);
     }

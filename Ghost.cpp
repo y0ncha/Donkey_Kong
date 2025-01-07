@@ -106,6 +106,7 @@ char Ghost::handle_collision() { return ' '; }
  */
 void Ghost::set_dir(Coordinates coord) {
 	Entity::set_dir(coord);
+}
 
 /**
  * @brief Inverts the direction of the ghost.
