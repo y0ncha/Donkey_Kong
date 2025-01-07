@@ -62,8 +62,8 @@ private:
 
 	// Method to render the HUD
 	void render_hud() const;
-
+  
 	// Method to render the level
-	void render_level() const;
+	void render_level();
 };
 

@@ -109,9 +109,10 @@ void Level::render_hud() const{
 /**
 * @brief Renders the level by drawing the board, Mario, and the HUD.
 */
-void Level::render_level() const{
+void Level::render_level() {
     board.print(); // Draw the game board
     mario.set(); // Draw Mario
+	  ghosts.set_all(); // Draw the ghosts
     render_hud(); // Update the lives display
 }
 
