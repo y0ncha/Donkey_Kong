@@ -26,7 +26,8 @@ public:
 
     // Enum for game constants
     enum Consts {
-        NOF_LEVELS = 10 // Number of levels in the game
+        NOF_LEVELS = 10, // Number of levels in the game
+		LEVELS_PER_PAGE = 5 // Number of levels to display per page 
     };
 
     // Starts the game loop and handles user input
@@ -52,6 +53,9 @@ public:
 
     // Method to get the level file names list
     const std::list<std::string>& get_fnames() const;
+
+	// Method to get the number of levels
+    int get_nof_levels() const;
 
 private:
 

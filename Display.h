@@ -24,6 +24,7 @@ public:
         LEVELS = '2', // Choose the level
         KEYS = '8',  // Show the keys
         EXIT = '9',   // Exit the game
+		ENTER = '\r', // Enter key
         RESUME = 27, // Resume to the game
     };
 
@@ -53,7 +54,7 @@ private:
     void print_layout(const char layout[Screen_Dim::Y][Screen_Dim::X + 1]) const;
 
 	// Prints the levels from the levels_fname list
-	void print_levels() const;
+	void print_levels(int page_ind = 0) const;
 
     static char main_layout[Screen_Dim::Y][Screen_Dim::X + 1];
     static char keys_layout[Screen_Dim::Y][Screen_Dim::X + 1];

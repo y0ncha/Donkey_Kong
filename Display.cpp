@@ -68,51 +68,70 @@ void Display::main_menu() const {
 }
 
 /**
- * @brief Prints the levels menu and handles the user input.
+ * @brief Prints 5 levels at a time starting from the current page index.
+ * @param page_ind The index of the current page.
  */
-void Display::print_levels() const {
-    short x = 28, y = 7, i = 1;
+void Display::print_levels(int page_ind) const {
+    short x = 28, y = 7;
+    auto it = game->get_fnames().begin();
+    std::advance(it, page_ind * Game::LEVELS_PER_PAGE); // Move the iterator to the start of the current page
 
-    for (const auto& level : game->get_fnames()) {
+	// Print 5 levels
+    for (int i = 1; it != game->get_fnames().end() && i <= Game::LEVELS_PER_PAGE; ++i, ++it) {
         gotoxy(x, y);
-        std::cout << remove_txt_ext(level);
-        gotoxy(x + 20, y++);
-        std::cout << " - " << i++ << std::endl << std::endl;
+        std::cout << remove_txt_ext(*it);
+        gotoxy(x + 20, y);
+        std::cout << " - " << (page_ind * Game::LEVELS_PER_PAGE) + i;
+        y += 2;
     }
 }
+
 
 /**
 *  @brief Prints the levels menu and handles the user input.
 */
 void Display::levels_menu() const {
 
+    int input = DEF;
+    int last_page = (int) game->get_nof_levels() / 5, page_ind = 0; // todo write const for 5 levels_per_pages
+    bool pending = true;
+
     print_layout(levels_layout);
     print_levels();
-    int input = DEF;
-    bool pending = true;
 
     while (pending) {
 
         // todo add flash_message function to display
-        gotoxy(30, 22);
+        gotoxy(29, 22);
         std::cout << "Press ESC to resume";
+        gotoxy(26, 23);
+        std::cout << "Press Enter for next page";
         Sleep(700);
-        gotoxy(30, 22);
+        gotoxy(29, 22);
         std::cout << "                   ";
+        gotoxy(26, 23);
+        std::cout << "                         ";
         Sleep(300);
 
         if (_kbhit()) {
+            input = _getch(); // Get the key input
+			short ind = input - '0' - 1; // Convert the input to an index
 
-			// Get the key input
-            input = _getch();
-            short ind = input - '0' - 1;
-
-            if (game->set_level(ind)) {
-                pending = false;
+            switch (input) {
+			    case Menu_Options::RESUME:
+				    pending = false;
+				    break;
+                case Menu_Options::ENTER:
+                    page_ind = (last_page == page_ind) ? 0 : page_ind + 1;
+                    print_layout(levels_layout);
+                    print_levels(page_ind);
+					break;
+				default:
+                    if (game->set_level(ind)) {
+                        pending = false;
+                    }
+					break;
             }
-			else if (input == ESC) {
-				pending = false;
-			}
         }
 
     }
@@ -524,11 +543,11 @@ char Display::levels_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
      "                                                                                ", // 14
      "                                                                                ", // 15
      "                                                                                ", // 16
-     "                                                                                ", // 17
      "********************************************************************************", // 18
   R"!(|                        CHOOSE WHAT LEVEL TO START WITH.                      |)!", // 19
-     "|            AFTER YOU CHOSE THE WANTED LEVEL START THE GAME FROM MAIN         |", // 20
+     "|            AFTER CHOOSING THE WANTED LEVEL, START THE GAME FROM MAIN         |", // 20
      "********************************************************************************", // 21
+     "                                                                                ", // 17
      "                                                                                ", // 22
      "                                                                                ", // 23
      "                                                                                ", // 24

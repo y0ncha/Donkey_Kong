@@ -71,11 +71,12 @@ Coordinates Entity::set_pos(Coordinates coord) const {
  * @param dy The y-direction value.
  */
 bool Entity::set_dir(int dx, int dy) {
-    if (-1 <= dx && dx <= 1 && -1 <= dy && dy <= 1) {
+
+    if (-1 <= dx && dx <= 1 && -1 <= dy && dy <= 1) { // Check if the direction is valid
         dir = { dx, dy };
         return true;
     }
-    return false;
+	else return false; // Return false if the direction is invalid
 }
 
 /**
@@ -91,6 +92,10 @@ bool Entity::set_dir(Coordinates coord) {
  * Erases the entity from the current position, updates the position, and draws the entity at the new position.
  */
 void Entity::step() {
+
+	// Check if the current position is inbound
+    if (!board->pos_inbound(point.pos)) return;
+
     point.erase(behind_ch()); // Erase the entity from the current position
 
     if (handle_collision()) {
@@ -168,4 +173,20 @@ bool Entity::off_ground() const {
  */
 bool Entity::on_ground() const {
     return !off_ground();
+}
+
+/**
+ * @brief Sets the dx value of the entity.
+ * @param dx The new dx value.
+ */
+bool Entity::set_dy(int dy) {
+    return set_dir(dir.x, dy);
+}
+
+/**
+ * @brief Sets the dy value of the entity.
+ * @param dy The new dy value.
+ */
+bool Entity::set_dx(int dx) {
+	return set_dir(dx, dir.y);
 }
