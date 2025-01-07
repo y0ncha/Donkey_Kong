@@ -37,6 +37,7 @@ Game_State Level::start() {
     char key;
 
     render_level(); // Update the game screen
+
     while (state == RUN) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
@@ -111,7 +112,6 @@ void Level::render_hud() const{
 void Level::render_level() const{
     board.print(); // Draw the game board
     mario.set(); // Draw Mario
-	std::cout << pauline << donkey_kong; // Draw the game elements
     render_hud(); // Update the lives display
 }
 

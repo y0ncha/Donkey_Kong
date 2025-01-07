@@ -85,6 +85,7 @@ void Ghosts::set_amount() {
  * @brief Method to check collisions between ghosts.
  */
 void Ghosts::check_ghosts_collision() const {
+
     for (size_t i = 0; i < ghosts.size(); ++i) {
         for (size_t j = i + 1; j < ghosts.size(); ++j) {
             if ((ghosts[i]->get_pos() + ghosts[i]->get_dir() == ghosts[j]->get_pos() + ghosts[j]->get_pos()) ||

@@ -23,11 +23,14 @@ void Ghost::set_board(const Board* pBoard) {
  * @return True if the move is valid, false otherwise.
  */
 bool Ghost::valid_move() {
-    if ((board->is_floor(point.pos + dir + Coordinates{0, 1})) && (Board::pos_inbound(point.pos + dir)))
-        return true;
-    else {
-        return false;
-    }
+
+    bool valid = false;
+
+	// Get the character of the next position floor
+	char next_floor = board->get_char(point.pos + dir + Coordinates{ 0, 1 });
+
+	// Check if the next move is above floor and if is inbound
+	return board->is_floor(next_floor) && board->path_clear(get_pos() + dir);
 }
 
 /**
@@ -35,8 +38,10 @@ bool Ghost::valid_move() {
  * @return The initial direction of the ghost.
  */
 Coordinates Ghost::init_dir() {
+
     int dx = rand() % 2 ? 1 : -1;
     dir = {dx, 0};
+
     if (valid_move())
         dir = { dx, 0 };
     else
@@ -47,19 +52,23 @@ Coordinates Ghost::init_dir() {
 
 /**
  * @brief Updates the direction of the ghost based on probability.
+ *        The ghost has a small chance to change direction randomly.
  */
-void Ghost::update_dirc() {
+void Ghost::update_dir(char key) {
+    // Probability to change direction
     int probability = rand() % 100;
+
+    // Small chance to change direction
     if (probability < 5) {
-        dir.x = -dir.x;
-        if (!valid_move()) {
-            dir.x = -dir.x;
-        }
-    } else {
-        if (!valid_move()) {
-            dir.x = -dir.x;
-        }
+        dir.x = -dir.x; // Invert direction
     }
+
+    // Ensure the new direction is valid
+    if (!valid_move()) {
+        dir.x = -dir.x; // Revert direction if not valid
+    }
+
+    // Update the last horizontal direction
     last_dx = dir.x;
 }
 
@@ -67,7 +76,7 @@ void Ghost::update_dirc() {
  * @brief Moves the ghost by updating its direction and stepping.
  */
 void Ghost::move() {
-    update_dirc();
+    update_dir();
     step();
 }
 
@@ -81,35 +90,21 @@ void Ghost::reset() {
 }
 
 /**
- * @brief Handles the falling logic for the ghost.
+ * @note Empty implemantation of handle_falling.
  */
-void Ghost::handle_falling() {
-    // Implementation of handle_falling
-}
+void Ghost::handle_falling() {}
 
 /**
- * @brief Handles collision logic for the ghost.
- * @return The type of object the ghost collides with.
+ * @note Empty implemantation of handle_collision.
  */
-char Ghost::handle_collision() {
-    // Implementation of handle_collision
-    return ' ';
-}
-
-/**
- * @brief Updates the direction of the ghost based on a key input.
- * @param key The key input to update the direction.
- */
-void Ghost::update_dir(char key) {
-    // Implementation of update_dir
-}
+char Ghost::handle_collision() { return ' '; }
 
 /**
  * @brief Sets the direction of the ghost.
  * @param coord The new direction coordinates.
  */
 void Ghost::set_dir(Coordinates coord) {
-    dir = coord;
+	Entity::set_dir(coord);
 }
 
 /**

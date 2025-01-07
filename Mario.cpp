@@ -240,15 +240,10 @@ char Mario::handle_collision() {
         dir.x = -dir.x; // Reverse direction if path is not clear
         obst = Board::AIR; // Return air to allow Mario to move
         break;
-    default:
+    default: // If a barrel is about to collide with a floor from the side, stop it
+        if (board->is_floor(obst)) dir.x = -dir.x;
         break;
     }
-
-    // If a mario is about to colide a floor from the side, stop him
-    if (board->is_floor(next_ch())) {
-        dir.x = -dir.x;
-    }
-
     return obst; // Return the type of object Mario hits (optional for next exercises)
 }
 

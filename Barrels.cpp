@@ -9,15 +9,15 @@ Barrels::Barrels(const Board* pBoard, Difficulty dif_lvl)
     : board(pBoard) {
 
     switch (dif_lvl) {
-        case EASY:
+	    case EASY:
             amount = DEF_AMOUNT;
             interval = DEF_INTERVAL;
-            break;
-        case MEDIUM:
+            break; 
+		case MEDIUM:
             amount = MED_AMOUNT;
             interval = MED_INTERVAL;
             break;
-        case HARD:
+        case HARD: 
             amount = HARD_AMOUNT;
             interval = HARD_INTERVAL;
             break;
