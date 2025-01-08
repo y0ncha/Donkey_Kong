@@ -122,7 +122,7 @@ Difficulty Game::get_difficulty() const {
  * @param ind The indemenagifull name for x to set.
  */
 bool Game::set_level(short ind) {
-    if (0 <= ind && ind < NOF_LEVELS) {
+    if (0 <= ind && ind < get_nof_levels()) {
         lvl_ind = ind;
         return true;
     }

@@ -79,7 +79,7 @@ void Display::print_levels(int page_ind, int last_page) const {
         gotoxy(x, y);
         std::cout << remove_txt_ext(*it);
         gotoxy(x + 20, y);
-        std::cout << " - " << (page_ind * Game::LEVELS_PER_PAGE) + i;
+        std::cout << " - " << i;
         y += 2;
     }
     gotoxy(71, 16);
@@ -102,8 +102,8 @@ void Display::levels_menu() const {
         flash_message({ "Press ESC to resume",  "Press Enter for next page" }, { {29, 22}, {26, 23} });
 
         if (_kbhit()) {
-            input = _getch(); // Get the key input
-            short ind = input - '0' - 1; // Convert the input to an index
+			input = _getch(); // Get the key input by integer
+			short ind = page_ind * Game::LEVELS_PER_PAGE + (input - '0') - 1; // Calculate the index of the selected level
 
             switch (input) {
             case Menu_Options::RESUME:

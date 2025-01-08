@@ -26,7 +26,6 @@ public:
 
     // Enum for game constants
     enum Consts {
-        NOF_LEVELS = 10, // Number of levels in the game
 		LEVELS_PER_PAGE = 5 // Number of levels to display per page 
     };
 
@@ -76,9 +75,6 @@ private:
 
 	// Pointer to hold the current level, using unique pointer for better memory management and to ease the level incrementation
 	std::unique_ptr<Level> curr_level = nullptr; 
-
-	// Array of level files to load the levels from
-    std::string level_files[Consts::NOF_LEVELS] = {"dkong_01.screen.txt", "dkong_02.screen.txt" , "dkong_03.screen.txt"};
 
 	// List to hold the level files names, sorted alphabetically
     std::list<std::string> level_fnames;
