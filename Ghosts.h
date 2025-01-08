@@ -40,6 +40,8 @@ public:
 
 	// Method to check if any ghost hit Mario
     bool hitted_mario() const;
+
+	bool colide(const std::unique_ptr<Ghost>& g1, const std::unique_ptr<Ghost>& g2) const;
     
 private:
 

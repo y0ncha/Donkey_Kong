@@ -50,6 +50,9 @@ public:
 	// Getter for the char to the right of the entity
 	char right_ch() const;
 
+    // Method to get the destination position of the entity
+    Coordinates get_dest() const;
+
     // Getter for the entity's position
     Coordinates get_pos() const { return point.pos; }
 

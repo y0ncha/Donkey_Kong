@@ -18,6 +18,12 @@ public:
     // Constructor for the Level class
     Level(std::string fname, Mario& mario, Difficulty dif_lvl);
 
+	// Move constructor
+	Level(Level&& other, std::string fname) noexcept;
+
+	// Move assignment operator
+	Level& operator=(Level&& other) noexcept;
+
     // Starts the level loop and handles user input
     Game_State start();
 
@@ -34,6 +40,9 @@ public:
 
 private:
   
+    // Difficulty level
+    Difficulty dif_lvl;
+
 	// Game board
     Board board;
 
@@ -47,15 +56,12 @@ private:
     Ghosts ghosts;
 
 	// Entities in the game
-    const Point legend;
-    const Point pauline;
-    const Point donkey_kong;
+    Point legend;
+    Point pauline;
+    Point donkey_kong;
 
     // Frame counter used to follow the level frames for barrel control (can be used for future level features)
     unsigned long int frames = 0;
-
-    // Advances to the next level
-    void advance_level(const std::string& fname);
 
     // Method to advance the entities in the game
     Game_State advance_entities();

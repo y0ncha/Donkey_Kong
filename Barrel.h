@@ -48,10 +48,10 @@ private:
     void handle_falling() override;
 
     // Method to print the explosion phase within a given radius
-    void print_explosion_phase(int radius);
+    void print_explosion_phase(int radius, Coordinates pos);
 
     // Method to clear the explosion phase within a given radius
-    void clear_explosion_phase(int radius);
+    void clear_explosion_phase(int radius, Coordinates pos);
 
     // Method to set the initial position of the barrel
     Coordinates init_pos();

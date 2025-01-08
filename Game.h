@@ -89,7 +89,11 @@ private:
 	// Method to push the level file names to the list
 	bool push_fname(const std::string& fname);
 
+	// Method to pop the level file names from the list
     const std::string& pop_fname(int i = 0);
+
+	// Method to load the levels from the files
+	void advance_level(const std::string& fname);
 
     // int level = 1; // Current game level
     // int score = 0; // Current game score

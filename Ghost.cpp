@@ -24,8 +24,6 @@ void Ghost::set_board(const Board* pBoard) {
  */
 bool Ghost::valid_move() {
 
-    bool valid = false;
-
 	// Get the character of the next position floor
 	char next_floor = board->get_char(point.pos + dir + Coordinates{ 0, 1 });
 

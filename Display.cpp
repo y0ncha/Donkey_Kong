@@ -2,11 +2,12 @@
 
 /**
 * @brief Get the singleton instance of Display.
+* @param pGame Pointer to the Game instance.
 * @return The singleton instance of Display.
 */
 Display& Display::get_instance(Game* pGame) {
     static Display instance;
-	if (pGame) instance.game = pGame;
+    if (pGame) instance.game = pGame;
     return instance;
 }
 
@@ -22,43 +23,39 @@ void Display::print_layout(const char layout[Screen_Dim::Y][Screen_Dim::X + 1]) 
     std::cout << layout[Screen_Dim::Y - 1];
 }
 
-/*
+/**
 * @brief Prints the main menu and handles the user input.
-* @return A "Game::status" to update the status if needed
 */
 void Display::main_menu() const {
-
     print_layout(main_layout);
-	int input = DEF;
-	bool pending = true;
+    int input = DEF;
+    bool pending = true;
 
     while (pending) {
         if (_kbhit()) {
-
             input = _getch(); // Get the key input
-    
             switch (input) {
-			case Menu_Options::LEVELS: // Choose the level
-				levels_menu();
-				print_layout(main_layout);
-				break;
-			case Menu_Options::KEYS: // Show the keys
+            case Menu_Options::LEVELS: // Choose the level
+                levels_menu();
+                print_layout(main_layout);
+                break;
+            case Menu_Options::KEYS: // Show the keys
                 keys_menu();
                 print_layout(main_layout);
                 break;
-			case Menu_Options::START: // Start the game
+            case Menu_Options::START: // Start the game
                 if (difficulty_menu()) {
                     game->set_state(RUN);
                     pending = false;
                 }
                 else {
-					print_layout(main_layout);
+                    print_layout(main_layout);
                 }
                 break;
-			case Menu_Options::EXIT: // Exit the game
+            case Menu_Options::EXIT: // Exit the game
                 exit_messege();
                 game->set_state(TERMINATE);
-				pending = false;
+                pending = false;
                 break;
             default:
                 break;
@@ -70,13 +67,14 @@ void Display::main_menu() const {
 /**
  * @brief Prints 5 levels at a time starting from the current page index.
  * @param page_ind The index of the current page.
+ * @param last_page The index of the last page.
  */
-void Display::print_levels(int page_ind) const {
+void Display::print_levels(int page_ind, int last_page) const {
     short x = 28, y = 7;
     auto it = game->get_fnames().begin();
     std::advance(it, page_ind * Game::LEVELS_PER_PAGE); // Move the iterator to the start of the current page
 
-	// Print 5 levels
+    // Print 5 levels
     for (int i = 1; it != game->get_fnames().end() && i <= Game::LEVELS_PER_PAGE; ++i, ++it) {
         gotoxy(x, y);
         std::cout << remove_txt_ext(*it);
@@ -84,94 +82,73 @@ void Display::print_levels(int page_ind) const {
         std::cout << " - " << (page_ind * Game::LEVELS_PER_PAGE) + i;
         y += 2;
     }
+    gotoxy(71, 16);
+    std::cout << "Page " << page_ind << "/" << last_page;
 }
 
-
 /**
-*  @brief Prints the levels menu and handles the user input.
+* @brief Prints the levels menu and handles the user input.
 */
 void Display::levels_menu() const {
-
     int input = DEF;
-    int last_page = (int) game->get_nof_levels() / 5, page_ind = 0; // todo write const for 5 levels_per_pages
+    int last_page = (int)game->get_nof_levels() / 5, page_ind = 0; // todo write const for 5 levels_per_pages
     bool pending = true;
 
     print_layout(levels_layout);
-    print_levels();
+    print_levels(page_ind, last_page);
 
     while (pending) {
 
-        // todo add flash_message function to display
-        gotoxy(29, 22);
-        std::cout << "Press ESC to resume";
-        gotoxy(26, 23);
-        std::cout << "Press Enter for next page";
-        Sleep(700);
-        gotoxy(29, 22);
-        std::cout << "                   ";
-        gotoxy(26, 23);
-        std::cout << "                         ";
-        Sleep(300);
+        flash_message({ "Press ESC to resume",  "Press Enter for next page" }, { {29, 22}, {26, 23} });
 
         if (_kbhit()) {
             input = _getch(); // Get the key input
-			short ind = input - '0' - 1; // Convert the input to an index
-
-            switch (input) {
-			    case Menu_Options::RESUME:
-				    pending = false;
-				    break;
-                case Menu_Options::ENTER:
-                    page_ind = (last_page == page_ind) ? 0 : page_ind + 1;
-                    print_layout(levels_layout);
-                    print_levels(page_ind);
-					break;
-				default:
-                    if (game->set_level(ind)) {
-                        pending = false;
-                    }
-					break;
-            }
-        }
-
-    }
-}
-
-/*
-* @brief Prints the pause menu and handles the user input.
-*/
-void Display::pause_menu() const {
-
-    print_layout(pause_layout);
-    int input = DEF;
-	bool pending = true;
-
-    while (pending) {
-
-        // todo add flash_message function to display
-        gotoxy(28, 22);
-        std::cout << "Press ESC to resume";
-        Sleep(700);
-        gotoxy(28, 22);
-        std::cout << "                   ";
-        Sleep(300);
-
-        if (_kbhit()) {
-            input = _getch(); // Get the key input
+            short ind = input - '0' - 1; // Convert the input to an index
 
             switch (input) {
             case Menu_Options::RESUME:
-				pending = false;
-				game->set_state(RUN);
-				break;
+                pending = false;
+                break;
+            case Menu_Options::ENTER:
+                page_ind = (last_page == page_ind) ? 0 : page_ind + 1;
+                print_layout(levels_layout);
+                print_levels(page_ind, last_page);
+                break;
+            default:
+                if (game->set_level(ind)) {
+                    pending = false;
+                }
+                break;
+            }
+        }
+    }
+}
+
+/**
+* @brief Prints the pause menu and handles the user input.
+*/
+void Display::pause_menu() const {
+    print_layout(pause_layout);
+    int input = DEF;
+    bool pending = true;
+
+    while (pending) {
+       
+        if (_kbhit()) {
+            input = _getch(); // Get the key input
+            switch (input) {
+            case Menu_Options::RESUME:
+                pending = false;
+                game->set_state(RUN);
+                break;
             case Menu_Options::KEYS:
                 keys_menu();
                 print_layout(pause_layout);
                 break;
             case Menu_Options::EXIT:
-				pending = false;
-				game->set_state(TERMINATE);
-				break;
+                pending = false;
+                game->set_state(TERMINATE);
+                break;
             default:
                 break;
             }
@@ -179,27 +156,25 @@ void Display::pause_menu() const {
     }
 }
 
+/**
+* @brief Prints the keys menu and handles the user input.
+*/
 void Display::keys_menu() const {
-
     print_layout(keys_layout);
     int input = DEF;
-	bool pending = true;
+    bool pending = true;
 
     while (pending) {
-
-        gotoxy(26, 22);
-        std::cout << "Press ESC to return to menu";
-        Sleep(700);
-        gotoxy(26, 22);
-        std::cout << "                           ";
-        Sleep(300);
-
+        flash_message({ "Press ESC to return to menu" }, { {26, 22} });
         if (_kbhit()) pending = (_getch() != ESC);
     }
 }
 
+/**
+* @brief Prints the difficulty menu and handles the user input.
+* @return True if a difficulty was selected, false otherwise.
+*/
 bool Display::difficulty_menu() const {
-
     print_layout(difficulty_layout);
     int input = DEF;
     bool pending = true;
@@ -217,69 +192,88 @@ bool Display::difficulty_menu() const {
                 pending = false;
                 break;
             case HARD:
-				game->set_difficulty(HARD);
+                game->set_difficulty(HARD);
                 pending = false;
                 break;
             case Display::RESUME:
-				pending = false;
+                pending = false;
                 return false;
                 break;
             default:
                 break;
             }
         }
+		flash_message({ "Press ESC to return" }, { {27, 23} });
     }
     return true;
 }
 
+/**
+* @brief Prints the exit message.
+*/
 void Display::exit_messege() const {
     print_layout(exit_layout);
 }
 
+/**
+* @brief Prints the strike message.
+*/
 void Display::strike_messege() const {
     print_layout(strike_layout);
-
+    std::cout.flush();
     while (true) {
-        if (_kbhit())  // Check if a key is pressed
-            break;
-
-        gotoxy(27, 23);
-        std::cout << "Press any key to continue";
-
-        Sleep(700);
-        if (_kbhit()) { // Check if a key is pressed (again to make it run faster between two "sleep")
-            break;
-        }
-        gotoxy(27, 23);
-        std::cout << "                         ";
-        Sleep(300);
+        if (_kbhit()) break; // Check if a key is pressed
+		flash_message({ "Press any key to continue" }, { {27, 23} });
     }
 }
 
+/**
+* @brief Prints the failure message.
+*/
 void Display::failure_messege() const {
     print_layout(fail_layout);
+    while (true) {
+        if (_kbhit()) break; // Check if a key is pressed
+        flash_message({ "Press any key to exit" }, { {29, 23} });
+    }
 }
 
+/**
+* @brief Prints the success message.
+*/
 void Display::success_messege() const {
     print_layout(success_layout);
 
     while (true) {
-        if (_kbhit())  // Check if a key is pressed
-            break;
-
-        gotoxy(27, 23);
-        std::cout << "Press any key to continue";
-
-        Sleep(700);
-        if (_kbhit()) { // Check if a key is pressed (again to make it run faster between two "sleep")
-            break;
-        }
-        gotoxy(27, 23);
-        std::cout << "                         ";
-        Sleep(300);
+        if (_kbhit()) break; // Check if a key is pressed
+        flash_message({ "Press any key to continue" }, { {27, 23} });   
     }
-
 }
+
+/**
+* @brief Prints a flash message for a short duration.
+* @param message The message to print.
+*/
+void Display::flash_message(const std::vector<std::string>& messages, const std::vector<Coordinates>& positions) const {
+
+	size_t size = messages.size();
+	
+	// Make the flash effect
+	for (size_t i = 0; i < size; i++) { // Print the messages in the given positions
+        gotoxy(positions[i]);
+		std::cout << messages[i];
+    }
+    if (_kbhit()) return;
+	Sleep(700);
+	for (size_t i = 0; i < size; i++) { // Clear the messages
+        size_t len = messages[i].size();
+        gotoxy(positions[i]);
+        while (len--) std::cout << " ";
+    }
+    if (_kbhit()) return;
+	Sleep(200);
+}
+
 
 // Main menu layout
 char Display::main_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
