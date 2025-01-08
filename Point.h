@@ -31,7 +31,7 @@ public:
 
 	// Draw the point on the console
     void draw() const;
-
+ 
 	// Erase the point from the console
     void erase(char ch) const;
 };

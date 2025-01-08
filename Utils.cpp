@@ -20,9 +20,7 @@ void gotoxy(Coordinates pos) {
  * @note Created by Amir Kirsh
  */
 void gotoxy(int x, int y) {
-    std::cout.flush();
-    COORD coord = { (short)x, (short)y }; // Create a COORD structure
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // move the cursor
+	gotoxy({ x, y }); // Delegate to the other gotoxy method
 }
 
 /**

@@ -41,6 +41,9 @@ public:
 	// Setter for the board
     void set_board(const Board* pBoard);
 
+	// Decreases the number of lives Mario has left
+	void lose_lives();
+
 private:
     // Enum for Mario's State
     enum class State {

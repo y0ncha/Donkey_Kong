@@ -190,3 +190,11 @@ bool Entity::set_dy(int dy) {
 bool Entity::set_dx(int dx) {
 	return set_dir(dx, dir.y);
 }
+
+/*
+* @brief Gets the destination position of the ghost.
+* @return The destination position of the ghost.
+*/
+Coordinates Entity::get_dest() const {
+    return point.pos + dir;
+}
