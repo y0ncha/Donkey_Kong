@@ -19,35 +19,35 @@ Game_State Game::start() {
     // Dynamic allocation to ease the level incrementation and to initiate level only after all the needed data is available
     curr_level = std::make_unique<Level>(pop_fname(lvl_ind), mario, dif_lvl);
 
-    while (state != TERMINATE) {
+    while (state != Game_State::TERMINATE) {
 		// Main game loop mamging the different states of the game
         switch (state) {
-		case RUN: // Run the game
+		case Game_State::RUN: // Run the game
             state = curr_level->start();
             break;
-		case PAUSE: // Pause the game
+		case Game_State::PAUSE: // Pause the game
             display.pause_menu();
             break;
-		case LVL_RESET: // Reset the level
+		case Game_State::LVL_RESET: // Reset the level
 			curr_level->reset_level();
             display.strike_messege();
-			state = RUN;
+			state = Game_State::RUN;
             break;
-		case FIN_FAIL: // Finish the game unsuccessfully
+		case Game_State::FIN_FAIL: // Finish the game unsuccessfully
             curr_level->reset_level();
             display.failure_messege();
-            state = TERMINATE;
+            state = Game_State::TERMINATE;
             break;
-		case FIN_SUC: // Finish the game successfully
+		case Game_State::FIN_SUC: // Finish the game successfully
             lvl_ind++;
             if (lvl_ind < level_fnames.size()) { // Check if there are more levels
                 display.success_messege(); // todo change to fin game and fin level
-                state = RUN;
+                state = Game_State::RUN;
 				advance_level(pop_fname(lvl_ind));
 			}
 			else { // If all the levels are finished, exit the game
                 display.success_messege(); // todo change to fin game and fin level
-                state = TERMINATE;
+                state = Game_State::TERMINATE;
             }
             break;
         }
@@ -72,13 +72,13 @@ void Game::advance_level(const std::string& fname) {
  */
 bool Game::set_state(Game_State _state) {
     switch (_state) {
-    case TERMINATE:
-    case RUN:
-    case PAUSE:
-    case LVL_RESET:
-    case FIN_FAIL:
-    case FIN_SUC:
-    case IDLE:
+    case Game_State::TERMINATE:
+    case Game_State::RUN:
+    case Game_State::PAUSE:
+    case Game_State::LVL_RESET:
+    case Game_State::FIN_FAIL:
+    case Game_State::FIN_SUC:
+    case Game_State::IDLE:
         state = _state;
         return true;
     default:
@@ -100,9 +100,9 @@ Game_State Game::get_state() const {
 bool Game::set_difficulty(Difficulty dif) {
 
     switch (dif) {
-    case EASY:
-    case MEDIUM:
-    case HARD:
+    case Difficulty::EASY:
+    case Difficulty::MEDIUM:
+    case Difficulty::HARD:
         dif_lvl = dif;
         return true;
     default:

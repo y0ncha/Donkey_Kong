@@ -1,5 +1,5 @@
 #include "Level.h"
-#include "Display.h"
+
 /**
  * @brief Constructor for the Level class.
  * @param fname The name of the file that holds the board layout.
@@ -14,7 +14,8 @@ Level::Level(std::string fname, Mario& mario, Difficulty dif_lvl)
     ghosts(&board),
     legend(Board::LEGEND, board.get_pos(Board::LEGEND)),
     pauline(Board::PAULINE, board.get_pos(Board::PAULINE)),
-    donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG)){
+    donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG)),
+    hammer(Board::HAMMER, board.get_pos(Board::HAMMER)) {
     mario.set_board(&board);
 }
 
@@ -24,16 +25,19 @@ Level::Level(std::string fname, Mario& mario, Difficulty dif_lvl)
 * @param fname The name of the file that holds the board layout.
 */
 Level::Level(Level&& other, std::string fname) noexcept
-	: dif_lvl(other.dif_lvl),
+    : dif_lvl(other.dif_lvl),
     board(fname),
     mario(other.mario),
     barrels(&board, other.dif_lvl),
     ghosts(&board),
     legend(Board::LEGEND, board.get_pos(Board::LEGEND)),
     pauline(Board::PAULINE, board.get_pos(Board::PAULINE)),
-    donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG))
-    {
-	mario.set_board(&board);
+    donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG)),
+    hammer(Board::HAMMER, board.get_pos(Board::HAMMER)) {
+    mario.set_board(&board);
+    mario.reset();
+	barrels.reset_all();
+	ghosts.reset_all();
 }
 
 /**
@@ -45,12 +49,17 @@ Level& Level::operator=(Level&& other) noexcept {
     if (this != &other) {
         board = std::move(other.board);
         barrels = std::move(other.barrels);
+		barrels.reset_all();
         ghosts = std::move(other.ghosts);
+		ghosts.reset_all();
 		legend = std::move(other.legend);
         pauline = std::move(other.pauline);
         donkey_kong = std::move(other.donkey_kong);
+		hammer = std::move(other.hammer);
         frames = other.frames;
         mario.set_board(&board);
+		mario.reset();
+
     }
     return *this;
 }
@@ -60,18 +69,18 @@ Level& Level::operator=(Level&& other) noexcept {
  */
 Game_State Level::start() {
 
-    Game_State state = RUN; // Set the game status to RUN
+    Game_State state = Game_State::RUN; // Set the game status to RUN
     char key;
 
     render_level(); // Update the game screen
 
-    while (state == RUN) { // Main game loop
+    while (state == Game_State::RUN) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
             key = _getch();
 
-			if (key == ESC) { // If the key is ESC, open the pause menu
-                return PAUSE;
+			if (key == Ctrl::ESC) { // If the key is ESC, open the pause menu
+                return Game_State::PAUSE;
 			}
 			else {
 				mario.update_dir(key); // Update Mario's direction based on the key input
@@ -102,14 +111,14 @@ Game_State Level::advance_entities() {
     mario.move(); // Move Mario if he is on a floor element
     barrels.move_all(frames); // Move the barrels
 	ghosts.move_all(); // Move the ghosts
-	Game_State state = RUN; // Check the game state
+	Game_State state = Game_State::RUN; // Check the game state
 
 	if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) { // Check if Mario was hit by a barrel or a ghost
 		mario.lose_lives(); // Decrease the number of lives Mario has left
-        state = mario.get_lives() > 0 ? LVL_RESET : FIN_FAIL; // Reset the level if Mario has more lives, else finish the game
+        state = mario.get_lives() > 0 ? Game_State::LVL_RESET : Game_State::FIN_FAIL; // Reset the level if Mario has more lives, else finish the game
     } 
     else if (mario.is_rescued_pauline()) { // Check if Mario saved Pauline
-		state = FIN_SUC; // Finish the game successfully
+		state = Game_State::FIN_SUC; // Finish the game successfully
     }
 	return state;
 }

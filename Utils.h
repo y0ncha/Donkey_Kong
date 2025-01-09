@@ -55,3 +55,20 @@ inline void handle_err(const std::string& message, const char* file, int line) {
  */
 std::string remove_txt_ext(const std::string& filename);
 
+/**
+ * @brief Overloads the compersion operators for the Ctrl enum class.
+ * @param lhs The character to compare.
+ * @param rhs The Ctrl enum class to compare.
+ */
+bool operator!=(const char& lhs, const Ctrl& rhs);
+bool operator!=(const Ctrl& lhs, const char& rhs);
+bool operator==(const char& lhs, const Ctrl& rhs);
+bool operator==(const Ctrl& lhs, const char& rhs);
+bool operator<(const char& lhs, const Ctrl& rhs);
+bool operator<(const Ctrl & lhs, const char& rhs);
+bool operator>(const char& lhs, const Ctrl& rhs);
+bool operator>(const Ctrl& lhs, const char& rhs);
+bool operator<=(const char& lhs, const Ctrl& rhs);
+bool operator<=(const Ctrl& lhs, const char& rhs);
+bool operator>=(const char& lhs, const Ctrl& rhs);
+bool operator>=(const Ctrl& lhs, const char& rhs);

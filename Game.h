@@ -10,7 +10,7 @@
 #include "Level.h"
 #include "Utils.h"
 
-
+// Forward declaration of the Level class
 class Level;
 class Display;
 
@@ -23,12 +23,7 @@ class Game {
 public:
     // Constructor for the Game class
     Game();
-
-    // Enum for game constants
-    enum Consts {
-		LEVELS_PER_PAGE = 5 // Number of levels to display per page 
-    };
-
+    
     // Starts the game loop and handles user input
     Game_State start();
 
@@ -56,13 +51,16 @@ public:
 	// Method to get the number of levels
     int get_nof_levels() const;
 
+	// Static consts for the game
+    static constexpr int LEVELS_PER_PAGE = 5; // Number of levels to display per page 
+
 private:
 
 	// Game state
-    Game_State state = IDLE; 
+    Game_State state = Game_State::IDLE;
 
     // Difficulty level
-    Difficulty dif_lvl = EASY; 
+    Difficulty dif_lvl = Difficulty::EASY;
 
 	// Level index to manage the game levels from the array
     short lvl_ind = 0; 

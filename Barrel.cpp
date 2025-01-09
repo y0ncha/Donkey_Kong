@@ -46,9 +46,6 @@ void Barrel::update_dir(char beneath) {
         case Board::ERR:
             reset();
             break;
-		case Board::WALL:
-			reset();
-            break;
         default:
             break;
     }

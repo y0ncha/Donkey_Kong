@@ -18,7 +18,7 @@ class Level;
 class Display {
 public:
     // Enum for the menu options
-    enum Menu_Options {
+    enum class Menu_Options {
         DEF,
         START = '1', // Start the game
         LEVELS = '2', // Choose the level
@@ -35,7 +35,7 @@ public:
     void pause_menu() const;
     void main_menu() const;
     bool difficulty_menu() const;
-    void levels_menu() const;
+    bool levels_menu() const;
     void exit_messege() const;
     void strike_messege() const;
     void failure_messege() const;
@@ -51,7 +51,7 @@ private:
 	Game* game = nullptr;
 
 	// Prints the layout to the console
-    void print_layout(const char layout[Screen_Dim::Y][Screen_Dim::X + 1]) const;
+    void print_layout(const char layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]) const;
 
 	// Prints the levels from the levels_fname list
 	void print_levels(int page_ind, int last_page) const;
@@ -59,13 +59,14 @@ private:
 	// Displays a falshing message on the screen
 	void flash_message(const std::vector<std::string>& messages, const std::vector<Coordinates>& positions) const;
 
-    static char main_layout[Screen_Dim::Y][Screen_Dim::X + 1];
-    static char keys_layout[Screen_Dim::Y][Screen_Dim::X + 1];
-    static char pause_layout[Screen_Dim::Y][Screen_Dim::X + 1];
-    static char exit_layout[Screen_Dim::Y][Screen_Dim::X + 1];
-    static char fail_layout[Screen_Dim::Y][Screen_Dim::X + 1];
-    static char success_layout[Screen_Dim::Y][Screen_Dim::X + 1];
-    static char difficulty_layout[Screen_Dim::Y][Screen_Dim::X + 1];
-    static char strike_layout[Screen_Dim::Y][Screen_Dim::X + 1];
-    static char levels_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    static char main_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char keys_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char pause_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char exit_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char fail_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char success_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char difficulty_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char strike_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char levels_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+	static char finish_game[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
 };

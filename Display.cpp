@@ -15,12 +15,12 @@ Display& Display::get_instance(Game* pGame) {
 * @brief Prints the layout to the console.
 * @param layout The layout to print.
 */
-void Display::print_layout(const char layout[Screen_Dim::Y][Screen_Dim::X + 1]) const {
+void Display::print_layout(const char layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]) const {
     gotoxy(0, 0);
-    for (int i = 0; i < Screen_Dim::Y - 1; i++) {
+    for (int i = 0; i < SCREEN_HEIGHT - 1; i++) {
         std::cout << layout[i] << std::endl;
     }
-    std::cout << layout[Screen_Dim::Y - 1];
+    std::cout << layout[SCREEN_HEIGHT - 1];
 }
 
 /**
@@ -28,16 +28,26 @@ void Display::print_layout(const char layout[Screen_Dim::Y][Screen_Dim::X + 1]) 
 */
 void Display::main_menu() const {
     print_layout(main_layout);
-    int input = DEF;
+    Menu_Options input = Menu_Options::DEF;
     bool pending = true;
 
     while (pending) {
         if (_kbhit()) {
-            input = _getch(); // Get the key input
+            input = static_cast<Menu_Options>(_getch()); // Get the key input
             switch (input) {
             case Menu_Options::LEVELS: // Choose the level
-                levels_menu();
-                print_layout(main_layout);
+                if (levels_menu()) {
+                    if (difficulty_menu()) {
+                        game->set_state(Game_State::RUN);
+                        pending = false;
+                    }
+                    else {
+                        print_layout(main_layout);
+                    }
+                }
+                else {
+                    print_layout(main_layout);
+                }
                 break;
             case Menu_Options::KEYS: // Show the keys
                 keys_menu();
@@ -45,7 +55,7 @@ void Display::main_menu() const {
                 break;
             case Menu_Options::START: // Start the game
                 if (difficulty_menu()) {
-                    game->set_state(RUN);
+                    game->set_state(Game_State::RUN);
                     pending = false;
                 }
                 else {
@@ -54,7 +64,7 @@ void Display::main_menu() const {
                 break;
             case Menu_Options::EXIT: // Exit the game
                 exit_messege();
-                game->set_state(TERMINATE);
+                game->set_state(Game_State::TERMINATE);
                 pending = false;
                 break;
             default:
@@ -89,9 +99,9 @@ void Display::print_levels(int page_ind, int last_page) const {
 /**
 * @brief Prints the levels menu and handles the user input.
 */
-void Display::levels_menu() const {
-    int input = DEF;
-    int last_page = (int)game->get_nof_levels() / 5, page_ind = 0; // todo write const for 5 levels_per_pages
+bool Display::levels_menu() const {
+    Menu_Options input = Menu_Options::DEF;
+    int ind, last_page = (int)game->get_nof_levels() / 5, page_ind = 0; // todo write const for 5 levels_per_pages
     bool pending = true;
 
     print_layout(levels_layout);
@@ -102,8 +112,8 @@ void Display::levels_menu() const {
         flash_message({ "Press ESC to resume",  "Press Enter for next page" }, { {29, 22}, {26, 23} });
 
         if (_kbhit()) {
-			input = _getch(); // Get the key input by integer
-			short ind = page_ind * Game::LEVELS_PER_PAGE + (input - '0') - 1; // Calculate the index of the selected level
+			input = static_cast<Menu_Options>(_getch()); // Get the key input by integer
+			ind = page_ind * Game::LEVELS_PER_PAGE + (static_cast<int>(input) - '0') - 1; // Calculate the index of the selected level
 
             switch (input) {
             case Menu_Options::RESUME:
@@ -115,13 +125,15 @@ void Display::levels_menu() const {
                 print_levels(page_ind, last_page);
                 break;
             default:
-                if (game->set_level(ind)) {
+				if (game->set_level(ind)) { // If the level index is valid, break
                     pending = false;
+                    return true;
                 }
                 break;
             }
         }
     }
+	return false;
 }
 
 /**
@@ -129,17 +141,17 @@ void Display::levels_menu() const {
 */
 void Display::pause_menu() const {
     print_layout(pause_layout);
-    int input = DEF;
+    Menu_Options input = Menu_Options::DEF;
     bool pending = true;
 
     while (pending) {
        
         if (_kbhit()) {
-            input = _getch(); // Get the key input
+            input = static_cast<Menu_Options>(_getch()); // Get the key input
             switch (input) {
             case Menu_Options::RESUME:
                 pending = false;
-                game->set_state(RUN);
+                game->set_state(Game_State::RUN);
                 break;
             case Menu_Options::KEYS:
                 keys_menu();
@@ -147,7 +159,7 @@ void Display::pause_menu() const {
                 break;
             case Menu_Options::EXIT:
                 pending = false;
-                game->set_state(TERMINATE);
+                game->set_state(Game_State::TERMINATE);
                 break;
             default:
                 break;
@@ -161,12 +173,11 @@ void Display::pause_menu() const {
 */
 void Display::keys_menu() const {
     print_layout(keys_layout);
-    int input = DEF;
     bool pending = true;
 
     while (pending) {
         flash_message({ "Press ESC to return to menu" }, { {26, 22} });
-        if (_kbhit()) pending = (_getch() != ESC);
+        if (_kbhit()) pending = (_getch() != Ctrl::ESC);
     }
 }
 
@@ -176,28 +187,29 @@ void Display::keys_menu() const {
 */
 bool Display::difficulty_menu() const {
     print_layout(difficulty_layout);
-    int input = DEF;
+    Difficulty input;
     bool pending = true;
+	char key;
 
     while (pending) {
         if (_kbhit()) {
-            input = _getch(); // Get the key input
+
+            key = _getch();
+			if (key == Ctrl::ESC) return false; // If the key is ESC, return false
+            input = static_cast<Difficulty>(key); // Get the key input
+
             switch (input) {
-            case EASY:
-                game->set_difficulty(EASY);
+            case Difficulty::EASY:
+                game->set_difficulty(Difficulty::EASY);
                 pending = false;
                 break;
-            case MEDIUM:
-                game->set_difficulty(MEDIUM);
+            case Difficulty::MEDIUM:
+                game->set_difficulty(Difficulty::MEDIUM);
                 pending = false;
                 break;
-            case HARD:
-                game->set_difficulty(HARD);
+            case Difficulty::HARD:
+                game->set_difficulty(Difficulty::HARD);
                 pending = false;
-                break;
-            case Display::RESUME:
-                pending = false;
-                return false;
                 break;
             default:
                 break;
@@ -276,7 +288,7 @@ void Display::flash_message(const std::vector<std::string>& messages, const std:
 
 
 // Main menu layout
-char Display::main_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
+char Display::main_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "================================================================================",// 0
      "                                                                                ",// 1
@@ -306,7 +318,7 @@ char Display::main_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
 };
 
 //Keys instructions layout
-char Display::keys_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
+char Display::keys_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "================================================================================",// 0
   R"!(//****************************************************************************\\)!",// 1
@@ -337,7 +349,7 @@ char Display::keys_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
 };
 
 // Difficulty selection layout
-char Display::difficulty_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
+char Display::difficulty_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "                       ____ _                                                   ",// 0
      "                      / ___| |__   ___   ___  ___  ___                          ",//1
@@ -368,7 +380,7 @@ char Display::difficulty_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
 };
 
 // Pause menu layout
-char Display::pause_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
+char Display::pause_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
   R"!(                      _____              __  __   ______                        )!",//0
   R"!(                     / ____|     /\     |  \/  | |  ____|                       )!",//1
@@ -398,7 +410,7 @@ char Display::pause_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
 };
 
 // Exit messege layout
-char Display::exit_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
+char Display::exit_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
   R"!(                          ############################                          )!",//0
   R"!(                          #                      _   #               / \ ____   )!",//1
@@ -428,7 +440,7 @@ char Display::exit_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
 };
 
 // Try again messege layout
-char Display::strike_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
+char Display::strike_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "                                   :=*%@@@%*=:                                  ",//0
      "                               =@@@@=       =@@@@+                              ",//1
@@ -459,7 +471,7 @@ char Display::strike_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
 };
 
 // Fail messege layout
-char Display::fail_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
+char Display::fail_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "                                                                                ", // 0
      "                                                                                ", // 1
@@ -489,7 +501,7 @@ char Display::fail_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
 };
 
 // Success messege layout
-char Display::success_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
+char Display::success_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
 "                                   :=*####*=                                    ", // 1
 "                                -*##*-   =*####.                                ", // 2
 "                              -###*  **:*#: +####                               ", // 3
@@ -518,7 +530,7 @@ char Display::success_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
 };
 
 // Levels selection layout
-char Display::levels_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
+char Display::levels_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "            _                                    _                       _      ", // 0
      "      ___  | |__    ___    ___    ___   ___     | |  ___  __   __  ___  | |     ", // 1
@@ -546,3 +558,35 @@ char Display::levels_layout[Screen_Dim::Y][Screen_Dim::X + 1] = {
      "                                                                                ", // 23
      "                                                                                ", // 24
 };
+
+// 
+char Display::finish_game[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
+    //01234567890123456789012345678901234567890123456789012345678901234567890123456789
+   "            _                                    _                       _      ", // 0
+   "      ___  | |__    ___    ___    ___   ___     | |  ___  __   __  ___  | |     ", // 1
+R"!(     / __| | '_ \  / _ \  / _ \  / __| / _ \    | | / _ \ \ \ / / / _ \ | |     )!", // 2
+R"!(     | (__ | | | || (_) || (_) | \__ \ | __/    | | | __/  \ V /  | __/ | |     )!", // 3
+R"!(     \___| |_| |_| \___/  \___/  |___/ \___|    |_| \___|   \_/   \___| |_|     )!", // 4
+   "                                                                                ", // 5
+   "                                                                                ", // 6
+   "                                                                                ", // 7
+   "                                                                                ", // 8
+   "                                                                                ", // 9
+   "                                                                                ", // 10
+   "                                                                                ", // 11
+   "                                                                                ", // 12
+   "                                                                                ", // 13
+   "                                                                                ", // 14
+   "                                                                                ", // 15
+   "                                                                                ", // 16
+   "********************************************************************************", // 18
+R"!(|                        CHOOSE WHAT LEVEL TO START WITH.                      |)!", // 19
+   "|            AFTER CHOOSING THE WANTED LEVEL, START THE GAME FROM MAIN         |", // 20
+   "********************************************************************************", // 21
+   "                                                                                ", // 17
+   "                                                                                ", // 22
+   "                                                                                ", // 23
+   "                                                                                ", // 24
+
+};
+
