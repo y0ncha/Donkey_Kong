@@ -37,6 +37,9 @@ public:
 	// Getter for the board (const by reference)
     const Board& get_board() const;
 
+	// Method to get the errors from the board validation
+    const std::vector<Board::Err_Code>& get_errors();
+
     // Static consts for the game
     static constexpr int DEF_DELAY = 100; // Default delay in milliseconds
     static constexpr int KILLED_DELAY = 1000; // Delay after Mario is hit

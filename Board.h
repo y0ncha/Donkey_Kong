@@ -49,11 +49,11 @@ public:
         NO_ERR,
         MISSING_MARIO,
         MISSING_PAULINE,
-		FILE_NOT_FOUND,
+		FILE_FAIL,
     };
 
 	// Checks if the board is valid
-    Err_Code is_valid_board() const;
+    const std::vector<Err_Code>& validate_board();
     
     // Prints the board on the console
     void print(int lives_left = 3) const;
@@ -92,8 +92,17 @@ public:
 
 private:
 
+    // Layout of the game board, represented as a 2D array of characters
+    char board_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+
+    // Map to store the positions of entities
+    mutable std::unordered_map <Icon, std::vector<Coordinates>> map;
+
+	// Error code for the board
+	std::vector<Err_Code>errors;
+
     // Loads the board from a givven file
-    bool load(std::string fname);
+    void load(std::string fname);
 
     // Handles the input character while loading the board
     bool is_valid_ch(Icon icon) const;
@@ -103,11 +112,5 @@ private:
 
 	// Handles the input character while loading the board
 	void handle_input(std::string, int y);
-
-    // Layout of the game board, represented as a 2D array of characters
-    char board_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
-
-    // Map to store the positions of entities
-    mutable std::unordered_map <Icon, std::vector<Coordinates>> map;
 };
 

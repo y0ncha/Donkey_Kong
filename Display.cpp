@@ -27,6 +27,7 @@ void Display::print_layout(const char layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]) c
 * @brief Prints the main menu and handles the user input.
 */
 void Display::main_menu() const {
+
     print_layout(main_layout);
     Menu_Options input = Menu_Options::DEF;
     bool pending = true;
@@ -42,6 +43,7 @@ void Display::main_menu() const {
                         pending = false;
                     }
                     else {
+						game->set_level(0);
                         print_layout(main_layout);
                     }
                 }
@@ -100,6 +102,7 @@ void Display::print_levels(int page_ind, int last_page) const {
 * @brief Prints the levels menu and handles the user input.
 */
 bool Display::levels_menu() const {
+
     Menu_Options input = Menu_Options::DEF;
     int ind, last_page = (int)game->get_nof_levels() / 5, page_ind = 0; // todo write const for 5 levels_per_pages
     bool pending = true;
@@ -140,6 +143,7 @@ bool Display::levels_menu() const {
 * @brief Prints the pause menu and handles the user input.
 */
 void Display::pause_menu() const {
+
     print_layout(pause_layout);
     Menu_Options input = Menu_Options::DEF;
     bool pending = true;
@@ -172,6 +176,7 @@ void Display::pause_menu() const {
 * @brief Prints the keys menu and handles the user input.
 */
 void Display::keys_menu() const {
+
     print_layout(keys_layout);
     bool pending = true;
 
@@ -186,6 +191,9 @@ void Display::keys_menu() const {
 * @return True if a difficulty was selected, false otherwise.
 */
 bool Display::difficulty_menu() const {
+
+    std::cout.flush(); // Flush the output buffer to prevent _getch() read the previous input
+
     print_layout(difficulty_layout);
     Difficulty input;
     bool pending = true;
@@ -231,11 +239,17 @@ void Display::exit_messege() const {
 * @brief Prints the strike message.
 */
 void Display::strike_messege() const {
+
+    std::cout.flush(); // Flush the output buffer to prevent _getch() read the previous input
+
     print_layout(strike_layout);
     std::cout.flush();
     while (true) {
-        if (_kbhit()) break; // Check if a key is pressed
 		flash_message({ "Press any key to continue" }, { {27, 23} });
+		if (_kbhit()) {
+			_getch(); // Get the key input to clear the buffer
+			break; // Check if a key is pressed
+		}
     }
 }
 
@@ -243,10 +257,14 @@ void Display::strike_messege() const {
 * @brief Prints the failure message.
 */
 void Display::failure_messege() const {
+
     print_layout(fail_layout);
     while (true) {
-        if (_kbhit()) break; // Check if a key is pressed
         flash_message({ "Press any key to exit" }, { {29, 23} });
+        if (_kbhit()) {
+            _getch(); // Get the key input to clear the buffer
+            break; // Check if a key is pressed
+        }
     }
 }
 
@@ -254,11 +272,15 @@ void Display::failure_messege() const {
 * @brief Prints the success message.
 */
 void Display::success_messege() const {
+
     print_layout(success_layout);
 
     while (true) {
-        if (_kbhit()) break; // Check if a key is pressed
         flash_message({ "Press any key to continue" }, { {27, 23} });   
+        if (_kbhit()) {
+            _getch(); // Get the key input to clear the buffer
+            break; // Check if a key is pressed
+        }
     }
 }
 
@@ -285,6 +307,58 @@ void Display::flash_message(const std::vector<std::string>& messages, const std:
     if (_kbhit()) return;
 	Sleep(200);
 }
+
+/**
+* @brief Prints the error message.
+* @param errors The vector of error codes.
+* @return false if there are no errors, true otherwise.
+*/
+bool Display::error_messege(const std::vector<Board::Err_Code>& errors) const {
+
+	// Check if there are no errors, if so return false to stop the while loop
+    if (errors.empty()) {
+		return false; 
+    }
+
+	// Set the row to start printing the error messages
+    int row = 8;
+
+	// Print the layout
+	print_layout(error_layout);
+    gotoxy(30, 1);
+    std::cout << '"' << game->pop_fname() << '"';
+
+
+    // Mechnism to print the error messages
+	for (auto err : errors) {
+		gotoxy(5, row);
+		switch (err) {
+		case Board::Err_Code::MISSING_MARIO:
+            std::cout << "The screen must include a Mario (@) instance.";
+            row += 2;
+			break;
+		case Board::Err_Code::MISSING_PAULINE:
+            std::cout << "The screen must include a Pauline ($) instance.";
+            row += 2;
+			break;
+		case Board::Err_Code::FILE_FAIL:
+			std::cout << "File failed to open.";
+            row += 2;
+			break;
+		default:
+			break;
+		}
+	}
+	while (true) {
+		flash_message({ "Press any key to skip to the next level" }, { {22, 23} });
+        if (_kbhit()) {
+            _getch(); // Get the key input to clear the buffer
+            break; // Check if a key is pressed
+        }
+	}
+	return true;
+}
+
 
 
 // Main menu layout
@@ -551,7 +625,7 @@ char Display::levels_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
      "                                                                                ", // 16
      "********************************************************************************", // 18
   R"!(|                        CHOOSE WHAT LEVEL TO START WITH.                      |)!", // 19
-     "|            AFTER CHOOSING THE WANTED LEVEL, START THE GAME FROM MAIN         |", // 20
+     "|                                                                              |", // 20
      "********************************************************************************", // 21
      "                                                                                ", // 17
      "                                                                                ", // 22
@@ -559,14 +633,14 @@ char Display::levels_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
      "                                                                                ", // 24
 };
 
-// 
-char Display::finish_game[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
+// Levels selection layout
+char Display::error_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
-   "            _                                    _                       _      ", // 0
-   "      ___  | |__    ___    ___    ___   ___     | |  ___  __   __  ___  | |     ", // 1
-R"!(     / __| | '_ \  / _ \  / _ \  / __| / _ \    | | / _ \ \ \ / / / _ \ | |     )!", // 2
-R"!(     | (__ | | | || (_) || (_) | \__ \ | __/    | | | __/  \ V /  | __/ | |     )!", // 3
-R"!(     \___| |_| |_| \___/  \___/  |___/ \___|    |_| \___|   \_/   \___| |_|     )!", // 4
+   "                                                                                ", // 0
+   "                       SCREEN :                                                 ", // 1
+   "                               IS NOT VALID                                     ", // 2
+   "                                                                                ", // 3
+   "                                                                                ", // 4
    "                                                                                ", // 5
    "                                                                                ", // 6
    "                                                                                ", // 7
@@ -579,14 +653,45 @@ R"!(     \___| |_| |_| \___/  \___/  |___/ \___|    |_| \___|   \_/   \___| |_| 
    "                                                                                ", // 14
    "                                                                                ", // 15
    "                                                                                ", // 16
-   "********************************************************************************", // 18
-R"!(|                        CHOOSE WHAT LEVEL TO START WITH.                      |)!", // 19
-   "|            AFTER CHOOSING THE WANTED LEVEL, START THE GAME FROM MAIN         |", // 20
-   "********************************************************************************", // 21
+   "                                                                                ", // 18
+   "                                                                                ", // 19
+   "                                                                                ", // 20
+   "                                                                                ", // 21
    "                                                                                ", // 17
    "                                                                                ", // 22
    "                                                                                ", // 23
    "                                                                                ", // 24
-
 };
+
+// Finish succes messege layout
+char Display::winning_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
+    //01234567890123456789012345678901234567890123456789012345678901234567890123456789
+   "                                                                                ", // 0
+   "                                                                                ", // 1
+   "                                                                                ", // 2
+   "                                                                                ", // 3
+   "                                                                                ", // 4
+   "                                                                                ", // 5
+   "                                                                                ", // 6
+   "                                                                                ", // 7
+   "                                                                                ", // 8
+   "                                                                                ", // 9
+   "                                                                                ", // 10
+   "                                                                                ", // 11
+   "                  YOUV'E FINISHED SUCCEFULLY ALL THE LEVELS                     ", // 12
+   "                                                                                ", // 13
+   "                                                                                ", // 14
+   "                                                                                ", // 15
+   "                                                                                ", // 16
+   "                                                                                ", // 18
+   "                                                                                ", // 19
+   "                                                                                ", // 20
+   "                                                                                ", // 21
+   "                                                                                ", // 17
+   "                                                                                ", // 22
+   "                                                                                ", // 23
+   "                                                                                ", // 24
+};
+
+
 

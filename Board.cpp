@@ -5,7 +5,7 @@
 * Initializes the map with the valid entities and their corresponding characters.
 * Initializes the board layout with empty characters.
 */
-Board::Board(std::string fname) : map{
+Board::Board(std::string fname) : map {
     {MARIO, {}},
     {DONKEY_KONG, {}},
     {PAULINE, {}},
@@ -22,9 +22,9 @@ Board::Board(std::string fname) : map{
 * Throws an error if the file could not be opened.
 * @param fname The name of the file to load the board layout from.
 */
-bool Board::load(std::string fname) {
+void Board::load(std::string fname) {
 
-	bool valid = true; // Flag to indicate if the board is valid
+	Err_Code err = Err_Code::NO_ERR;
     std::string buffer; // Buffer to store each line of the file
 	std::ifstream file(fname); // Open the file with the given filename for reading
 
@@ -35,25 +35,23 @@ bool Board::load(std::string fname) {
 		}
 	}
 	else {
-        valid = false;
+		errors.push_back(Err_Code::FILE_FAIL);
 	}
-    return valid;
 }
 
 /**
-* @brief Handles the input line by validating the characters and storing them in the board layout.
-* @return Error code indicating the invalidation.
-*/
-Board::Err_Code Board::is_valid_board() const{
+ * @brief Validates the board layout and stores any errors in the errors vector.
+ * @return A vector of error codes indicating the errors in the board layout.
+ */
+const std::vector<Board::Err_Code>& Board::validate_board() {
 
-	if (map[Icon::MARIO].empty()) {
-		return Err_Code::MISSING_MARIO;
-	}
-	if (map[Icon::PAULINE].empty()) {
-        return Err_Code::MISSING_PAULINE;
-	}
-	return Err_Code::NO_ERR;
-
+    if (map[Icon::MARIO].empty()) {
+        errors.push_back(Err_Code::MISSING_MARIO); // Check if Mario is missing
+    }
+    if (map[Icon::PAULINE].empty()) {
+        errors.push_back(Err_Code::MISSING_PAULINE); // Check if Pauline is missing
+    }
+	return errors;
 }
 /**
  * @brief Draws the game board by printing each row of the layout.

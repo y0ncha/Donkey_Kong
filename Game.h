@@ -51,6 +51,9 @@ public:
 	// Method to get the number of levels
     int get_nof_levels() const;
 
+    // Method to pop the level file names from the list
+    const std::string& pop_fname(int i = -1) const;
+
 	// Static consts for the game
     static constexpr int LEVELS_PER_PAGE = 5; // Number of levels to display per page 
 
@@ -83,11 +86,11 @@ private:
 	// Method to push the level file names to the list
 	bool push_fname(const std::string& fname);
 
-	// Method to pop the level file names from the list
-    const std::string& pop_fname(int i = 0);
-
 	// Method to load the levels from the files
 	void advance_level(const std::string& fname);
+
+	// Method to inittiate and validate the level
+    void set_level(const std::string& fname);
 
     // int level = 1; // Current game level
     // int score = 0; // Current game score

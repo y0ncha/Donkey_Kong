@@ -17,6 +17,7 @@ Level::Level(std::string fname, Mario& mario, Difficulty dif_lvl)
     donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG)),
     hammer(Board::HAMMER, board.get_pos(Board::HAMMER)) {
     mario.set_board(&board);
+    mario.reset();
 }
 
 /**
@@ -35,9 +36,7 @@ Level::Level(Level&& other, std::string fname) noexcept
     donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG)),
     hammer(Board::HAMMER, board.get_pos(Board::HAMMER)) {
     mario.set_board(&board);
-    mario.reset();
-	barrels.reset_all();
-	ghosts.reset_all();
+	reset_level();
 }
 
 /**
@@ -152,4 +151,11 @@ void Level::render_level() const {
     render_hud(); // Update the lives display
 }
 
+/**
+ * @brief Getter for the errors from the board validation.
+ * @return A vector of error codes.
+ */
+const std::vector<Board::Err_Code>& Level::get_errors() {
+	return board.validate_board();
+}
 

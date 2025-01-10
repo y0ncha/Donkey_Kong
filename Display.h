@@ -40,6 +40,7 @@ public:
     void strike_messege() const;
     void failure_messege() const;
     void success_messege() const;
+	bool error_messege(const std::vector<Board::Err_Code>& errors) const;
     void keys_menu() const;
 
 private:
@@ -68,5 +69,6 @@ private:
     static char difficulty_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
     static char strike_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
     static char levels_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
-	static char finish_game[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+	static char winning_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]; // todo update
+    static char error_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]; // todo update
 };
