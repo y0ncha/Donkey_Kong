@@ -37,12 +37,16 @@ public:
 
     // Checks if Mario saved Pauline
     bool is_rescued_pauline() const;
+    
+    // Checks if Mario picked up the hammer
+    bool get_hammer() const;
 
 	// Setter for the board
     void set_board(const Board* pBoard);
 
 	// Decreases the number of lives Mario has left
 	void lose_lives();
+
 
 private:
     // Enum for Mario's State
@@ -61,6 +65,7 @@ private:
 
     bool mario_hit = false; // Indicates if Mario has been hit
     bool rescued_pauline = false; // Indicates if Mario has saved Pauline
+    bool has_hammer = false; // Indicates if Mario has a hammer
 
     // Makes Mario jump
     void jump();

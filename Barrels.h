@@ -34,6 +34,9 @@ public:
     // Checks if Mario was hit by a barrel
     bool hitted_mario() const;
 
+    // Checks if a barrel is in a given position and resets it if it is
+    bool in_range(Coordinates& pos) ;
+
     enum consts {
         DEF_AMOUNT = 10,
         MED_AMOUNT = 15,

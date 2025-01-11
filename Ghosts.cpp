@@ -99,6 +99,24 @@ void Ghosts::handle_colisions() {
     }
 }
 
+
+/**
+* @brief Checks if a ghost is in a given position
+* vanishes the ghost if it is and return true, false otherwise.
+* @param pos The position to check.
+* */
+bool Ghosts::in_range(Coordinates& pos)
+{
+    for (auto& ghost : ghosts) {
+		if (ghost->is_active() && ghost->get_pos() == pos )
+		{
+			ghost->kill();
+            return true;
+		}
+	}
+    return false;
+}
+
 /**
  * @brief Method to check if any ghost hit Mario.
  * @param g1 ghost by const ref.

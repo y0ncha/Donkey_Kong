@@ -132,6 +132,7 @@ bool Board::path_clear(Coordinates coord) const {
     case LADDER:
     case DONKEY_KONG:
     case PAULINE:
+    case HAMMER:
         return true;
     default:
         return false;
@@ -260,7 +261,8 @@ void Board::handle_input(std::string line, int y) {
         Icon icon = static_cast<Icon>(line[x]);
 
         if (is_valid(icon)) { // Check if the character is valid
-
+            if (icon == HAMMER) // Set the hammer_on_board to true if the character is a hammer
+				set_hammer_on_board();
             board_layout[y][x] = map_icon(icon, { x, y });
         }
         else { // Set the character to AIR if it is invalid
@@ -281,5 +283,17 @@ void Board::handle_input(std::string line, int y) {
 */
 size_t Board::get_entity_count(Icon icon) const {
    return map[icon].size();
+}
+
+//return true if theres an hammer on the board, false otherwise
+bool Board::hammer_on_board() const
+{
+    return hammer_ON_board;
+}
+
+//set true if theres an hammer on the board
+void Board::set_hammer_on_board()
+{
+	hammer_ON_board = true;
 }
 

@@ -24,6 +24,17 @@ Coordinates Coordinates::operator+(const Coordinates& other) const {
 }
 
 /**
+ * @brief Overloads the - operator to return a new Coordinates object that is the difference of this object and another.
+ * Does not modify the original objects.
+ * @param other The other Coordinates object to subtract.
+ * @return A new Coordinates object with subtracted values.
+ */
+Coordinates Coordinates::operator-(const Coordinates& other) const
+{
+    return Coordinates(this->x - other.x, this->y - other.y); // Return a new Coordinates object with subtracted values
+}
+
+/**
  * @brief Overloads the == operator to compare two Coordinates objects.
  * Returns true if the x and y values are equal.
  * @param other The other Coordinates object to compare.

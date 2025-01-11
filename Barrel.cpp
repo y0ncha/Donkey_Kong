@@ -102,7 +102,8 @@ void Barrel::print_explosion_phase(int radius, Coordinates pos) {
 
     if (radius == 0) {
         gotoxy(pos);
-        if (getch_console(pos) == Board::MARIO) {
+        char atPos = getch_console(pos);
+        if (atPos == Board::MARIO || atPos == Board::SUPER_MARIO) {
             state = State::HIT_MARIO;
         }
         std::cout << "*";
@@ -113,7 +114,8 @@ void Barrel::print_explosion_phase(int radius, Coordinates pos) {
 				Coordinates dest = { pos.x + i, pos.y + j };
 				if (board->pos_inbound(dest)) {
 					gotoxy(dest);
-					if (getch_console(dest) == Board::MARIO) {
+                    char atDest = getch_console(dest);
+                    if (atDest == Board::MARIO || atDest == Board::SUPER_MARIO) {
 						state = State::HIT_MARIO;
 					}
 					std::cout << "*";
@@ -207,6 +209,7 @@ char Barrel::handle_collision() {
 
     switch (obst) {
 	    case Board::MARIO: // If the barrel hits Mario
+        case Board::SUPER_MARIO:
             state = State::HIT_MARIO;
             break;
 		case Board::WALL: // If the barrel hits a wall

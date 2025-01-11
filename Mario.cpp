@@ -234,6 +234,10 @@ char Mario::handle_collision() {
 	case Board::GHOST: // If Mario hits a ghost
 		mario_hit = true; // Set Mario as hit
 		break;
+    case Board::HAMMER: // If Mario hits a hammer
+        has_hammer = true;// Set Mario as having a hammer
+        point.icon = Board::SUPER_MARIO; // Change Mario's icon to Mario with a hammer
+        break;
     case Board::PAULINE: // If Mario hits Pauline
         rescued_pauline = true; // Set Mario as saved Pauline
         break;
@@ -274,6 +278,7 @@ void Mario::lose_lives() {
 	lives_left--;
 }
 
+
 /**
  * @brief Resets Mario to its initial fields.
  */
@@ -281,7 +286,9 @@ void Mario::reset() {
 
     mario_hit = false;
     rescued_pauline = false;
+    has_hammer = false;
 
+    point.icon=Board::MARIO;
     point.pos = board->get_pos(Board::MARIO);
     state = State::IDLE;
 
@@ -306,4 +313,13 @@ bool Mario::is_hit() const {
  */
 bool Mario::is_rescued_pauline() const {
     return rescued_pauline;
+}
+
+/**
+ * @brief Checks if Mario picked up the hammer.
+ * @return true if he picked up the hammer, false otherwise
+ */
+bool Mario::get_hammer() const
+{
+    return has_hammer;
 }
