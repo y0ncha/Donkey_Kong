@@ -22,6 +22,9 @@ public:
 	// Method to reset the ghost
 	void reset() override;
 
+	// Method to kill the ghost
+	void kill();
+
 	// Method to check if the ghost is active
 	bool is_active() const;
 

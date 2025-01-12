@@ -35,6 +35,9 @@ public:
     // Checks if Mario was hit by a barrel
     bool hitted_mario() const;
 
+    // Checks if a barrel is in a given position and resets it if it is
+    bool in_range(Coordinates& pos);
+
 	// Map to store the default amount and interval for each difficulty level
     const std::unordered_map<Difficulty, std::pair<size_t, size_t>> difficulty = {
         { Difficulty::EASY, {10, 30} },

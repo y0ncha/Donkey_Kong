@@ -22,6 +22,9 @@ struct Coordinates {
     // Overloads the + operator to return a new Coordinates object that is the sum of this object and another
     Coordinates operator+(const Coordinates& other) const;
 
+    // Overloads the - operator to return a new Coordinates object that is the difference of this object and another
+    Coordinates operator-(const Coordinates& other) const;
+
     // Overloads the == operator to compare two Coordinates objects
     bool operator==(const Coordinates& other) const;
 

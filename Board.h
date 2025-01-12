@@ -23,6 +23,7 @@ public:
 	// Enum for game elements (no use of enum class due to Icon being scoped in Board class and to alllow easy conversions to char)
     enum Icon {
         MARIO = '@', // Character representing Mario
+        SUPER_MARIO = '8', // Character representing Mario with a hammer
         DONKEY_KONG = '&', // Character representing Donkey Kong
         BARREL = 'O', // Character representing a barrel
         PAULINE = '$', // Character representing Pauline
@@ -89,6 +90,11 @@ public:
 	// Returns the number of entities of a given type
 	size_t get_entity_count(Icon icon) const;
 
+    // Checks if the hammer is on the board
+    bool hammer_on_board() const;
+
+    // Sets true if there is a hammer on the board
+    void set_hammer_on_board();
 
 private:
 
@@ -112,5 +118,7 @@ private:
 
 	// Handles the input character while loading the board
 	void handle_input(std::string, int y);
+
+    bool hammer_ON_board = false; // Indicates if the hammer is on the board
 };
 

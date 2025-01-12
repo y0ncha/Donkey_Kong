@@ -30,6 +30,9 @@ public:
 
     // Checks if Mario saved Pauline
     bool is_rescued_pauline() const;
+    
+    // Checks if Mario picked up the hammer
+    bool get_hammer() const;
 
 	// Setter for the board
     void set_board(const Board* pBoard);
@@ -37,10 +40,10 @@ public:
 	// Decreases the number of lives Mario has left
 	void lose_lives();
 
-    // Consts for Mario's properties
-    static constexpr int JMP_H = 2; // Max height of a jump
-    static constexpr int MAX_FALL_H = 5; // Max height of a fall
-    static constexpr int MAX_LIVES = 3; // Mario's number of lives
+  // Consts for Mario's properties
+  static constexpr int JMP_H = 2; // Max height of a jump
+  static constexpr int MAX_FALL_H = 5; // Max height of a fall
+  static constexpr int MAX_LIVES = 3; // Mario's number of lives
 
 private:
 
@@ -60,6 +63,7 @@ private:
 
     bool mario_hit = false; // Indicates if Mario has been hit
     bool rescued_pauline = false; // Indicates if Mario has saved Pauline
+    bool has_hammer = false; // Indicates if Mario has a hammer
 
     // Makes Mario jump
     void jump();

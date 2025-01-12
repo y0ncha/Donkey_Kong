@@ -95,3 +95,21 @@ void Barrels::reset_all() {
 bool Barrels::hitted_mario() const {
     return hit_mario;
 }
+
+/**
+* @brief Checks if a barrel is in  a given position
+* vanishes the barrel if it is and return true, false otherwise.
+* @param pos The position to check.
+*/
+bool Barrels::in_range(Coordinates& pos) 
+{
+    for (auto& barrel : barrels)
+	{
+		if (barrel->is_active() && barrel->get_pos() ==pos)
+		{
+            barrel->reset();
+            return true;
+		}
+	}
+    return false;
+}
