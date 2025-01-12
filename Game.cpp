@@ -23,38 +23,40 @@ Game_State Game::start() {
     while (state != Game_State::TERMINATE) {
 		// Main game loop mamging the different states of the game
         switch (state) {
-		case Game_State::RUN: // Run the game
+        case Game_State::RUN: // Run the game
             state = curr_level->start();
             break;
-		case Game_State::PAUSE: // Pause the game
+        case Game_State::PAUSE: // Pause the game
             display.pause_menu();
             break;
-		case Game_State::LVL_RESET: // Reset the level
-			curr_level->reset_level();
-            display.strike_messege();
-			state = Game_State::RUN;
-            break;
-		case Game_State::FIN_FAIL: // Finish the game unsuccessfully
+        case Game_State::LVL_RESET: // Reset the level
             curr_level->reset_level();
-            display.failure_messege();
+            display.strike_message();
+            state = Game_State::RUN;
+            break;
+        case Game_State::FIN_FAIL: // Finish the game unsuccessfully
+            curr_level->reset_level();
+            display.failure_message();
             state = Game_State::TERMINATE;
             break;
-		case Game_State::FIN_SUC: // Finish the game successfully
-			lvl_ind++; // Advance to the next level
+        case Game_State::FIN_SUC: // Finish the game successfully
+            lvl_ind++; // Advance to the next level
             if (lvl_ind < level_fnames.size()) { // Check if there are more levels
-                display.success_messege(); // todo change to fin game and fin level
+                display.success_message(); 
                 state = Game_State::RUN;
-				set_level(pop_fname());
-			}
-			else { // If all the levels are finished, exit the game
-                display.success_messege(); // todo change to fin game and fin level
+                set_level(pop_fname());
+            }
+            else { // If all the levels are finished, exit the game
+                display.winning_message();
                 state = Game_State::TERMINATE;
             }
+            break;
+        default: // Do nothing if the state is not valid
             break;
         }
     }
 	// Display the exit message
-    display.exit_messege();
+    display.exit_message();
 	return state;
 }
 
@@ -74,6 +76,8 @@ void Game::advance_level(const std::string& fname) {
  */
 void Game::set_level(const std::string& fname) {
 
+	if (state == Game_State::TERMINATE) return; // If the game is terminated, do nothing
+
 	if (curr_level == nullptr) { // If the current level is not null, use the constructor
         curr_level = std::make_unique<Level>(fname, mario, dif_lvl);
 	}
@@ -82,7 +86,7 @@ void Game::set_level(const std::string& fname) {
     }
 
 	// Validate the level, while invalid keep advancing to the next level
-	while (display.error_messege(curr_level->get_errors())) {
+	while (display.error_message(curr_level->get_errors())) {
 
 		lvl_ind++; // Advance to the next level
 
@@ -91,7 +95,7 @@ void Game::set_level(const std::string& fname) {
 		}
 		else { // If all the levels are finished, exit the game
             state = Game_State::FIN_SUC;
-            break; // todo print relvant error message
+            break;
 		}
 	}
 }

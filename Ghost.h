@@ -54,7 +54,7 @@ private:
 	// Empty implementation of handle_falling
 	void handle_falling() override;
 
-	//TODO add the following methods, and change the ghost hit_mario based on them
+	// Empty implementation of handle_collision
 	char handle_collision() override; 
 
 	// Method to update the direction of the ghost

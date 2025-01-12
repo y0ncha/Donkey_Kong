@@ -65,7 +65,7 @@ void Display::main_menu() const {
                 }
                 break;
             case Menu_Options::EXIT: // Exit the game
-                exit_messege();
+                exit_message();
                 game->set_state(Game_State::TERMINATE);
                 pending = false;
                 break;
@@ -84,12 +84,13 @@ void Display::main_menu() const {
 void Display::print_levels(int page_ind, int last_page) const {
     short x = 28, y = 7;
     auto it = game->get_fnames().begin();
-    std::advance(it, page_ind * Game::LEVELS_PER_PAGE); // Move the iterator to the start of the current page
+	auto end_it = game->get_fnames().end();
+    std::advance(it, page_ind * LEVELS_PER_PAGE); // Move the iterator to the start of the current page
 
     // Print 5 levels
-    for (int i = 1; it != game->get_fnames().end() && i <= Game::LEVELS_PER_PAGE; ++i, ++it) {
+    for (int i = 1; it != end_it && i <= LEVELS_PER_PAGE; ++i, ++it) {
         gotoxy(x, y);
-        std::cout << remove_txt_ext(*it);
+        std::cout << remove_ext(*it);
         gotoxy(x + 20, y);
         std::cout << " - " << i;
         y += 2;
@@ -104,7 +105,7 @@ void Display::print_levels(int page_ind, int last_page) const {
 bool Display::levels_menu() const {
 
     Menu_Options input = Menu_Options::DEF;
-    int ind, last_page = (int)game->get_nof_levels() / 5, page_ind = 0; // todo write const for 5 levels_per_pages
+    int ind, last_page = (int)game->get_nof_levels() / LEVELS_PER_PAGE, page_ind = 0;
     bool pending = true;
 
     print_layout(levels_layout);
@@ -116,7 +117,7 @@ bool Display::levels_menu() const {
 
         if (_kbhit()) {
 			input = static_cast<Menu_Options>(_getch()); // Get the key input by integer
-			ind = page_ind * Game::LEVELS_PER_PAGE + (static_cast<int>(input) - '0') - 1; // Calculate the index of the selected level
+			ind = page_ind * LEVELS_PER_PAGE + (static_cast<int>(input) - '0') - 1; // Calculate the index of the selected level
 
             switch (input) {
             case Menu_Options::RESUME:
@@ -231,24 +232,25 @@ bool Display::difficulty_menu() const {
 /**
 * @brief Prints the exit message.
 */
-void Display::exit_messege() const {
+void Display::exit_message() const {
     print_layout(exit_layout);
 }
 
 /**
 * @brief Prints the strike message.
 */
-void Display::strike_messege() const {
+void Display::strike_message() const {
 
-    std::cout.flush(); // Flush the output buffer to prevent _getch() read the previous input
+	bool pending = true;
+	char void_input;
 
     print_layout(strike_layout);
     std::cout.flush();
-    while (true) {
+    while (pending) {
 		flash_message({ "Press any key to continue" }, { {27, 23} });
 		if (_kbhit()) {
-			_getch(); // Get the key input to clear the buffer
-			break; // Check if a key is pressed
+            void_input = _getch(); // Get the key input to clear the buffer
+			pending = false; // Check if a key is pressed
 		}
     }
 }
@@ -256,14 +258,17 @@ void Display::strike_messege() const {
 /**
 * @brief Prints the failure message.
 */
-void Display::failure_messege() const {
+void Display::failure_message() const {
+
+    bool pending = true;
+    char void_input;
 
     print_layout(fail_layout);
-    while (true) {
+    while (pending) {
         flash_message({ "Press any key to exit" }, { {29, 23} });
         if (_kbhit()) {
-            _getch(); // Get the key input to clear the buffer
-            break; // Check if a key is pressed
+            void_input = _getch(); // Get the key input to clear the buffer
+            pending = false; // Check if a key is pressed
         }
     }
 }
@@ -271,15 +276,35 @@ void Display::failure_messege() const {
 /**
 * @brief Prints the success message.
 */
-void Display::success_messege() const {
+void Display::success_message() const {
+
+    bool pending = true;
+    char void_input;
 
     print_layout(success_layout);
-
-    while (true) {
+    while (pending) {
         flash_message({ "Press any key to continue" }, { {27, 23} });   
         if (_kbhit()) {
-            _getch(); // Get the key input to clear the buffer
-            break; // Check if a key is pressed
+            void_input = _getch(); // Get the key input to clear the buffer
+            pending = false;
+        }
+    }
+}
+
+/**
+ * @brief Prints the winning message (finished all valid levels).
+ */
+void Display::winning_message() const {
+
+    bool pending = true;
+    char void_input;
+
+    print_layout(winning_layout);
+    while (pending) {
+        flash_message({ "Press any key to continue" }, { {27, 23} });
+        if (_kbhit()) {
+            void_input = _getch(); // Get the key input to clear the buffer
+            pending = false;
         }
     }
 }
@@ -313,7 +338,7 @@ void Display::flash_message(const std::vector<std::string>& messages, const std:
 * @param errors The vector of error codes.
 * @return false if there are no errors, true otherwise.
 */
-bool Display::error_messege(const std::vector<Board::Err_Code>& errors) const {
+bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
 
 	// Check if there are no errors, if so return false to stop the while loop
     if (errors.empty()) {
@@ -322,6 +347,8 @@ bool Display::error_messege(const std::vector<Board::Err_Code>& errors) const {
 
 	// Set the row to start printing the error messages
     int row = 8;
+    bool pending = true;
+	char void_input;
 
 	// Print the layout
 	print_layout(error_layout);
@@ -349,11 +376,11 @@ bool Display::error_messege(const std::vector<Board::Err_Code>& errors) const {
 			break;
 		}
 	}
-	while (true) {
+	while (pending) {
 		flash_message({ "Press any key to skip to the next level" }, { {22, 23} });
         if (_kbhit()) {
-            _getch(); // Get the key input to clear the buffer
-            break; // Check if a key is pressed
+            void_input = _getch(); // Get the key input to clear the buffer
+            pending = false; // Check if a key is pressed
         }
 	}
 	return true;
@@ -483,7 +510,7 @@ char Display::pause_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
      "                                                                                ", //24
 };
 
-// Exit messege layout
+// Exit message layout
 char Display::exit_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
   R"!(                          ############################                          )!",//0
@@ -513,7 +540,7 @@ char Display::exit_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
      "********************************************************************************",//24
 };
 
-// Try again messege layout
+// Try again message layout
 char Display::strike_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "                                   :=*%@@@%*=:                                  ",//0
@@ -544,7 +571,7 @@ char Display::strike_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
 
 };
 
-// Fail messege layout
+// Fail message layout
 char Display::fail_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "                                                                                ", // 0
@@ -574,7 +601,7 @@ char Display::fail_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
      "                                                                                ", // 24
 };
 
-// Success messege layout
+// Success message layout
 char Display::success_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
 "                                   :=*####*=                                    ", // 1
 "                                -*##*-   =*####.                                ", // 2
@@ -625,8 +652,8 @@ char Display::levels_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
      "                                                                                ", // 16
      "********************************************************************************", // 18
   R"!(|                        CHOOSE WHAT LEVEL TO START WITH.                      |)!", // 19
-     "|                                                                              |", // 20
      "********************************************************************************", // 21
+     "                                                                                ", // 16
      "                                                                                ", // 17
      "                                                                                ", // 22
      "                                                                                ", // 23
@@ -663,7 +690,7 @@ char Display::error_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
    "                                                                                ", // 24
 };
 
-// Finish succes messege layout
+// Finish succes message layout
 char Display::winning_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
    "                                                                                ", // 0
@@ -692,6 +719,8 @@ char Display::winning_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
    "                                                                                ", // 23
    "                                                                                ", // 24
 };
+
+
 
 
 

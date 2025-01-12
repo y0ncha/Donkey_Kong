@@ -53,7 +53,7 @@ inline void handle_err(const std::string& message, const char* file, int line) {
  * @param filename The filename to remove the extension from.
  * @return The filename without the ".txt" extension.
  */
-std::string remove_txt_ext(const std::string& filename);
+std::string remove_ext(const std::string& filename);
 
 /**
  * @brief Overloads the compersion operators for the Ctrl enum class.

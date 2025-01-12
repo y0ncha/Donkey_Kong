@@ -54,9 +54,6 @@ public:
     // Method to pop the level file names from the list
     const std::string& pop_fname(int i = -1) const;
 
-	// Static consts for the game
-    static constexpr int LEVELS_PER_PAGE = 5; // Number of levels to display per page 
-
 private:
 
 	// Game state
