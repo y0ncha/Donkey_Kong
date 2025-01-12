@@ -89,6 +89,17 @@ void Ghost::reset() {
 }
 
 /**
+ * @brief Kills the ghost by making it vanish and setting it to inactive.
+ */
+void Ghost::kill(){
+    vanish();
+	active = false;
+	set_pos({ -1,-1 });
+	dir = { 0,0 };
+	last_dx = 0;
+}
+
+/**
  * @note Empty implemantation of handle_falling.
  */
 void Ghost::handle_falling() {}
@@ -119,7 +130,11 @@ void Ghost::invert_dir() {
  * @return True if the ghost has hit Mario, false otherwise.
  */
 bool Ghost::is_hit_mario() const {
-    return (getch_console(point.pos) == Board::MARIO || getch_console(point.pos + dir) == Board::MARIO);
+    char current = getch_console(point.pos);
+    char next = getch_console(point.pos + dir);
+
+    return (current == Board::MARIO || current == Board::SUPER_MARIO ||
+        next == Board::MARIO || next == Board::SUPER_MARIO);
 }
 
 /**

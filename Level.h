@@ -34,6 +34,15 @@ public:
     // Resets the level
     void reset_level();
 
+    // Show the hammer if Mario hasn't picked it up 
+    void show_hammer() const;
+
+    // Handle the hammer attack
+    void handle_hammer_attack();
+
+    // Helper method to handle the hammer attack
+    bool handle_hammer_attack_helper(Coordinates pos);
+
 	// Getter for the board (const by reference)
     const Board& get_board() const;
 
