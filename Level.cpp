@@ -1,5 +1,5 @@
 #include "Level.h"
-#include "Display.h"
+
 /**
  * @brief Constructor for the Level class.
  * @param fname The name of the file that holds the board layout.
@@ -17,6 +17,7 @@ Level::Level(std::string fname, Mario& mario, Difficulty dif_lvl)
     donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG)),
     hammer(Board::HAMMER, board.get_pos(Board::HAMMER)) {
     mario.set_board(&board);
+    mario.reset();
 }
 
 /**
@@ -25,7 +26,7 @@ Level::Level(std::string fname, Mario& mario, Difficulty dif_lvl)
 * @param fname The name of the file that holds the board layout.
 */
 Level::Level(Level&& other, std::string fname) noexcept
-	: dif_lvl(other.dif_lvl),
+    : dif_lvl(other.dif_lvl),
     board(fname),
     mario(other.mario),
     barrels(&board, other.dif_lvl),
@@ -35,7 +36,8 @@ Level::Level(Level&& other, std::string fname) noexcept
     donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG)),
     hammer(Board::HAMMER, board.get_pos(Board::HAMMER))
     {
-	mario.set_board(&board);
+    mario.set_board(&board);
+	  reset_level();
 }
 
 /**
@@ -47,13 +49,16 @@ Level& Level::operator=(Level&& other) noexcept {
     if (this != &other) {
         board = std::move(other.board);
         barrels = std::move(other.barrels);
+		    barrels.reset_all();
         ghosts = std::move(other.ghosts);
-		legend = std::move(other.legend);
+		    ghosts.reset_all();
+		    legend = std::move(other.legend);
         pauline = std::move(other.pauline);
         donkey_kong = std::move(other.donkey_kong);
-        hammer = std::move(other.hammer);
+		    hammer = std::move(other.hammer);
         frames = other.frames;
         mario.set_board(&board);
+		    mario.reset();
     }
     return *this;
 }
@@ -63,12 +68,12 @@ Level& Level::operator=(Level&& other) noexcept {
  */
 Game_State Level::start() {
 
-    Game_State state = RUN; // Set the game status to RUN
+    Game_State state = Game_State::RUN; // Set the game status to RUN
     char key;
 
     render_level(); // Update the game screen
 
-    while (state == RUN) { // Main game loop
+    while (state == Game_State::RUN) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
             key = _getch();
@@ -162,9 +167,11 @@ Game_State Level::advance_entities() {
 
     mario.move(); // Move Mario if he is on a floor element
     barrels.move_all(frames); // Move the barrels
-	ghosts.move_all(); // Move the ghosts
+	  ghosts.move_all(); // Move the ghosts
+    
+  	Game_State state = RUN; // Variable to hold the result state
+  
     if (board.hammer_on_board()) show_hammer(); // Show the hammer if Mario hasn't picked it up and it is on the board
-	Game_State state = RUN; // Check the game state
 
     if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) { // Check if Mario was hit by a barrel or a ghost
         mario.lose_lives(); // Decrease the number of lives Mario has left
@@ -205,4 +212,11 @@ void Level::render_level() const {
     render_hud(); // Update the lives display
 }
 
+/**
+ * @brief Getter for the errors from the board validation.
+ * @return A vector of error codes.
+ */
+const std::vector<Board::Err_Code>& Level::get_errors() {
+	return board.validate_board();
+}
 

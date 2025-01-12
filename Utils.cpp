@@ -107,4 +107,42 @@ std::string remove_txt_ext(const std::string& filename) {
 }
 
 
+// Overloads the comparison operators for the Ctrl enum class
+bool operator != (const char& lhs, const Ctrl& rhs) {
+	return !(lhs == static_cast<char>(rhs));
+}
+bool operator != (const Ctrl& lhs, const char& rhs) {
+	return !(static_cast<char>(lhs) == rhs);
+}
+bool operator == (const char& lhs, const Ctrl& rhs) {
+	return lhs == static_cast<char>(rhs);
+}
+bool operator == (const Ctrl& lhs, const char& rhs) {
+	return static_cast<char>(lhs) == rhs;
+}
+bool operator < (const char& lhs, const Ctrl& rhs) {
+	return lhs < static_cast<char>(rhs);
+}
+bool operator < (const Ctrl& lhs, const char& rhs) {
+	return static_cast<char>(lhs) < rhs;
+}
+bool operator > (const char& lhs, const Ctrl& rhs) {
+	return lhs > static_cast<char>(rhs);
+}
+bool operator > (const Ctrl& lhs, const char& rhs) {
+	return static_cast<char>(lhs) > rhs;
+}
+bool operator <= (const char& lhs, const Ctrl& rhs) {
+	return lhs <= static_cast<char>(rhs);
+}
+bool operator <= (const Ctrl& lhs, const char& rhs) {
+	return static_cast<char>(lhs) <= rhs;
+}
+bool operator >= (const char& lhs, const Ctrl& rhs) {
+	return lhs >= static_cast<char>(rhs);
+}
+bool operator >= (const Ctrl& lhs, const char& rhs) {
+	return static_cast<char>(lhs) >= rhs;
+}
+
 

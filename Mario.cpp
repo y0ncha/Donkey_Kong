@@ -21,8 +21,11 @@ void Mario::set_board(const Board* pBoard) {
  */
 void Mario::update_dir(char key) {
 
+	// Convert key to lowercase Ctrl type
+    Ctrl ctrl = static_cast<Ctrl>(std::tolower(key));
+
     // Convert key to direction (ignore non-defined keys)
-    switch (std::tolower(key)) {
+    switch (ctrl) {
     case Ctrl::UP:
         set_dy(-1); // move up
         break;
@@ -241,16 +244,15 @@ char Mario::handle_collision() {
     case Board::PAULINE: // If Mario hits Pauline
         rescued_pauline = true; // Set Mario as saved Pauline
         break;
-	case Board::WALL: // If Mario hits a wall
-		dir.x = -dir.x; // Reverse direction if path is not clear
-		obst = Board::AIR; // Return air to allow Mario to move
-		break;
     case Board::ERR: // If Mario's next step is out of bounds
         dir.x = -dir.x; // Reverse direction if path is not clear
         obst = Board::AIR; // Return air to allow Mario to move
         break;
-    default: // If a barrel is about to collide with a floor from the side, stop it
-        if (board->is_floor(obst)) dir.x = -dir.x;
+    default: // If a barrel is about to collide with a floor from the side, invert direction
+        if (board->is_floor(obst)) {
+            dir.x = -dir.x;
+			obst = Board::AIR;
+        }
         break;
     }
 

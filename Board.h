@@ -20,7 +20,7 @@ public:
 	// Constructor for the Board class
     Board(std::string fname);
 
-    // Enum for game elements
+	// Enum for game elements (no use of enum class due to Icon being scoped in Board class and to alllow easy conversions to char)
     enum Icon {
         MARIO = '@', // Character representing Mario
         SUPER_MARIO = '8', // Character representing Mario with a hammer
@@ -45,9 +45,17 @@ public:
         HRTS_DISP_Y = 0, // Initial y-coordinate for the hearts display
     };
 
-	// Loads the board from a givven file
-	void load(std::string fname);
+    // Enum for error codes
+    enum class Err_Code {
+        NO_ERR,
+        MISSING_MARIO,
+        MISSING_PAULINE,
+		FILE_FAIL,
+    };
 
+	// Checks if the board is valid
+    const std::vector<Err_Code>& validate_board();
+    
     // Prints the board on the console
     void print(int lives_left = 3) const;
 
@@ -67,8 +75,8 @@ public:
     bool path_clear(Coordinates coord) const;
     bool path_clear(int x, int y) const;
 
+	// Retrieves the position of the entity
     Coordinates get_pos(Icon icon, size_t ind = 0) const;
-
 
     // Checks if the x-coordinate is within the game bounds
     static bool y_inbound(int y);
@@ -90,15 +98,20 @@ public:
 
 private:
 
-
     // Layout of the game board, represented as a 2D array of characters
-    char board_layout[Screen_Dim::Y][Screen_Dim::X + 1];
+    char board_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
 
     // Map to store the positions of entities
     mutable std::unordered_map <Icon, std::vector<Coordinates>> map;
 
+	// Error code for the board
+	std::vector<Err_Code>errors;
+
+    // Loads the board from a givven file
+    void load(std::string fname);
+
     // Handles the input character while loading the board
-    bool is_valid (Icon icon);
+    bool is_valid_ch(Icon icon) const;
      
 	// Maps the icon to its position on the board
 	Icon map_icon(Icon icon, Coordinates pos);

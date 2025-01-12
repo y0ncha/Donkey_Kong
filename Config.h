@@ -1,7 +1,8 @@
 #pragma once
 
 // Enum for the control keys
-enum Ctrl {
+enum class Ctrl : char {
+    DEF,         // Default control
     UP = 'w',    // Move up
     DOWN = 'x',  // Move down
     LEFT = 'a',  // Move left
@@ -9,11 +10,10 @@ enum Ctrl {
     STAY = 's',  // Stay in place
     HIT='p',     //Hit with hammer
     ESC = 27,    // Escape key
-    DEF = '\0'   // Default control
 };
 
 // Enum for game state
-enum Game_State {
+enum class Game_State {
 	TERMINATE, // Game is terminated
     RUN, // Game is running
     PAUSE, // Game is paused
@@ -24,15 +24,13 @@ enum Game_State {
 };
 
 // Enum for the game levels
-enum Difficulty {
+enum class Difficulty : char {
     EASY = '1',
-    MEDIUM = '2',
-    HARD = '3'
+    MEDIUM,
+    HARD,
 };
 
-// Enum for the game levels
-enum Screen_Dim {
-    X = 80, // Maximum width of the game area
-    Y = 25  // Maximum height of the game area
-};
+// Const to hold the screen dimensions
+constexpr size_t SCREEN_WIDTH = 80; // Width of the screen
+constexpr size_t SCREEN_HEIGHT = 25; // Height of the screen
 

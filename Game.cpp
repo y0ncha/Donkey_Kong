@@ -17,41 +17,43 @@ Game_State Game::start() {
     display.main_menu();
 
     // Dynamic allocation to ease the level incrementation and to initiate level only after all the needed data is available
-    curr_level = std::make_unique<Level>(pop_fname(lvl_ind), mario, dif_lvl);
+	set_level(pop_fname());
 
-    while (state != TERMINATE) {
+	// Main game loop
+    while (state != Game_State::TERMINATE) {
 		// Main game loop mamging the different states of the game
         switch (state) {
-		case RUN: // Run the game
+		case Game_State::RUN: // Run the game
             state = curr_level->start();
             break;
-		case PAUSE: // Pause the game
+		case Game_State::PAUSE: // Pause the game
             display.pause_menu();
             break;
-		case LVL_RESET: // Reset the level
+		case Game_State::LVL_RESET: // Reset the level
 			curr_level->reset_level();
             display.strike_messege();
-			state = RUN;
+			state = Game_State::RUN;
             break;
-		case FIN_FAIL: // Finish the game unsuccessfully
+		case Game_State::FIN_FAIL: // Finish the game unsuccessfully
             curr_level->reset_level();
             display.failure_messege();
-            state = TERMINATE;
+            state = Game_State::TERMINATE;
             break;
-		case FIN_SUC: // Finish the game successfully
-            lvl_ind++;
+		case Game_State::FIN_SUC: // Finish the game successfully
+			lvl_ind++; // Advance to the next level
             if (lvl_ind < level_fnames.size()) { // Check if there are more levels
                 display.success_messege(); // todo change to fin game and fin level
-                state = RUN;
-				advance_level(pop_fname(lvl_ind));
+                state = Game_State::RUN;
+				set_level(pop_fname());
 			}
 			else { // If all the levels are finished, exit the game
                 display.success_messege(); // todo change to fin game and fin level
-                state = TERMINATE;
+                state = Game_State::TERMINATE;
             }
             break;
         }
     }
+	// Display the exit message
     display.exit_messege();
 	return state;
 }
@@ -64,7 +66,35 @@ void Game::advance_level(const std::string& fname) {
     // Using move constructor to pass the current level to avoid memory reaclocation
     curr_level->reset_level();
     curr_level = std::make_unique<Level>(std::move(*curr_level), fname);
- }
+}
+
+/**
+ * @brief Initializes the level.
+ * @param fname The filename of the level to initialize.
+ */
+void Game::set_level(const std::string& fname) {
+
+	if (curr_level == nullptr) { // If the current level is not null, use the constructor
+        curr_level = std::make_unique<Level>(fname, mario, dif_lvl);
+	}
+	else { // If the current level is already initialized, use the move constructor
+		curr_level = std::make_unique<Level>(std::move(*curr_level), fname);
+    }
+
+	// Validate the level, while invalid keep advancing to the next level
+	while (display.error_messege(curr_level->get_errors())) {
+
+		lvl_ind++; // Advance to the next level
+
+		if (lvl_ind < level_fnames.size()) { // If there are more levels, advance to the next one
+			advance_level(pop_fname());
+		}
+		else { // If all the levels are finished, exit the game
+            state = Game_State::FIN_SUC;
+            break; // todo print relvant error message
+		}
+	}
+}
 
 /**
  * @brief Validates and sets the game status.
@@ -72,13 +102,13 @@ void Game::advance_level(const std::string& fname) {
  */
 bool Game::set_state(Game_State _state) {
     switch (_state) {
-    case TERMINATE:
-    case RUN:
-    case PAUSE:
-    case LVL_RESET:
-    case FIN_FAIL:
-    case FIN_SUC:
-    case IDLE:
+    case Game_State::TERMINATE:
+    case Game_State::RUN:
+    case Game_State::PAUSE:
+    case Game_State::LVL_RESET:
+    case Game_State::FIN_FAIL:
+    case Game_State::FIN_SUC:
+    case Game_State::IDLE:
         state = _state;
         return true;
     default:
@@ -100,9 +130,9 @@ Game_State Game::get_state() const {
 bool Game::set_difficulty(Difficulty dif) {
 
     switch (dif) {
-    case EASY:
-    case MEDIUM:
-    case HARD:
+    case Difficulty::EASY:
+    case Difficulty::MEDIUM:
+    case Difficulty::HARD:
         dif_lvl = dif;
         return true;
     default:
@@ -122,7 +152,7 @@ Difficulty Game::get_difficulty() const {
  * @param ind The indemenagifull name for x to set.
  */
 bool Game::set_level(short ind) {
-    if (0 <= ind && ind < NOF_LEVELS) {
+    if (0 <= ind && ind < get_nof_levels()) {
         lvl_ind = ind;
         return true;
     }
@@ -183,11 +213,23 @@ void Game::scan_for_fnames(const std::string& directory) {
 }
 
 /**
-* @brief Pops the level filename at the specified index.
+ * @brief Pops the level filename at the specified index.
  * @param i The index of the filename to pop.
  * @return The filename at the specified index.
  */
-const std::string& Game::pop_fname(int i) {
+const std::string& Game::pop_fname(int i) const {
+
+	static const std::string empty_str = "";
+
+	// If the index is -1, set it to the current level index
+    if (i == -1) i = lvl_ind;
+
+	// Check if the index is out of bounds
+	if (i < 0 || i >= level_fnames.size()) {
+		return empty_str;
+	}
+
+	// Get the filename at the specified index
 	auto it = level_fnames.begin();
 	std::advance(it, i);
 	return *it;

@@ -6,29 +6,13 @@
  * @param dif_lvl Difficulty level.
  */
 Barrels::Barrels(const Board* pBoard, Difficulty dif_lvl)
-    : board(pBoard) {
-
-    switch (dif_lvl) {
-	    case EASY:
-            amount = DEF_AMOUNT;
-            interval = DEF_INTERVAL;
-            break; 
-		case MEDIUM:
-            amount = MED_AMOUNT;
-            interval = MED_INTERVAL;
-            break;
-        case HARD: 
-            amount = HARD_AMOUNT;
-            interval = HARD_INTERVAL;
-            break;
-        default:
-            break;
-    }
+    : board(pBoard),
+    amount(difficulty.at(dif_lvl).first),
+	interval(difficulty.at(dif_lvl).second) {
 
     // Initialize the barrels with the board pointer
     barrels.reserve(amount);
-
-    for (size_t i = 0; i < amount; i++) {
+    for (size_t i = 0; i < static_cast<size_t>(amount); i++) {
         barrels.emplace_back(std::make_unique<Barrel>(board)); // Unique pointer used as a preparation for the next exercises
     }
 }

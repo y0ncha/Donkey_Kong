@@ -11,7 +11,7 @@ class Barrel : public Entity {
 
 public:
     // Constructor for the Barrel class
-    Barrel(const Board* pBoard = nullptr);
+    Barrel(const Board* pBoard);
 
     // Method to handle the movement logic of the barrel
     void move() override;
@@ -34,11 +34,10 @@ public:
     // Method to spawn the barrel
     void spawn();
 
-    enum Consts {
-        MAX_FALL_H = 8, // Max height of a fall
-        EXPLOSION_RADIUS = 2, // Radius of the explosion
-        EXPLOSSION_DELAY = 60, // Delay for the explosion
-    };
+    static constexpr int MAX_FALL_H = 8; // Max height of a fall
+    static constexpr int EXPLOSION_RADIUS = 2; // Radius of the explosion
+    static constexpr int EXPLOSSION_DELAY = 60; // Delay for the explosion
+
 
 private:
     // Method to handle the direction change when the barrel is on different types of floors
