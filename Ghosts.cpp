@@ -81,7 +81,7 @@ void Ghosts::set_all() const {
  * @brief Method to set the amount of ghosts.
  */
 void Ghosts::set_amount() {
-    amount = board->get_entity_count(Board::GHOST);
+    amount = board->count_entity(Board::GHOST);
 }
 
 /**

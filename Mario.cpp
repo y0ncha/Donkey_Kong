@@ -238,7 +238,7 @@ char Mario::handle_collision() {
 		mario_hit = true; // Set Mario as hit
 		break;
     case Board::HAMMER: // If Mario hits a hammer
-        has_hammer = true;// Set Mario as having a hammer
+        armed = true;// Set Mario as having a hammer
         point.icon = Board::SUPER_MARIO; // Change Mario's icon to Mario with a hammer
         break;
     case Board::PAULINE: // If Mario hits Pauline
@@ -255,13 +255,11 @@ char Mario::handle_collision() {
         }
         break;
     }
-
     // If Mario falls out of the screen
     if (beneath_ch() == Board::ERR) {
 		set_dir(0, 0); // Stop Mario
         mario_hit = true; // Set Mario as hit
     }
-
     return obst; // Return the type of object Mario hits (optional for next exercises)
 }
 
@@ -288,7 +286,7 @@ void Mario::reset() {
 
     mario_hit = false;
     rescued_pauline = false;
-    has_hammer = false;
+    armed = false;
 
     point.icon=Board::MARIO;
     point.pos = board->get_pos(Board::MARIO);
@@ -313,7 +311,7 @@ bool Mario::is_hit() const {
  * @brief Checks if Mario saved Pauline.
  * @return True if Mario saved Pauline, false otherwise.
  */
-bool Mario::is_rescued_pauline() const {
+bool Mario::has_rescued_pauline() const {
     return rescued_pauline;
 }
 
@@ -321,7 +319,6 @@ bool Mario::is_rescued_pauline() const {
  * @brief Checks if Mario picked up the hammer.
  * @return true if he picked up the hammer, false otherwise
  */
-bool Mario::get_hammer() const
-{
-    return has_hammer;
+bool Mario::is_armed() const {
+    return armed;
 }

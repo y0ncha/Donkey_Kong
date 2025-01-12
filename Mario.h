@@ -17,7 +17,7 @@ public:
     void move() override;
 
     // Updates Mario's direction based on the input key
-    void update_dir(char key) override;
+    void update_dir(char key = static_cast<char>(Ctrl::DEF)) override;
 
     // Gets the number of lives Mario has left
     int get_lives() const;
@@ -29,10 +29,10 @@ public:
     bool is_hit() const;
 
     // Checks if Mario saved Pauline
-    bool is_rescued_pauline() const;
+    bool has_rescued_pauline() const;
     
     // Checks if Mario picked up the hammer
-    bool get_hammer() const;
+    bool is_armed() const;
 
 	// Setter for the board
     void set_board(const Board* pBoard);
@@ -63,7 +63,7 @@ private:
 
     bool mario_hit = false; // Indicates if Mario has been hit
     bool rescued_pauline = false; // Indicates if Mario has saved Pauline
-    bool has_hammer = false; // Indicates if Mario has a hammer
+    bool armed = false; // Indicates if Mario has a hammer
 
     // Makes Mario jump
     void jump();

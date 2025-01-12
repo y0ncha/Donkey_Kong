@@ -68,28 +68,28 @@ Level& Level::operator=(Level&& other) noexcept {
  */
 Game_State Level::start() {
 
-    Game_State state = Game_State::RUN; // Set the game status to RUN
-    char key;
+	Game_State state = Game_State::RUN; // Variable to hold the game state
+	char input; // Variable to hold the user input
+	Ctrl key; // Variable to hold the key input
 
     render_level(); // Update the game screen
 
     while (state == Game_State::RUN) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
-            key = _getch();
+            input = _getch();
+			key = static_cast<Ctrl>(input);
 
             switch (key) {
-            case ESC:  // If the key is ESC, open the pause menu
-                return PAUSE;
+            case Ctrl::ESC:  // If the key is ESC, open the pause menu
+                return Game_State::PAUSE;
                 break;
-
-            case HIT: // If the key is HIT, handle the hammer attack
-                if (mario.get_hammer())
+            case Ctrl::HIT: // If the key is HIT, handle the hammer attack
+                if (mario.is_armed())
                     handle_hammer_attack();
                 break;
-
             default: // If any other key is pressed
-                mario.update_dir(key); // Update Mario's direction based on the key input
+                mario.update_dir(input); // Update Mario's direction based on the key input
                 break;
 			}
         }
@@ -104,23 +104,11 @@ Game_State Level::start() {
  * @brief Resets the level and updates Mario's lives.
  */
 void Level::reset_level() {
+	board.reset_hammer(); // Set the hammer on the board
     mario.reset(); // Draw Mario at its default position
     barrels.reset_all(); // Reset the barrels
 	ghosts.reset_all(); // Reset the ghosts
     frames = 0;
-}
-
-/**
- * @brief Show the hammer if Mario hasn't picked it up 
- */
-void Level::show_hammer() const
-{
-    if (mario.get_hammer()) { // If Mario has a hammer
-        hammer.erase(board.get_char(hammer.pos)); // Erase the hammer from the board
-	}
-    else { // If Mario does not have a hammer
-        std::cout << hammer; // Display the hammer
-    }
 }
 
 /**
@@ -140,8 +128,12 @@ void Level::handle_hammer_attack() {
     if (handle_hammer_attack_helper(mario_next_pos)) return; // Check if the next next next position has an enemy and kill it if it does
 }
 
-bool Level::handle_hammer_attack_helper(Coordinates pos)
-{
+/**
+ * @brief Helper method to handle the hammer attack
+ * @param pos The position to check for enemies.
+ * @return True if an enemy was killed, false otherwise.
+ */
+bool Level::handle_hammer_attack_helper(Coordinates pos) {
     char enemy = getch_console(pos);// Get the character of the next position
 
     switch (enemy) {
@@ -167,18 +159,21 @@ Game_State Level::advance_entities() {
 
     mario.move(); // Move Mario if he is on a floor element
     barrels.move_all(frames); // Move the barrels
-	  ghosts.move_all(); // Move the ghosts
+	ghosts.move_all(); // Move the ghosts
     
-  	Game_State state = RUN; // Variable to hold the result state
-  
-    if (board.hammer_on_board()) show_hammer(); // Show the hammer if Mario hasn't picked it up and it is on the board
+  	Game_State state = Game_State::RUN; // Variable to hold the result state
 
-    if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) { // Check if Mario was hit by a barrel or a ghost
+	// If Mario is armed and remove the hammer from the board
+    if (mario.is_armed()) board.remove_hammer();
+
+	// Check if Mario was hit by a barrel or a ghost
+    if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) {
         mario.lose_lives(); // Decrease the number of lives Mario has left
-        state = mario.get_lives() > 0 ? LVL_RESET : FIN_FAIL; // Reset the level if Mario has more lives, else finish the game
+        state = mario.get_lives() > 0 ? Game_State::LVL_RESET : Game_State::FIN_FAIL; // Reset the level if Mario has more lives, else finish the game
     }
-    else if (mario.is_rescued_pauline()) { // Check if Mario saved Pauline
-        state = FIN_SUC; // Finish the game successfully
+	// Check if Mario has rescued Pauline
+    else if (mario.has_rescued_pauline()) {
+        state = Game_State::FIN_SUC; // Finish the game successfully
     }
 	return state;
 }

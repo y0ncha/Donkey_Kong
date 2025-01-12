@@ -40,9 +40,6 @@ public:
         FLOOR_R = '>', // Character representing a right-sloping floor
 
         ERR = '\0', // Error character
-
-        HRTS_DISP_X = 20, // Initial x-coordinate for the hearts display
-        HRTS_DISP_Y = 0, // Initial y-coordinate for the hearts display
     };
 
     // Enum for error codes
@@ -63,10 +60,6 @@ public:
     char get_char(Coordinates coord) const;
     char get_char(int x, int y) const;
 
-    // Sets the character at the given coordinates
-    void set_char(Coordinates coord, char ch);
-    void set_char(int x, int y, char ch);
-
     // Checks if the character at the given coordinates is a floor element
     bool is_floor(Coordinates coord) const;
     bool is_floor(char ch) const;
@@ -74,6 +67,15 @@ public:
     // Checks if the path is clear
     bool path_clear(Coordinates coord) const;
     bool path_clear(int x, int y) const;
+
+	// Remove the hammer when picked up
+    void remove_hammer();
+
+	// Set the hammer on the board
+    void reset_hammer();
+
+    // Returns the number of entities of a given type
+    size_t count_entity(Icon icon) const;
 
 	// Retrieves the position of the entity
     Coordinates get_pos(Icon icon, size_t ind = 0) const;
@@ -87,16 +89,11 @@ public:
     // Checks if the position is within the game bounds
     static bool pos_inbound(Coordinates pos);
 
-	// Returns the number of entities of a given type
-	size_t get_entity_count(Icon icon) const;
-
-    // Checks if the hammer is on the board
-    bool hammer_on_board() const;
-
-    // Sets true if there is a hammer on the board
-    void set_hammer_on_board();
-
 private:
+
+    // Sets the character at the given coordinates
+    void set_char(Coordinates coord, char ch);
+    void set_char(int x, int y, char ch);
 
     // Layout of the game board, represented as a 2D array of characters
     char board_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
@@ -118,7 +115,5 @@ private:
 
 	// Handles the input character while loading the board
 	void handle_input(std::string, int y);
-
-    bool hammer_ON_board = false; // Indicates if the hammer is on the board
 };
 

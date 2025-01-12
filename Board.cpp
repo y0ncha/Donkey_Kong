@@ -255,7 +255,7 @@ Board::Icon Board::map_icon(Icon icon, Coordinates pos) {
 			icon = AIR;
         }
 		// Set the postion to AIR if the character is not a Pauline or Donkey Kong
-		icon = (icon == PAULINE || icon == DONKEY_KONG) ? icon : AIR;
+		icon = (icon == PAULINE || icon == DONKEY_KONG || icon == HAMMER) ? icon : AIR;
     }
 	// return to set the character to the board
 	return icon;
@@ -277,8 +277,7 @@ void Board::handle_input(std::string line, int y) {
 
         Icon icon = static_cast<Icon>(line[x]);
 
-        if (is_valid(icon)) { // Check if the character is valid
-            if (icon == HAMMER) set_hammer_on_board();// Set the hammer_on_board to true if the character is a hammer
+        if (is_valid_ch(icon)) { // Check if the character is valid
             board_layout[y][x] = map_icon(icon, { x, y });
         }
         else { // Set the character to AIR if it is invalid
@@ -298,19 +297,26 @@ void Board::handle_input(std::string line, int y) {
 * @param icon The entity type.
 * @return The number of entities of the given type.
 */
-size_t Board::get_entity_count(Icon icon) const {
+size_t Board::count_entity(Icon icon) const {
    return map[icon].size();
 }
 
-//return true if theres an hammer on the board, false otherwise
-bool Board::hammer_on_board() const
-{
-    return hammer_ON_board;
+/**
+* @brief Removes the hammer from the board.
+*/
+void Board::remove_hammer() {
+
+	// Check if the hammer is not on the board
+	if (map[Icon::HAMMER].empty()) return; 
+	set_char(map[Icon::HAMMER][0], AIR);
 }
 
-//set true if theres an hammer on the board
-void Board::set_hammer_on_board()
-{
-	hammer_ON_board = true;
-}
+/**
+* @brief Sets the hammer on the board.
+*/
+void Board::reset_hammer() {
 
+	// Check if the hammer is not on the board
+	if (map[Icon::HAMMER].empty()) return;
+	set_char(map[Icon::HAMMER][0], HAMMER);
+}

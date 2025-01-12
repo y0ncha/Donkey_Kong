@@ -34,9 +34,6 @@ public:
     // Resets the level
     void reset_level();
 
-    // Show the hammer if Mario hasn't picked it up 
-    void show_hammer() const;
-
     // Handle the hammer attack
     void handle_hammer_attack();
 
