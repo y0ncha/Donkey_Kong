@@ -31,19 +31,23 @@ public:
     // Get the singleton instance of Display
     static Display& get_instance(Game* pGame = nullptr);
 
-
+	// Display the game's different menus and messages
     void pause_menu() const;
     void main_menu() const;
     bool difficulty_menu() const;
     bool levels_menu() const;
-    void exit_messege() const;
-    void strike_messege() const;
-    void failure_messege() const;
-    void success_messege() const;
-	bool error_messege(const std::vector<Board::Err_Code>& errors) const;
+    void exit_message() const;
+    void strike_message() const;
+    void failure_message() const;
+    void success_message() const;
+	bool error_message(const std::vector<Board::Err_Code>& errors) const;
+	void winning_message() const;
     void keys_menu() const;
 
 private:
+
+    // Static consts for the game
+    static constexpr int LEVELS_PER_PAGE = 5; // Number of levels to display per page 
 
     // Private constructor to prevent instantiation
     Display() = default;

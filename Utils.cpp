@@ -93,19 +93,17 @@ void clear_screen() {
 }
 
 /**
- * @brief Removes the .txt extension from a filename.
+ * @brief Removes the extension from a filename.
  * @param filename The filename to process.
- * @return The filename without the .txt extension.
+ * @return The filename without the extension.
  */
-std::string remove_txt_ext(const std::string& filename) {
-    const std::string extension = ".txt";
-    if (filename.size() >= extension.size() &&
-        filename.compare(filename.size() - extension.size(), extension.size(), extension) == 0) {
-        return filename.substr(0, filename.size() - extension.size());
+std::string remove_ext(const std::string& filename) {
+    size_t last_dot = filename.find_last_of('.');
+    if (last_dot == std::string::npos) {
+        return filename; // Return the original filename if no dot is found
     }
-    return filename; // Return the original filename if it doesn't end with .txt
+    return filename.substr(0, last_dot); // Return the filename without the extension
 }
-
 
 // Overloads the comparison operators for the Ctrl enum class
 bool operator != (const char& lhs, const Ctrl& rhs) {
