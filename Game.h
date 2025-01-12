@@ -10,7 +10,7 @@
 #include "Level.h"
 #include "Utils.h"
 
-
+// Forward declaration of the Level class
 class Level;
 class Display;
 
@@ -23,13 +23,7 @@ class Game {
 public:
     // Constructor for the Game class
     Game();
-
-    // Enum for game constants
-    enum Consts {
-        NOF_LEVELS = 10, // Number of levels in the game
-		LEVELS_PER_PAGE = 5 // Number of levels to display per page 
-    };
-
+    
     // Starts the game loop and handles user input
     Game_State start();
 
@@ -57,13 +51,19 @@ public:
 	// Method to get the number of levels
     int get_nof_levels() const;
 
+    // Method to pop the level file names from the list
+    const std::string& pop_fname(int i = -1) const;
+
+	// Static consts for the game
+    static constexpr int LEVELS_PER_PAGE = 5; // Number of levels to display per page 
+
 private:
 
 	// Game state
-    Game_State state = IDLE; 
+    Game_State state = Game_State::IDLE;
 
     // Difficulty level
-    Difficulty dif_lvl = EASY; 
+    Difficulty dif_lvl = Difficulty::EASY;
 
 	// Level index to manage the game levels from the array
     short lvl_ind = 0; 
@@ -77,9 +77,6 @@ private:
 	// Pointer to hold the current level, using unique pointer for better memory management and to ease the level incrementation
 	std::unique_ptr<Level> curr_level = nullptr; 
 
-	// Array of level files to load the levels from
-    std::string level_files[Consts::NOF_LEVELS] = {"dkong_01.screen.txt", "dkong_02.screen.txt" , "dkong_03.screen.txt"};
-
 	// List to hold the level files names, sorted alphabetically
     std::list<std::string> level_fnames;
 
@@ -89,11 +86,11 @@ private:
 	// Method to push the level file names to the list
 	bool push_fname(const std::string& fname);
 
-	// Method to pop the level file names from the list
-    const std::string& pop_fname(int i = 0);
-
 	// Method to load the levels from the files
 	void advance_level(const std::string& fname);
+
+	// Method to inittiate and validate the level
+    void set_level(const std::string& fname);
 
     // int level = 1; // Current game level
     // int score = 0; // Current game score

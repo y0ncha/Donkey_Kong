@@ -159,11 +159,11 @@ char Entity::right_ch() const {
  */
 bool Entity::off_ground() const {
     char bellow = beneath_ch();
-	if (bellow == Board::ERR) { // Check if the character beneath the entity is an error
-        return false;
+	if (bellow == Board::ERR) { // Check if the character beneath the entity is out of bound
+        return true;
     }
 	else { // Check if the character beneath the entity is not a floor element
-        return (bellow != Board::FLOOR && bellow != Board::FLOOR_L && bellow != Board::FLOOR_R);
+        return !board->is_floor(bellow);
     }
 }
 

@@ -5,7 +5,7 @@
 * Initializes the map with the valid entities and their corresponding characters.
 * Initializes the board layout with empty characters.
 */
-Board::Board(std::string fname) : map{
+Board::Board(std::string fname) : map {
     {MARIO, {}},
     {DONKEY_KONG, {}},
     {PAULINE, {}},
@@ -24,7 +24,8 @@ Board::Board(std::string fname) : map{
 */
 void Board::load(std::string fname) {
 
-     std::string buffer; // Buffer to store each line of the file
+	Err_Code err = Err_Code::NO_ERR;
+    std::string buffer; // Buffer to store each line of the file
 	std::ifstream file(fname); // Open the file with the given filename for reading
 
 	if (file.is_open()) { // Check if the file is open
@@ -34,10 +35,24 @@ void Board::load(std::string fname) {
 		}
 	}
 	else {
-		throw std::runtime_error("Error: Could not open file " + fname); // Throw an error if the file could not be opened
+		errors.push_back(Err_Code::FILE_FAIL);
 	}
 }
 
+/**
+ * @brief Validates the board layout and stores any errors in the errors vector.
+ * @return A vector of error codes indicating the errors in the board layout.
+ */
+const std::vector<Board::Err_Code>& Board::validate_board() {
+
+    if (map[Icon::MARIO].empty()) {
+        errors.push_back(Err_Code::MISSING_MARIO); // Check if Mario is missing
+    }
+    if (map[Icon::PAULINE].empty()) {
+        errors.push_back(Err_Code::MISSING_PAULINE); // Check if Pauline is missing
+    }
+	return errors;
+}
 /**
  * @brief Draws the game board by printing each row of the layout.
  * Loops through all rows (from 0 to Screen_Dim::Y-1) and prints each line to the console.
@@ -47,10 +62,10 @@ void Board::print(int lives_left) const {
     gotoxy(0, 0); // Move the cursor to the top-left corner of the console
 
     // Print the rest of the layout
-    for (int i = 0; i < Screen_Dim::Y - 1; i++) {
+    for (int i = 0; i < SCREEN_HEIGHT - 1; i++) {
         std::cout << board_layout[i] << std::endl; // Print each row of the preset board
     }
-    std::cout << board_layout[Screen_Dim::Y - 1]; // Print the last row without a newline
+    std::cout << board_layout[SCREEN_HEIGHT - 1]; // Print the last row without a newline
 }
 
 /**
@@ -116,7 +131,7 @@ bool Board::is_floor(Coordinates coord) const {
  * @return True if the character is a floor element, false otherwise.
  */
 bool Board::is_floor(char ch) const {
-    return (ch == FLOOR || ch == FLOOR_L || ch == FLOOR_R); // Check if the character is a floor element
+    return (ch == FLOOR || ch == FLOOR_L || ch == FLOOR_R || ch == WALL); // Check if the character is a floor element
 }
 
 /**
@@ -132,6 +147,7 @@ bool Board::path_clear(Coordinates coord) const {
     case LADDER:
     case DONKEY_KONG:
     case PAULINE:
+    case HAMMER:
         return true;
     default:
         return false;
@@ -155,7 +171,7 @@ bool Board::path_clear(int x, int y) const {
 * @return True if the x-coordinate is within the game bounds, false otherwise.
 */
 bool Board::x_inbound(int x) {
-    return (x >= 0 && x < Screen_Dim::X); // Check if the x-coordinate is within the game bounds
+    return (x >= 0 && x < SCREEN_WIDTH); // Check if the x-coordinate is within the game bounds
 }
 
 /**
@@ -164,7 +180,7 @@ bool Board::x_inbound(int x) {
  * @return True if the y-coordinate is within the game bounds, false otherwise.
  */
 bool Board::y_inbound(int y) {
-    return (y >= 0 && y < Screen_Dim::Y); // Check if the y-coordinate is within the game bounds
+    return (y >= 0 && y < SCREEN_HEIGHT); // Check if the y-coordinate is within the game bounds
 }
 
 /**
@@ -199,7 +215,7 @@ Coordinates Board::get_pos(Icon icon, size_t ind) const {
 * @param icon The character to check.
 * @return True if the character is valid, false otherwise.
 */
-bool Board::is_valid(Icon icon) {
+bool Board::is_valid_ch(Icon icon) const{
 
     switch (icon) {
     case MARIO:
@@ -252,6 +268,8 @@ Board::Icon Board::map_icon(Icon icon, Coordinates pos) {
 */
 void Board::handle_input(std::string line, int y) {
 
+	if (!y_inbound(y)) return; // Check if the y-coordinate is valid
+
     // Loop through each character in the line
     int x = 0;
 
@@ -260,7 +278,7 @@ void Board::handle_input(std::string line, int y) {
         Icon icon = static_cast<Icon>(line[x]);
 
         if (is_valid(icon)) { // Check if the character is valid
-
+            if (icon == HAMMER) set_hammer_on_board();// Set the hammer_on_board to true if the character is a hammer
             board_layout[y][x] = map_icon(icon, { x, y });
         }
         else { // Set the character to AIR if it is invalid
@@ -272,6 +290,7 @@ void Board::handle_input(std::string line, int y) {
     while (x_inbound(x)) {
         board_layout[y][x++] = AIR;
     }
+    board_layout[y][SCREEN_WIDTH] = '\0'; // Set the last character to null terminator
 }
 
 /**
@@ -281,5 +300,17 @@ void Board::handle_input(std::string line, int y) {
 */
 size_t Board::get_entity_count(Icon icon) const {
    return map[icon].size();
+}
+
+//return true if theres an hammer on the board, false otherwise
+bool Board::hammer_on_board() const
+{
+    return hammer_ON_board;
+}
+
+//set true if theres an hammer on the board
+void Board::set_hammer_on_board()
+{
+	hammer_ON_board = true;
 }
 

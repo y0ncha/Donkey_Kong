@@ -13,13 +13,6 @@ public:
     // Constructor to initialize Mario with the original and current board
     Mario(const Board* pBoard);
 
-    // Enum for Mario's related constants
-    enum Consts {
-        JMP_H = 2, // Max height of a jump
-        MAX_FALL_H = 5, // Max height of a fall
-        LIVES = 3, // Mario's number of lives
-    };
-
     // Moves Mario one step with delay (Override of Entity's move method)
     void move() override;
 
@@ -37,6 +30,9 @@ public:
 
     // Checks if Mario saved Pauline
     bool is_rescued_pauline() const;
+    
+    // Checks if Mario picked up the hammer
+    bool get_hammer() const;
 
 	// Setter for the board
     void set_board(const Board* pBoard);
@@ -44,7 +40,13 @@ public:
 	// Decreases the number of lives Mario has left
 	void lose_lives();
 
+  // Consts for Mario's properties
+  static constexpr int JMP_H = 2; // Max height of a jump
+  static constexpr int MAX_FALL_H = 5; // Max height of a fall
+  static constexpr int MAX_LIVES = 3; // Mario's number of lives
+
 private:
+
     // Enum for Mario's State
     enum class State {
         IDLE,
@@ -55,12 +57,13 @@ private:
 
     State state = State::IDLE; // Current state of Mario
 
-    int lives_left = LIVES; // Number of lives Mario has
+    int lives_left = MAX_LIVES; // Number of lives Mario has
     int fall_count = 0; // Counter for the number of steps Mario has been falling
     int jump_ascend = 0, jump_descend = 0; // Counter for the height of Mario's jump
 
     bool mario_hit = false; // Indicates if Mario has been hit
     bool rescued_pauline = false; // Indicates if Mario has saved Pauline
+    bool has_hammer = false; // Indicates if Mario has a hammer
 
     // Makes Mario jump
     void jump();
