@@ -1,5 +1,5 @@
 #include "Ghosts.h"
-
+#include "Level.h"
 /**
  * @brief Constructor for the Ghosts class.
  * @param pBoard Pointer to the game board.
@@ -105,16 +105,24 @@ void Ghosts::handle_colisions() {
 * vanishes the ghost if it is and return true, false otherwise.
 * @param pos The position to check.
 * */
-bool Ghosts::in_range(Coordinates& pos)
-{
+void Ghosts::was_hit(Coordinates pos, Coordinates dir) {
+
     for (auto& ghost : ghosts) {
-		if (ghost->is_active() && ghost->get_pos() == pos )
-		{
-			ghost->kill();
-            return true;
-		}
-	}
-    return false;
+
+        // If the barrel is inactive skip it
+        if (!ghost->is_active()) continue;
+
+        Coordinates barrel_pos = ghost->get_pos();
+
+        // Check if the barrel is in the range
+        for (int i = 0; i < Level::ATTACK_RANGE; i++) { // todo range
+            if (barrel_pos == pos) {
+                ghost->reset();
+                break;
+            }
+            barrel_pos += dir;
+        }
+    }
 }
 
 /**

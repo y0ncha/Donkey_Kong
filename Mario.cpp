@@ -152,6 +152,9 @@ void Mario::handle_idle() {
             if (can_climb()) { // If Mario can climb
                 handle_climbing();
             }
+			else {
+				dir.y = 0; // If Mario can't climb, reset the vertical direction
+			}
             break;
         default: // If Mario is on the ground
             last_dx = dir.x; // Save the last direction
@@ -250,7 +253,7 @@ char Mario::handle_collision() {
         break;
     default: // If a barrel is about to collide with a floor from the side, invert direction
         if (board->is_floor(obst)) {
-            dir.x = -dir.x;
+            dir.x = 0;
 			obst = Board::AIR;
         }
         break;
@@ -278,6 +281,13 @@ void Mario::lose_lives() {
 	lives_left--;
 }
 
+/**
+* @brief Gets the number of points Mario has.
+* @return The number of points.
+*/
+int Mario::get_points() const {
+	return points;
+}
 
 /**
  * @brief Resets Mario to its initial fields.

@@ -33,9 +33,37 @@ void Board::load(std::string fname) {
 			std::getline(file, buffer); // Read each line of the file into the buffer
 			handle_input(buffer, y); // Handle the input line
 		}
+        set_legend(); // Set the legend on the board
 	}
 	else {
 		errors.push_back(Err_Code::FILE_FAIL);
+	}
+}
+
+void Board::set_legend() {
+
+	// If the legend is not present, set the position to the default value
+    if (map[LEGEND].empty()) {
+        map_icon(LEGEND, { 0, 0 });
+    }
+    // If the legend frame is out of the screen's bound
+    else if (!pos_inbound(map[LEGEND][0] + Coordinates{LEGEND_WIDTH, LEGEND_HEIGHT})) {
+        map[LEGEND][0] = { 0, 0 };
+	}
+   
+    // Save the legend top left position 
+    Coordinates pos = map[LEGEND][0];
+
+	// Print the legend frame (fill it with AIR to make sure the legend is clear for data)
+    for (size_t i = 0; i < LEGEND_HEIGHT; i++) {
+        for (size_t j = 0; j < LEGEND_WIDTH; j++) {
+            if (i == 2 || j == 0 || j == 19) {
+				set_char(pos.x + j, pos.y + i, WALL);
+			}
+            else {
+                set_char(pos.x + j, pos.y + i, AIR);
+            }
+        }
 	}
 }
 

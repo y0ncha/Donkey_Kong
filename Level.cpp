@@ -86,7 +86,7 @@ Game_State Level::start() {
                 break;
             case Ctrl::HIT: // If the key is HIT, handle the hammer attack
                 if (mario.is_armed())
-                    handle_hammer_attack();
+                    perform_attack();
                 break;
             default: // If any other key is pressed
                 mario.update_dir(input); // Update Mario's direction based on the key input
@@ -112,43 +112,27 @@ void Level::reset_level() {
 }
 
 /**
- * @brief Handle the hammer attack
- * checks for the next, next next and next*3 positions of Mario for better gameplay
- * kills the ghost or smash the barrel if it is in range
- */
-void Level::handle_hammer_attack() {
-
-    Coordinates mario_next_pos = mario.get_dest(); // Get the next position of Mario
-    if (handle_hammer_attack_helper(mario_next_pos)) return; // Check if the next position has an enemy and kill it if it does
-    
-    mario_next_pos = mario_next_pos + mario.get_dir(); // Get the next next position of Mario
-    if (handle_hammer_attack_helper(mario_next_pos)) return; // Check if the next next position has an enemy and kill it if it does
-    
-    mario_next_pos = mario_next_pos + mario.get_dir(); // Get the next next next position of Mario
-    if (handle_hammer_attack_helper(mario_next_pos)) return; // Check if the next next next position has an enemy and kill it if it does
-}
-
-/**
  * @brief Helper method to handle the hammer attack
  * @param pos The position to check for enemies.
  * @return True if an enemy was killed, false otherwise.
  */
-bool Level::handle_hammer_attack_helper(Coordinates pos) {
+void Level::perform_attack() {
+
+    Coordinates pos = mario.get_dest(); // Get the next position of Mario
+	Coordinates dir = mario.get_dir(); // Get the direction of Mario
+
     char enemy = getch_console(pos);// Get the character of the next position
 
     switch (enemy) {
-
     case Board::BARREL: // If the next position is a barrel
-        if (barrels.in_range(pos)) // Check if the barrel is in range and smash it if it is
-            return true;
+        barrels.was_hit(pos, dir); // Check if the barrel is in range and smash it if it is
         break;
-
     case Board::GHOST: // If the next position is a ghost
-        if (ghosts.in_range(pos)) // Check if the ghost is in range and kill it if it is
-            return true;
+        ghosts.was_hit(pos, dir); // Check if the ghost is in range and kill it if it is
         break;
+	default:
+		break;
     }
-    return false;
 }
 
 
@@ -190,13 +174,26 @@ const Board& Level::get_board() const {
 */
 void Level::render_hud() const {
 
-    gotoxy(legend.pos); // Move the cursor to the position where lives are displayed
+	int hearts_x = legend.pos.x + 6, hearts_y = legend.pos.y; // Set the x-coordinate for the lives display
+
 	int n = mario.get_lives(); // Get the number of lives Mario has left
+
     // Print the lives in the legend
+    gotoxy(hearts_x, hearts_y); // Move the cursor to the position where lives are displayed
     for (int i = 0; i < n; ++i) {
         std::cout << "<3 ";
     }
+    print_points();
+}
 
+/**
+* @brief Prints the points Mario has collected.
+*/
+void Level::print_points() const {
+    int points_x = legend.pos.x + 6, points_y = legend.pos.y + 1; // Set the x-coordinate for the points display
+	gotoxy(points_x, points_y); // Move the cursor to the position where points are displayed
+    mario.get_points();
+    std::cout << "Points: " << mario.get_points(); // Print the points Mario has collected
 }
 
 /**

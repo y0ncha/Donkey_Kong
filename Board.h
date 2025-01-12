@@ -89,11 +89,11 @@ public:
     // Checks if the position is within the game bounds
     static bool pos_inbound(Coordinates pos);
 
-private:
+	// Consts for the width of the legend
+	static constexpr int LEGEND_WIDTH = 20; // Width of the game board
+	static constexpr int LEGEND_HEIGHT = 3; // Height of the game board
 
-    // Sets the character at the given coordinates
-    void set_char(Coordinates coord, char ch);
-    void set_char(int x, int y, char ch);
+private:
 
     // Layout of the game board, represented as a 2D array of characters
     char board_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
@@ -104,8 +104,15 @@ private:
 	// Error code for the board
 	std::vector<Err_Code>errors;
 
+    // Sets the character at the given coordinates
+    void set_char(Coordinates coord, char ch);
+    void set_char(int x, int y, char ch);
+
     // Loads the board from a givven file
     void load(std::string fname);
+
+	// Sets the legend on the board
+	void set_legend();
 
     // Handles the input character while loading the board
     bool is_valid_ch(Icon icon) const;
