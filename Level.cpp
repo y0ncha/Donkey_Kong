@@ -133,12 +133,14 @@ const Board& Level::get_board() const {
 * @brief Renders the HUD (Heads Up Display) with the number of lives.
 */
 void Level::render_hud() const {
-    gotoxy(Board::HRTS_DISP_X, Board::HRTS_DISP_Y); // Move the cursor to the position where lives are displayed
+
+    gotoxy(legend.pos); // Move the cursor to the position where lives are displayed
 	int n = mario.get_lives(); // Get the number of lives Mario has left
     // Print the lives in the legend
     for (int i = 0; i < n; ++i) {
         std::cout << "<3 ";
     }
+
 }
 
 /**
