@@ -26,8 +26,9 @@ void Display::print_layout(const char layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]) c
 /**
 * @brief Prints the main menu and handles the user input.
 */
-void Display::main_menu() const {
+Display::Menu_Options Display::main_menu() const {
 
+	game->scan_for_fnames(); // Scan for level files
     print_layout(main_layout);
     Menu_Options input = Menu_Options::DEF;
     bool pending = true;
@@ -74,6 +75,7 @@ void Display::main_menu() const {
             }
         }
     }
+	return input;
 }
 
 /**

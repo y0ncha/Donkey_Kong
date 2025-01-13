@@ -15,8 +15,6 @@ const Game::Statistics& Game::start() {
 	auto start_t = start_timer(); // Start the timer
 
     show_cursor(false); // Hide the console cursor for better visuals
-	scan_for_fnames(); // Scan for level files in the specified directory
-    display.main_menu();
 
     // Dynamic allocation to ease the level incrementation and to initiate level only after all the needed data is available
 	set_level(pop_fname());

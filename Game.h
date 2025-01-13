@@ -64,6 +64,10 @@ public:
 	// Method to get the game statistics
 	const Statistics& get_stats() const;
 
+	// Method to scan for level files in the directory
+	void scan_for_fnames(const std::string& directory = std::filesystem::current_path().string());
+
+
 private:
 
 	// Game state
@@ -95,9 +99,6 @@ private:
 
 	// Method to save the game statistics
     void save_stats();
-
-    // Method to scan for level files in the directory
-    void scan_for_fnames(const std::string& directory = std::filesystem::current_path().string());
 
 	// Method to push the level file names to the list
 	bool push_fname(const std::string& fname);
