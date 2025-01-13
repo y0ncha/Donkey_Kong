@@ -152,6 +152,9 @@ void Mario::handle_idle() {
             if (can_climb()) { // If Mario can climb
                 handle_climbing();
             }
+			else {
+				dir.y = 0; // If Mario can't climb, reset the vertical direction
+			}
             break;
         default: // If Mario is on the ground
             last_dx = dir.x; // Save the last direction
@@ -238,7 +241,7 @@ char Mario::handle_collision() {
 		mario_hit = true; // Set Mario as hit
 		break;
     case Board::HAMMER: // If Mario hits a hammer
-        has_hammer = true;// Set Mario as having a hammer
+        armed = true;// Set Mario as having a hammer
         point.icon = Board::SUPER_MARIO; // Change Mario's icon to Mario with a hammer
         break;
     case Board::PAULINE: // If Mario hits Pauline
@@ -250,18 +253,16 @@ char Mario::handle_collision() {
         break;
     default: // If a barrel is about to collide with a floor from the side, invert direction
         if (board->is_floor(obst)) {
-            dir.x = -dir.x;
+            dir.x = 0;
 			obst = Board::AIR;
         }
         break;
     }
-
     // If Mario falls out of the screen
     if (beneath_ch() == Board::ERR) {
 		set_dir(0, 0); // Stop Mario
         mario_hit = true; // Set Mario as hit
     }
-
     return obst; // Return the type of object Mario hits (optional for next exercises)
 }
 
@@ -280,6 +281,13 @@ void Mario::lose_lives() {
 	lives_left--;
 }
 
+/**
+* @brief Gets the number of points Mario has.
+* @return The number of points.
+*/
+int Mario::get_score() const {
+	return score;
+}
 
 /**
  * @brief Resets Mario to its initial fields.
@@ -288,7 +296,7 @@ void Mario::reset() {
 
     mario_hit = false;
     rescued_pauline = false;
-    has_hammer = false;
+    armed = false;
 
     point.icon=Board::MARIO;
     point.pos = board->get_pos(Board::MARIO);
@@ -313,7 +321,7 @@ bool Mario::is_hit() const {
  * @brief Checks if Mario saved Pauline.
  * @return True if Mario saved Pauline, false otherwise.
  */
-bool Mario::is_rescued_pauline() const {
+bool Mario::has_rescued_pauline() const {
     return rescued_pauline;
 }
 
@@ -321,7 +329,6 @@ bool Mario::is_rescued_pauline() const {
  * @brief Checks if Mario picked up the hammer.
  * @return true if he picked up the hammer, false otherwise
  */
-bool Mario::get_hammer() const
-{
-    return has_hammer;
+bool Mario::is_armed() const {
+    return armed;
 }

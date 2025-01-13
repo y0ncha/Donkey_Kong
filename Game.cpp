@@ -10,11 +10,11 @@ Game::Game()
  * @brief Starts the game loop and handles user input.
  * @return The game state after the game loop ends (FIN_SUC, FIN_FAIL, TERMINATE).
  */
-Game_State Game::start() {
+const Game::Statistics& Game::start() {
+
+	auto start_t = start_timer(); // Start the timer
 
     show_cursor(false); // Hide the console cursor for better visuals
-	scan_for_fnames(); // Scan for level files in the specified directory
-    display.main_menu();
 
     // Dynamic allocation to ease the level incrementation and to initiate level only after all the needed data is available
 	set_level(pop_fname());
@@ -35,6 +35,8 @@ Game_State Game::start() {
             state = Game_State::RUN;
             break;
         case Game_State::FIN_FAIL: // Finish the game unsuccessfully
+            game_duration = stop_timer(start_t);
+			save_stats();
             curr_level->reset_level();
             display.failure_message();
             state = Game_State::TERMINATE;
@@ -47,6 +49,9 @@ Game_State Game::start() {
                 set_level(pop_fname());
             }
             else { // If all the levels are finished, exit the game
+                // Stop the timer, get the duraion and save the statistics
+                game_duration = stop_timer(start_t);
+                save_stats();
                 display.winning_message();
                 state = Game_State::TERMINATE;
             }
@@ -57,7 +62,23 @@ Game_State Game::start() {
     }
 	// Display the exit message
     display.exit_message();
-	return state;
+    return stats;
+}
+
+/**
+ * @brief Saves the game statistics.
+ */
+void Game::save_stats() {
+	stats.score = mario.get_score();
+	stats.difficulty = static_cast<int>(dif_lvl);
+    stats.time_played = game_duration;
+}
+
+/**
+ * @brief Gets the game's statisitcs
+ */
+const Game::Statistics& Game::get_stats() const {
+	return stats;
 }
 
 /**

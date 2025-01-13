@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <string>
 #include "Config.h"
+#include <iomanip>
 #include "Mario.h"
 #include "Game.h"
 #include "Level.h"
@@ -33,7 +34,7 @@ public:
 
 	// Display the game's different menus and messages
     void pause_menu() const;
-    void main_menu() const;
+    Menu_Options main_menu() const;
     bool difficulty_menu() const;
     bool levels_menu() const;
     void exit_message() const;

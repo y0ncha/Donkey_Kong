@@ -1,14 +1,14 @@
+Q                             L                                                Q
 Q                                                                              Q
-QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 Q                                                                              Q
-Q&                                 $                                           Q
-Q>>>==============            ==========                                       Q
-Q       H                              H                                       Q  
-Q    x  H                     x        H                                       Q
-Q====================================================  ======================= Q
-Q                                    H                                  H      Q
-Q                                    H                                  H      Q
-Q                         ============         ========================<<<==   Q
+Q                                                                              Q
+Q&                                                                    ======== Q
+Q>>>=================                                                   H      Q  
+Q    x                                                                  H      Q
+Q=================  ===========================================  ==============Q
+Q                                    H                                         Q
+Q                             ++     H                                         Q
+Q                 p       ============         ========================<<<==   Q
 Q                ========                                      H               Q
 Q                       H             ======>>>                H               Q
 Q                       H               H                      H               Q
@@ -17,9 +17,9 @@ Q        ==================             H                H         H           Q
 Q               H                    x  H            x   H         H           Q
 Q               H          =================<<<==============<<<   H           Q
 Q               H           H                                      H           Q
-Q               H           H                                      H           Q
-Q             >>>========  ======                        ==================    Q
+Q               H    %      H                                      H           Q
+Q             >>>================                        ==================    Q
 Q                             H                                                Q
 Q         x                   H           @                                    Q
-Q                             H                                                Q
+Q                             H                                 $              Q
 QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ

@@ -1,4 +1,5 @@
 #include "Barrels.h"
+#include "Level.h"
 
 /**
  * @brief Constructor to initialize the Barrels class.
@@ -100,16 +101,25 @@ bool Barrels::hitted_mario() const {
 * @brief Checks if a barrel is in  a given position
 * vanishes the barrel if it is and return true, false otherwise.
 * @param pos The position to check.
+* @param dir The direction of the barrel.
+* @return True if the barrel is in the given position, false otherwise.
 */
-bool Barrels::in_range(Coordinates& pos) 
-{
-    for (auto& barrel : barrels)
-	{
-		if (barrel->is_active() && barrel->get_pos() ==pos)
-		{
-            barrel->reset();
-            return true;
+void Barrels::was_hit(Coordinates pos, Coordinates dir) {
+
+    for (auto& barrel : barrels) {
+
+		// If the barrel is inactive skip it
+        if (!barrel->is_active()) continue;
+
+		Coordinates barrel_pos = barrel->get_pos();
+
+		// Check if the barrel is in the range
+		for (int i = 0; i < Level::ATTACK_RANGE; i++) { // todo range
+			if (barrel_pos == pos) {
+				barrel->reset();
+				break;
+			}
+			barrel_pos += dir;
 		}
 	}
-    return false;
 }
