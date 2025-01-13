@@ -42,7 +42,7 @@ public:
     bool hitted_mario() const;
 
     // Method to check if a ghost is in a given position and resets it if it is
-    bool in_range(Coordinates& pos);
+    void was_hit(Coordinates pos, Coordinates dir);
 
     // Method to check if two ghosts collide
 	bool colide(const std::unique_ptr<Ghost>& g1, const std::unique_ptr<Ghost>& g2) const;

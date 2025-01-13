@@ -68,28 +68,28 @@ Level& Level::operator=(Level&& other) noexcept {
  */
 Game_State Level::start() {
 
-    Game_State state = Game_State::RUN; // Set the game status to RUN
-    char key;
+	Game_State state = Game_State::RUN; // Variable to hold the game state
+	char input; // Variable to hold the user input
+	Ctrl key; // Variable to hold the key input
 
     render_level(); // Update the game screen
 
     while (state == Game_State::RUN) { // Main game loop
 
         if (_kbhit()) { // Check if a key is pressed
-            key = _getch();
+            input = _getch();
+			key = static_cast<Ctrl>(input);
 
             switch (key) {
-            case ESC:  // If the key is ESC, open the pause menu
-                return PAUSE;
+            case Ctrl::ESC:  // If the key is ESC, open the pause menu
+                return Game_State::PAUSE;
                 break;
-
-            case HIT: // If the key is HIT, handle the hammer attack
-                if (mario.get_hammer())
-                    handle_hammer_attack();
+            case Ctrl::HIT: // If the key is HIT, handle the hammer attack
+                if (mario.is_armed())
+                    perform_attack();
                 break;
-
             default: // If any other key is pressed
-                mario.update_dir(key); // Update Mario's direction based on the key input
+                mario.update_dir(input); // Update Mario's direction based on the key input
                 break;
 			}
         }
@@ -104,6 +104,7 @@ Game_State Level::start() {
  * @brief Resets the level and updates Mario's lives.
  */
 void Level::reset_level() {
+	board.reset_hammer(); // Set the hammer on the board
     mario.reset(); // Draw Mario at its default position
     barrels.reset_all(); // Reset the barrels
 	ghosts.reset_all(); // Reset the ghosts
@@ -111,52 +112,27 @@ void Level::reset_level() {
 }
 
 /**
- * @brief Show the hammer if Mario hasn't picked it up 
+ * @brief Helper method to handle the hammer attack
+ * @param pos The position to check for enemies.
+ * @return True if an enemy was killed, false otherwise.
  */
-void Level::show_hammer() const
-{
-    if (mario.get_hammer()) { // If Mario has a hammer
-        hammer.erase(board.get_char(hammer.pos)); // Erase the hammer from the board
-	}
-    else { // If Mario does not have a hammer
-        std::cout << hammer; // Display the hammer
-    }
-}
+void Level::perform_attack() {
 
-/**
- * @brief Handle the hammer attack
- * checks for the next, next next and next*3 positions of Mario for better gameplay
- * kills the ghost or smash the barrel if it is in range
- */
-void Level::handle_hammer_attack() {
+    Coordinates pos = mario.get_dest(); // Get the next position of Mario
+	Coordinates dir = mario.get_dir(); // Get the direction of Mario
 
-    Coordinates mario_next_pos = mario.get_dest(); // Get the next position of Mario
-    if (handle_hammer_attack_helper(mario_next_pos)) return; // Check if the next position has an enemy and kill it if it does
-    
-    mario_next_pos = mario_next_pos + mario.get_dir(); // Get the next next position of Mario
-    if (handle_hammer_attack_helper(mario_next_pos)) return; // Check if the next next position has an enemy and kill it if it does
-    
-    mario_next_pos = mario_next_pos + mario.get_dir(); // Get the next next next position of Mario
-    if (handle_hammer_attack_helper(mario_next_pos)) return; // Check if the next next next position has an enemy and kill it if it does
-}
-
-bool Level::handle_hammer_attack_helper(Coordinates pos)
-{
     char enemy = getch_console(pos);// Get the character of the next position
 
     switch (enemy) {
-
     case Board::BARREL: // If the next position is a barrel
-        if (barrels.in_range(pos)) // Check if the barrel is in range and smash it if it is
-            return true;
+        barrels.was_hit(pos, dir); // Check if the barrel is in range and smash it if it is
         break;
-
     case Board::GHOST: // If the next position is a ghost
-        if (ghosts.in_range(pos)) // Check if the ghost is in range and kill it if it is
-            return true;
+        ghosts.was_hit(pos, dir); // Check if the ghost is in range and kill it if it is
         break;
+	default:
+		break;
     }
-    return false;
 }
 
 
@@ -167,18 +143,21 @@ Game_State Level::advance_entities() {
 
     mario.move(); // Move Mario if he is on a floor element
     barrels.move_all(frames); // Move the barrels
-	  ghosts.move_all(); // Move the ghosts
+	ghosts.move_all(); // Move the ghosts
     
-  	Game_State state = RUN; // Variable to hold the result state
-  
-    if (board.hammer_on_board()) show_hammer(); // Show the hammer if Mario hasn't picked it up and it is on the board
+  	Game_State state = Game_State::RUN; // Variable to hold the result state
 
-    if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) { // Check if Mario was hit by a barrel or a ghost
+	// If Mario is armed and remove the hammer from the board
+    if (mario.is_armed()) board.remove_hammer();
+
+	// Check if Mario was hit by a barrel or a ghost
+    if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) {
         mario.lose_lives(); // Decrease the number of lives Mario has left
-        state = mario.get_lives() > 0 ? LVL_RESET : FIN_FAIL; // Reset the level if Mario has more lives, else finish the game
+        state = mario.get_lives() > 0 ? Game_State::LVL_RESET : Game_State::FIN_FAIL; // Reset the level if Mario has more lives, else finish the game
     }
-    else if (mario.is_rescued_pauline()) { // Check if Mario saved Pauline
-        state = FIN_SUC; // Finish the game successfully
+	// Check if Mario has rescued Pauline
+    else if (mario.has_rescued_pauline()) {
+        state = Game_State::FIN_SUC; // Finish the game successfully
     }
 	return state;
 }
@@ -195,13 +174,26 @@ const Board& Level::get_board() const {
 */
 void Level::render_hud() const {
 
-    gotoxy(legend.pos); // Move the cursor to the position where lives are displayed
+	int hearts_x = legend.pos.x + 6, hearts_y = legend.pos.y; // Set the x-coordinate for the lives display
+
 	int n = mario.get_lives(); // Get the number of lives Mario has left
+
     // Print the lives in the legend
+    gotoxy(hearts_x, hearts_y); // Move the cursor to the position where lives are displayed
     for (int i = 0; i < n; ++i) {
         std::cout << "<3 ";
     }
+	print_score(); // Print the points Mario has collected
+}
 
+/**
+* @brief Prints the points Mario has collected.
+*/
+void Level::print_score() const {
+    int points_x = legend.pos.x + 6, points_y = legend.pos.y + 1; // Set the x-coordinate for the points display
+	gotoxy(points_x, points_y); // Move the cursor to the position where points are displayed
+    mario.get_score();
+    std::cout << "Score: " << mario.get_score(); // Print the points Mario has collected
 }
 
 /**

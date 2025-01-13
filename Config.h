@@ -8,7 +8,7 @@ enum class Ctrl : char {
     LEFT = 'a',  // Move left
     RIGHT = 'd', // Move right
     STAY = 's',  // Stay in place
-    HIT='p',     //Hit with hammer
+    HIT = 'p',     //Hit with hammer
     ESC = 27,    // Escape key
 };
 

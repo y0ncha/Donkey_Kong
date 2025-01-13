@@ -33,9 +33,37 @@ void Board::load(std::string fname) {
 			std::getline(file, buffer); // Read each line of the file into the buffer
 			handle_input(buffer, y); // Handle the input line
 		}
+        set_legend(); // Set the legend on the board
 	}
 	else {
 		errors.push_back(Err_Code::FILE_FAIL);
+	}
+}
+
+void Board::set_legend() {
+
+	// If the legend is not present, set the position to the default value
+    if (map[LEGEND].empty()) {
+        map_icon(LEGEND, { 0, 0 });
+    }
+    // If the legend frame is out of the screen's bound
+    else if (!pos_inbound(map[LEGEND][0] + Coordinates{LEGEND_WIDTH, LEGEND_HEIGHT})) {
+        map[LEGEND][0] = { 0, 0 };
+	}
+   
+    // Save the legend top left position 
+    Coordinates pos = map[LEGEND][0];
+
+	// Print the legend frame (fill it with AIR to make sure the legend is clear for data)
+    for (int i = 0; i < LEGEND_HEIGHT; i++) {
+        for (int j = 0; j < LEGEND_WIDTH; j++) {
+            if (i == 2 || j == 0 || j == 19) {
+				set_char(pos.x + j, pos.y + i, WALL);
+			}
+            else {
+                set_char(pos.x + j, pos.y + i, AIR);
+            }
+        }
 	}
 }
 
@@ -255,7 +283,7 @@ Board::Icon Board::map_icon(Icon icon, Coordinates pos) {
 			icon = AIR;
         }
 		// Set the postion to AIR if the character is not a Pauline or Donkey Kong
-		icon = (icon == PAULINE || icon == DONKEY_KONG) ? icon : AIR;
+		icon = (icon == PAULINE || icon == DONKEY_KONG || icon == HAMMER) ? icon : AIR;
     }
 	// return to set the character to the board
 	return icon;
@@ -277,8 +305,7 @@ void Board::handle_input(std::string line, int y) {
 
         Icon icon = static_cast<Icon>(line[x]);
 
-        if (is_valid(icon)) { // Check if the character is valid
-            if (icon == HAMMER) set_hammer_on_board();// Set the hammer_on_board to true if the character is a hammer
+        if (is_valid_ch(icon)) { // Check if the character is valid
             board_layout[y][x] = map_icon(icon, { x, y });
         }
         else { // Set the character to AIR if it is invalid
@@ -298,19 +325,26 @@ void Board::handle_input(std::string line, int y) {
 * @param icon The entity type.
 * @return The number of entities of the given type.
 */
-size_t Board::get_entity_count(Icon icon) const {
+size_t Board::count_entity(Icon icon) const {
    return map[icon].size();
 }
 
-//return true if theres an hammer on the board, false otherwise
-bool Board::hammer_on_board() const
-{
-    return hammer_ON_board;
+/**
+* @brief Removes the hammer from the board.
+*/
+void Board::remove_hammer() {
+
+	// Check if the hammer is not on the board
+	if (map[Icon::HAMMER].empty()) return; 
+	set_char(map[Icon::HAMMER][0], AIR);
 }
 
-//set true if theres an hammer on the board
-void Board::set_hammer_on_board()
-{
-	hammer_ON_board = true;
-}
+/**
+* @brief Sets the hammer on the board.
+*/
+void Board::reset_hammer() {
 
+	// Check if the hammer is not on the board
+	if (map[Icon::HAMMER].empty()) return;
+	set_char(map[Icon::HAMMER][0], HAMMER);
+}

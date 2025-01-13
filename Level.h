@@ -34,14 +34,8 @@ public:
     // Resets the level
     void reset_level();
 
-    // Show the hammer if Mario hasn't picked it up 
-    void show_hammer() const;
-
     // Handle the hammer attack
-    void handle_hammer_attack();
-
-    // Helper method to handle the hammer attack
-    bool handle_hammer_attack_helper(Coordinates pos);
+    void perform_attack();
 
 	// Getter for the board (const by reference)
     const Board& get_board() const;
@@ -52,6 +46,7 @@ public:
     // Static consts for the game
     static constexpr int DEF_DELAY = 100; // Default delay in milliseconds
     static constexpr int KILLED_DELAY = 1000; // Delay after Mario is hit
+	static constexpr int ATTACK_RANGE = 2; // Delay after Mario picks up the hammer
 
 private:
   
@@ -87,5 +82,8 @@ private:
   
 	// Method to render the level
 	void render_level() const;
+
+	// Method to print mario's gained points
+	void print_score() const;
 };
 
