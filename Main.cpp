@@ -11,9 +11,16 @@ int main() {
 	// Seed the random number generator
 	srand(static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
 	
-	// Initialize the game
-	Game my_game; 
-	my_game.start();
+	Game my_game; // Create a new game instance
+	std::string nickname; // Variable to hold the player's nickname
+	Game::Statistics game_stats; // Variable to hold the game statistics
+
+	// Get the player's nickname
+	std::cout << "Enter your nickname: ";
+	std::cin >> nickname;
+
+	// Start the game loop
+	game_stats = my_game.start();
 
 	return 0;
 }

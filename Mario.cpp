@@ -285,8 +285,8 @@ void Mario::lose_lives() {
 * @brief Gets the number of points Mario has.
 * @return The number of points.
 */
-int Mario::get_points() const {
-	return points;
+int Mario::get_score() const {
+	return score;
 }
 
 /**

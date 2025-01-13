@@ -183,17 +183,17 @@ void Level::render_hud() const {
     for (int i = 0; i < n; ++i) {
         std::cout << "<3 ";
     }
-    print_points();
+	print_score(); // Print the points Mario has collected
 }
 
 /**
 * @brief Prints the points Mario has collected.
 */
-void Level::print_points() const {
+void Level::print_score() const {
     int points_x = legend.pos.x + 6, points_y = legend.pos.y + 1; // Set the x-coordinate for the points display
 	gotoxy(points_x, points_y); // Move the cursor to the position where points are displayed
-    mario.get_points();
-    std::cout << "Points: " << mario.get_points(); // Print the points Mario has collected
+    mario.get_score();
+    std::cout << "Score: " << mario.get_score(); // Print the points Mario has collected
 }
 
 /**

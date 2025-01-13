@@ -84,6 +84,6 @@ private:
 	void render_level() const;
 
 	// Method to print mario's gained points
-	void print_points() const;
+	void print_score() const;
 };
 

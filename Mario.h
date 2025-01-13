@@ -40,7 +40,7 @@ public:
 	// Decreases the number of lives Mario has left
 	void lose_lives();
 
-    int get_points() const;
+    int get_score() const;
 
   // Consts for Mario's properties
   static constexpr int JMP_H = 2; // Max height of a jump
@@ -62,7 +62,7 @@ private:
     int lives_left = MAX_LIVES; // Number of lives Mario has
     int fall_count = 0; // Counter for the number of steps Mario has been falling
     int jump_ascend = 0, jump_descend = 0; // Counter for the height of Mario's jump
-    int points = 0;
+    int score = 0;
 
     bool mario_hit = false; // Indicates if Mario has been hit
     bool rescued_pauline = false; // Indicates if Mario has saved Pauline

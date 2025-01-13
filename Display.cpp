@@ -264,6 +264,15 @@ void Display::failure_message() const {
     char void_input;
 
     print_layout(fail_layout);
+
+    gotoxy(28, 15); // Print the score
+    std::cout << game->get_stats().score;
+
+    gotoxy(53, 15); // Print the time played (minutes : seconds)
+    std::cout << std::setw(2) << std::setfill('0') << game->get_stats().time_played.first << ":"
+              << std::setw(2) << std::setfill('0') << game->get_stats().time_played.second;
+
+
     while (pending) {
         flash_message({ "Press any key to exit" }, { {29, 23} });
         if (_kbhit()) {
@@ -299,7 +308,15 @@ void Display::winning_message() const {
     bool pending = true;
     char void_input;
 
-    print_layout(winning_layout);
+	print_layout(winning_layout);
+
+	gotoxy(27, 14); // Print the score
+	std::cout << game->get_stats().score;
+    
+	gotoxy(52, 14); // Print the time played (minutes : seconds)
+    std::cout << std::setw(2) << std::setfill('0') << game->get_stats().time_played.first << ":"
+        << std::setw(2) << std::setfill('0') << game->get_stats().time_played.second;
+
     while (pending) {
         flash_message({ "Press any key to continue" }, { {27, 23} });
         if (_kbhit()) {
@@ -589,7 +606,7 @@ char Display::fail_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
   R"!(            | || (_) || |_| | |  _|/ ___ \  | | | |___ | |___ | |_| |           )!", // 12
   R"!(            |_| \___/  \__,_| |_| /_/   \_\|___||_____||_____||____/            )!", // 13
      "                                                                                ", // 14
-     "                                                                                ", // 15
+     "                     SCORE:             TIME PLAYED:                            ", // 15
      "                                                                                ", // 16
      "                             BETTER LUCK NEXT TIME !                            ", // 17
      "                                                                                ", // 18
@@ -707,7 +724,7 @@ char Display::winning_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
    "                                                                                ", // 11
    "                  YOUV'E FINISHED SUCCEFULLY ALL THE LEVELS                     ", // 12
    "                                                                                ", // 13
-   "                                                                                ", // 14
+   "                    SCORE:             TIME PLAYED:                           ", // 14
    "                                                                                ", // 15
    "                                                                                ", // 16
    "                                                                                ", // 18

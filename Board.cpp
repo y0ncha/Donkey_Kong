@@ -55,8 +55,8 @@ void Board::set_legend() {
     Coordinates pos = map[LEGEND][0];
 
 	// Print the legend frame (fill it with AIR to make sure the legend is clear for data)
-    for (size_t i = 0; i < LEGEND_HEIGHT; i++) {
-        for (size_t j = 0; j < LEGEND_WIDTH; j++) {
+    for (int i = 0; i < LEGEND_HEIGHT; i++) {
+        for (int j = 0; j < LEGEND_WIDTH; j++) {
             if (i == 2 || j == 0 || j == 19) {
 				set_char(pos.x + j, pos.y + i, WALL);
 			}

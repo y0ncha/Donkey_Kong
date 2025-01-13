@@ -4,6 +4,7 @@
 #include <list> 
 #include <filesystem>
 #include <regex>
+#include <chrono>
 #include "Config.h"
 #include "Mario.h"
 #include "Display.h"
@@ -13,7 +14,6 @@
 // Forward declaration of the Level class
 class Level;
 class Display;
-
 /**
  * @class Game
  * Represents the main game loop and controls the game's logic.
@@ -23,9 +23,16 @@ class Game {
 public:
     // Constructor for the Game class
     Game();
-    
+
+	// Struct to hold the game statistics
+	struct Statistics {
+		int score = 0;
+		std::pair<int, int> time_played = { 0 ,0 };
+		int difficulty = 0;
+	};
+
     // Starts the game loop and handles user input
-    Game_State start();
+    const Game::Statistics& start();
 
 	// Setter for the game status
     bool set_state(Game_State _state);
@@ -54,6 +61,9 @@ public:
     // Method to pop the level file names from the list
     const std::string& pop_fname(int i = -1) const;
 
+	// Method to get the game statistics
+	const Statistics& get_stats() const;
+
 private:
 
 	// Game state
@@ -65,17 +75,26 @@ private:
 	// Level index to manage the game levels from the array
     short lvl_ind = 0; 
 
+	// Game duration
+	std::pair<int, int> game_duration;
+
     // Mario to be passed to the levels
     Mario mario;
 
 	// Display to print different messages and menus on screen
     Display& display;
 
+	// Game statistics
+	Statistics stats; // Game statistics
+
 	// Pointer to hold the current level, using unique pointer for better memory management and to ease the level incrementation
 	std::unique_ptr<Level> curr_level = nullptr; 
 
 	// List to hold the level files names, sorted alphabetically
     std::list<std::string> level_fnames;
+
+	// Method to save the game statistics
+    void save_stats();
 
     // Method to scan for level files in the directory
     void scan_for_fnames(const std::string& directory = std::filesystem::current_path().string());
@@ -88,7 +107,4 @@ private:
 
 	// Method to inittiate and validate the level
     void set_level(const std::string& fname);
-
-    // int level = 1; // Current game level
-    // int score = 0; // Current game score
 };

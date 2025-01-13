@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <chrono>
 #include "Coord.h"
 #include "Board.h"
 
@@ -54,6 +55,29 @@ inline void handle_err(const std::string& message, const char* file, int line) {
  * @return The filename without the ".txt" extension.
  */
 std::string remove_ext(const std::string& filename);
+
+/**
+ * @brief Starts the timer.
+ * @return The start time.
+ */
+inline std::chrono::steady_clock::time_point start_timer() {
+	return std::chrono::high_resolution_clock::now();
+}
+
+/**
+ * @brief Stops the timer and returns the duration in minutes and seconds.
+ * @param start_time The start time.
+ * @return The duration in minutes and seconds.
+ */
+inline std::pair<int, int> stop_timer(auto start_time) {
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time).count();
+
+    int minutes = static_cast<int>(duration) / 60;
+    int seconds = static_cast<int>(duration) % 60;
+    return { minutes, seconds };
+}
+
 
 /**
  * @brief Overloads the compersion operators for the Ctrl enum class.
