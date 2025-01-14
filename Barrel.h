@@ -20,16 +20,13 @@ public:
     char handle_collision() override;
 
     // Method to reset the barrel
-    void reset() override;
+    void reset();
 
     // Method to check if the barrel is active
     bool is_active() const;
 
     // Method to check if the barrel hit Mario
     bool hitted_mario() const;
-
-    // Method to set the board for the barrel
-    void set_board(const Board* pBoard);
 
     // Method to spawn the barrel
     void spawn();

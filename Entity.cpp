@@ -35,6 +35,51 @@ void Entity::set(size_t i) const {
 }
 
 /**
+* @brief Getter for the last horizontal direction.
+* @return The last horizontal direction.
+*/
+int Entity::get_lastdx() const {
+	return last_dx;
+}
+
+/**
+ * @brief Inverts the direction of the entity.
+ */
+void Entity::invert_dir() {
+    last_dx = dir.x;
+	dir.x = -dir.x;
+}
+
+/**
+ * @brief Resets the entity to its initial state.
+ */
+void Entity::reset() {
+	vanish();
+	set_pos({ -1, -1 });
+	dir = { 0, 0 };
+	last_dx = 0;
+}
+
+/**
+ * @brief Setter for the board pointer.
+ * @param pBoard The board pointer to set.
+ */
+bool Entity::set_board(const Board* pBoard) {
+
+	if (pBoard == nullptr) return false; // Check if the board pointer is valid
+	
+    board = pBoard;
+	return true;
+}
+
+/**
+ * @brief Setter for the last_dx.
+ */
+void Entity::set_last_dx(int dx) {
+	last_dx = dx;
+}
+
+/**
  * @brief Erases the entity from its current position.
  */
 void Entity::vanish() const {
@@ -73,6 +118,7 @@ Coordinates Entity::set_pos(Coordinates coord) const {
 bool Entity::set_dir(int dx, int dy) {
 
     if (-1 <= dx && dx <= 1 && -1 <= dy && dy <= 1) { // Check if the direction is valid
+		if (dir.x != 0) last_dx = dir.x;
         dir = { dx, dy };
         return true;
     }
@@ -188,6 +234,7 @@ bool Entity::set_dy(int dy) {
  * @param dy The new dy value.
  */
 bool Entity::set_dx(int dx) {
+	if (dx != 0) last_dx = dir.x;
 	return set_dir(dx, dir.y);
 }
 
@@ -197,4 +244,17 @@ bool Entity::set_dx(int dx) {
 */
 Coordinates Entity::get_dest() const {
     return point.pos + dir;
+}
+
+/**
+ * @brief Sets the icon of the entity.
+ * @param ch The new icon.
+ * @return True if the icon is valid, false otherwise.
+ */
+bool Entity::set_icon(Board::Icon icon) {
+	if (board->is_valid_ch(icon)) {
+		point.icon = icon;
+		return true;
+	}
+    return false;
 }

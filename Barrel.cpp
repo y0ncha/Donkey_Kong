@@ -34,11 +34,9 @@ void Barrel::update_dir(char beneath) {
     switch (beneath) {
         case Board::FLOOR_L:
             set_dx(-1); // Move left
-			last_dx = -1;
             break;
         case Board::FLOOR_R:
 			set_dx(1); // Move right
-			last_dx = 1;
             break;
         case Board::AIR:
             state = State::FALLING; // Set the State to FALLING
@@ -57,7 +55,7 @@ void Barrel::update_dir(char beneath) {
 void Barrel::handle_falling() {
 
     fall_count++;
-    dir = {0, 1}; // Set the direction to fall and step
+    set_dir(0, 1); // Set the direction to fall and step
     step();
 
 	// If the barrel falls out of the screen
@@ -69,8 +67,9 @@ void Barrel::handle_falling() {
     if (on_ground() && !hitted_mario()) {
         if (fall_count >= MAX_FALL_H) {
             explode();
-        } else {
-            dir = {last_dx, 0};
+        } 
+        else {
+            set_dir(get_lastdx(), 0);
             state = State::IDLE;
             fall_count = 0;
         }
@@ -81,7 +80,7 @@ void Barrel::handle_falling() {
  * @brief Method to handle the explosion of the barrel.
  */
 void Barrel::explode() {
-	Coordinates pos = point.pos;
+    Coordinates pos = get_pos();
     reset();
     for (int i = 0; i <= EXPLOSION_RADIUS; i++) {
         print_explosion_phase(i, pos);
@@ -181,14 +180,6 @@ Coordinates Barrel::init_pos() {
 }
 
 /**
- * @brief Sets the original and current board for the barrel.
- * @param pBoard Pointer to the game board.
- */
-void Barrel::set_board(const Board* pBoard) {
-    board = pBoard;
-}
-
-/**
  * @brief Spawns the barrel at the initial position and activates it.
  */
 void Barrel::spawn() {
@@ -202,7 +193,7 @@ void Barrel::spawn() {
  * @return The type of object the barrel collides with.
  */
 char Barrel::handle_collision() {
-    char obst = getch_console(point.pos + dir);
+    char obst = getch_console(get_pos() + get_dir());
 
     switch (obst) {
 	    case Board::MARIO: // If the barrel hits Mario
@@ -216,7 +207,7 @@ char Barrel::handle_collision() {
             reset();
             break;
         default: // If a barrel is about to collide with a floor from the side, stop it
-            if (board->is_floor(obst)) dir.x = -dir.x;
+			if (board->is_floor(obst)) invert_dir();
             break;
     }
     return obst;
@@ -226,10 +217,7 @@ char Barrel::handle_collision() {
  * @brief Resets the barrel state and direction.
  */
 void Barrel::reset() {
-    vanish();
-    set_pos(-1, -1);
-    dir = {0, 0};
-    last_dx = 0;
+	Entity::reset();
     state = State::IDLE;
     fall_count = 0;
     active = false;

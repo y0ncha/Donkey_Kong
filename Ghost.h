@@ -17,10 +17,7 @@ public:
 	void move() override;
 
 	// Method to reset the ghost
-	void set_board(const Board* pBoard);
-
-	// Method to reset the ghost
-	void reset() override;
+	void reset();
 
 	// Method to kill the ghost
 	void kill();
@@ -30,9 +27,6 @@ public:
 
 	// method to activate the ghost
 	void activate();
-
-	// Method to invert the direction of the ghost
-	void invert_dir();
 
 	// Method to check if the ghost hit Mario
 	bool is_hit_mario() const;

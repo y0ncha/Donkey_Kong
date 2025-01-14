@@ -221,6 +221,36 @@ bool Board::pos_inbound(Coordinates pos) {
 }
 
 /**
+* @brief Checks if the character is valid.
+* @param icon The character to check.
+* @return True if the character is valid, false otherwise.
+*/
+bool Board::is_valid_ch(Board::Icon icon) {
+
+    switch (icon) {
+    case Board::MARIO:
+    case Board::DONKEY_KONG:
+    case Board::PAULINE:
+    case Board::HAMMER:
+    case Board::GHOST:
+    case Board::LEGEND:
+    case Board::WALL:
+    case Board::LADDER:
+    case Board::BARREL:
+    case Board::AIR:
+    case Board::FLOOR:
+    case Board::FLOOR_L:
+    case Board::FLOOR_R:
+	case Board::SUPER_MARIO:
+        return true;
+        break;
+    default:
+        return false;
+        break;
+    }
+}
+
+/**
 * @brief Retrieves the position of the specified entity.
 * @param icon The character representing the entity.
 * @param ind The index of the entity in the map.
@@ -236,35 +266,6 @@ Coordinates Board::get_pos(Icon icon, size_t ind) const {
 	}
     else {
         return { -1, -1 };
-    }
-}
-
-/**
-* @brief Checks if the character is valid.
-* @param icon The character to check.
-* @return True if the character is valid, false otherwise.
-*/
-bool Board::is_valid_ch(Icon icon) const{
-
-    switch (icon) {
-    case MARIO:
-    case DONKEY_KONG:
-    case PAULINE:
-    case HAMMER:
-    case GHOST:
-    case LEGEND:
-    case WALL:
-    case LADDER:
-    case BARREL:
-    case AIR:
-    case FLOOR:
-    case FLOOR_L:
-    case FLOOR_R:
-        return true;
-        break;
-    default:
-        return false;
-        break;
     }
 }
 
