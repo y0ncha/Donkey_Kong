@@ -104,22 +104,20 @@ bool Barrels::hitted_mario() const {
 * @param dir The direction of the barrel.
 * @return True if the barrel is in the given position, false otherwise.
 */
-void Barrels::was_hit(Coordinates pos, Coordinates dir) {
+void Barrels::was_hit(Coordinates pos) {
 
     for (auto& barrel : barrels) {
 
-		// If the barrel is inactive skip it
+        // If the barrel is inactive skip it
         if (!barrel->is_active()) continue;
 
-		Coordinates barrel_pos = barrel->get_pos();
+        if (pos == barrel->get_pos()) {
+            gotoxy(barrel->get_pos());
+            std::cout << "*";
+            Sleep(150);
 
-		// Check if the barrel is in the range
-		for (int i = 0; i < Level::ATTACK_RANGE; i++) { // todo range
-			if (barrel_pos == pos) {
-				barrel->reset();
-				break;
-			}
-			barrel_pos += dir;
-		}
-	}
+            barrel->reset();
+            break;
+        };
+    }
 }

@@ -105,23 +105,21 @@ void Ghosts::handle_colisions() {
 * vanishes the ghost if it is and return true, false otherwise.
 * @param pos The position to check.
 * */
-void Ghosts::was_hit(Coordinates pos, Coordinates dir) {
+void Ghosts::was_hit(Coordinates pos) {
 
     for (auto& ghost : ghosts) {
 
         // If the barrel is inactive skip it
         if (!ghost->is_active()) continue;
 
-        Coordinates barrel_pos = ghost->get_pos();
+        if (pos == ghost->get_pos()) {
+            gotoxy(ghost->get_pos());
+            std::cout << "*";
+            Sleep(150);
 
-        // Check if the barrel is in the range
-        for (int i = 0; i < Level::ATTACK_RANGE; i++) { // todo range
-            if (barrel_pos == pos) {
-                ghost->reset();
-                break;
-            }
-            barrel_pos += dir;
-        }
+            ghost->reset();
+            break;
+        };
     }
 }
 

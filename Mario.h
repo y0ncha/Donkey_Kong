@@ -25,6 +25,9 @@ public:
     // Resets Mario to the initial position
     void reset() override;
 
+    // Reset Mario to it initial feilds
+    void fatory_reset();
+
     // Checks if Mario was hit
     bool is_hit() const;
 
@@ -40,7 +43,11 @@ public:
 	// Decreases the number of lives Mario has left
 	void lose_lives();
 
+	// Gets the number of points Mario has
     int get_score() const;
+
+	// Updates Mario's score
+	void update_score(Points points);
 
   // Consts for Mario's properties
   static constexpr int JMP_H = 2; // Max height of a jump
