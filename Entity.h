@@ -14,17 +14,12 @@ void handle_err(const std::string& message, const char* file, int line);
 class Entity {
 
 public:
-    // Constructor for the Entity class
-    Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates dir = {0, 0});
 
 	// Virtual destructor for the Entity class
 	virtual ~Entity() = default;
 
     // Virtual method to move the Entity
     virtual void move() = 0;
-
-    // Virtual method to reset the Entity
-    virtual void reset() = 0;
 
 	// Draws the entity at its current position
     void set(size_t i = 0) const;
@@ -59,37 +54,55 @@ public:
     // Getter for the entity's direction
     Coordinates get_dir() const { return dir; }
 
+	// Getter for the entity's horizontal direction
+	int get_dx() const { return dir.x; }
+
+	// Getter for the entity's vertical direction
+	int get_dy() const { return dir.y; }
+
     // Checks if the entity is off the ground
     bool off_ground() const;
 
     // Checks if the entity is on the ground
     bool on_ground() const;
 
+	// Getter for the last horizontal direction
+    int get_lastdx() const;
+
+    // Method to set the position of the entity
+    void reset();
+
+    // Inverts the direction of the entity
+    void invert_dir();
+
+    // Setter for the board pointer
+    bool set_board(const Board* pBoard);
+
 protected:
+
+	// Constructor for the Entity class (abstract class)
+    Entity(const Board* pBoard, char ch, Coordinates init_pos, Coordinates dir = { 0, 0 });
+
+    // Pointer to the original game board
+    const Board* board;
 
     // Setter for the entity's direction using dx and dy values
     bool set_dir(int dx, int dy);
     bool set_dir(Coordinates coord);
 
+	// Getter for the last horizontal direction
+    void set_last_dx(int dx);
+
 	// Setter for the entity's dx and dy values
 	bool set_dy(int dy);
 	bool set_dx(int dx);
 
+	// Setter for the entity's icon
+    bool set_icon(Board::Icon icon); 
+
     // Setter for the entity's position using x and y coordinates
     Coordinates set_pos(int _x, int _y) const;
     Coordinates set_pos(Coordinates coord) const;
-
-    // Pointer to the original game board
-    const Board* board;
-
-    // Point representation of the entity
-    Point point;
-
-    // Last horizontal direction
-    int last_dx = 0;
-
-    // Direction of the entity
-    Coordinates dir;
 
     // Moves the entity by one step with an optional delay
     void step();
@@ -102,4 +115,15 @@ protected:
 
     // Virtual method to handle the direction change when the entity is on different types of floors
     virtual void handle_falling() = 0;
+
+private:
+
+    // Point representation of the entity
+    Point point;
+
+    // Last horizontal direction
+    int last_dx = 0;
+
+    // Direction of the entity
+    Coordinates dir;
 };

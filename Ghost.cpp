@@ -5,17 +5,9 @@
  * @param pBoard Pointer to the game board.
  */
 Ghost::Ghost(const Board* pBoard) : Entity(pBoard, Board::GHOST, { -1, -1 }) {
-    dir = init_dir();
-    last_dx = dir.x;
+    init_dir();
+	set_last_dx(get_dx());
     active = true;
-}
-
-/**
- * @brief Sets the game board for the ghost.
- * @param pBoard Pointer to the game board.
- */
-void Ghost::set_board(const Board* pBoard) {
-    board = pBoard;
 }
 
 /**
@@ -25,10 +17,10 @@ void Ghost::set_board(const Board* pBoard) {
 bool Ghost::valid_move() {
 
 	// Get the character of the next position floor
-	char next_floor = board->get_char(point.pos + dir + Coordinates{ 0, 1 });
+	char next_floor = board->get_char(get_pos() + get_dir() + Coordinates{0, 1});
 
 	// Check if the next move is above floor and if is inbound
-	return board->is_floor(next_floor) && board->path_clear(get_pos() + dir);
+	return board->is_floor(next_floor) && board->path_clear(get_pos() + get_dir());
 }
 
 /**
@@ -38,14 +30,12 @@ bool Ghost::valid_move() {
 Coordinates Ghost::init_dir() {
 
     int dx = rand() % 2 ? 1 : -1;
-    dir = {dx, 0};
+	Entity::set_dir(dx, 0);
 
-    if (valid_move())
-        dir = { dx, 0 };
-    else
-        dir = { -dx, 0 };
-    last_dx = dir.x;
-    return dir;
+	if (!valid_move()) {
+		invert_dir();
+	}
+    return get_dir();
 }
 
 /**
@@ -58,16 +48,13 @@ void Ghost::update_dir(char key) {
 
     // Small chance to change direction
     if (probability < 5) {
-        dir.x = -dir.x; // Invert direction
+		invert_dir();
     }
 
     // Ensure the new direction is valid
     if (!valid_move()) {
-        dir.x = -dir.x; // Revert direction if not valid
+        invert_dir();
     }
-
-    // Update the last horizontal direction
-    last_dx = dir.x;
 }
 
 /**
@@ -82,9 +69,8 @@ void Ghost::move() {
  * @brief Resets the ghost to its initial state.
  */
 void Ghost::reset() {
-    vanish();
-    set_pos({-1,-1});
-    dir = init_dir();
+	Entity::reset();
+    init_dir();
     active = true;
 }
 
@@ -92,11 +78,9 @@ void Ghost::reset() {
  * @brief Kills the ghost by making it vanish and setting it to inactive.
  */
 void Ghost::kill(){
-    vanish();
+	Entity::reset();
 	active = false;
-	set_pos({ -1,-1 });
-	dir = { 0,0 };
-	last_dx = 0;
+
 }
 
 /**
@@ -118,20 +102,12 @@ void Ghost::set_dir(Coordinates coord) {
 }
 
 /**
- * @brief Inverts the direction of the ghost.
- */
-void Ghost::invert_dir() {
-    dir.x = -dir.x;
-    last_dx = dir.x;
-}
-
-/**
  * @brief Checks if the ghost has hit Mario.
  * @return True if the ghost has hit Mario, false otherwise.
  */
 bool Ghost::is_hit_mario() const {
-    char current = getch_console(point.pos);
-    char next = getch_console(point.pos + dir);
+    char current = getch_console(get_pos());
+    char next = getch_console(get_pos() + get_dir());
 
     return (current == Board::MARIO || current == Board::SUPER_MARIO ||
         next == Board::MARIO || next == Board::SUPER_MARIO);

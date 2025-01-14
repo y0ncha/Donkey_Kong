@@ -7,13 +7,6 @@
 Mario::Mario(const Board* pBoard) 
     : Entity(pBoard, Board::MARIO, { -1, -1}) {}
 
-/**
-* @brief Sets mario's board pointer.
-* @param pBoard The board pointer to set.
-*/
-void Mario::set_board(const Board* pBoard) {
-	board = pBoard;
-}
 
 /**
  * @brief Updates Mario's direction based on the key input.
@@ -84,7 +77,7 @@ void Mario::handle_jumping() {
     // If Mario is on the ground
     if (on_ground()) {
         state = State::IDLE;
-        dir.y = 0;
+		set_dy(0);
         jump_ascend = jump_descend = 0;
         fall_count = 0; // Reset the fall count
     }
@@ -94,14 +87,14 @@ void Mario::handle_jumping() {
  * @brief Handles Mario's CLIMBING logic.
  */
 void Mario::handle_climbing() {
-    if (dir.y == -1) {
+    if (get_dy() == -1) {
         state = State::CLIMBING;
         climb_up(); // Continue CLIMBING up
 
         // If Mario reaches the top of the ladder
         if (behind_ch() == Board::AIR) {
             state = State::IDLE;
-            dir.y = 0;
+            set_dy(0);
         }
     }
     else {
@@ -109,9 +102,9 @@ void Mario::handle_climbing() {
         climb_down(); // Continue CLIMBING down
 
         // If Mario reaches the floor
-        if (board->is_floor(point.pos + dir)) {
+        if (board->is_floor(get_pos() + get_dir())) {
             state = State::IDLE;
-            dir.y = 0;
+            set_dy(0);
         }
     }
 }
@@ -130,7 +123,7 @@ void Mario::handle_falling() {
         else {
             fall_count = 0;
             state = State::IDLE;
-            dir = { last_dx, 0 };
+            set_dir(get_lastdx(), 0);
         }
     }
 }
@@ -140,10 +133,11 @@ void Mario::handle_falling() {
  */
 void Mario::handle_idle() {
     if (off_ground()) {
+		set_last_dx(get_dx());
         handle_falling();
     }
     else {
-        switch (dir.y) {
+        switch (get_dy()) {
         case -1: // If Mario is moving up
             if (can_climb()) { // If Mario can climb
                 handle_climbing();
@@ -152,7 +146,7 @@ void Mario::handle_idle() {
                 handle_jumping();
             }
             else {
-				dir.y = 0; // If Mario can't climb or jump, reset the vertcal direction
+				set_dy(0); // If Mario can't climb or jump, reset the vertcal direction
             }
             break;
         case 1: // If Mario is moving down
@@ -160,11 +154,10 @@ void Mario::handle_idle() {
                 handle_climbing();
             }
 			else {
-				dir.y = 0; // If Mario can't climb, reset the vertical direction
+				set_dy(0); // If Mario can't climb, reset the vertical direction
 			}
             break;
-        default: // If Mario is on the ground
-            last_dx = dir.x; // Save the last direction
+        default: // If Mario is on the ground  
             step(); // move Mario one step
             break;
         }
@@ -175,14 +168,14 @@ void Mario::handle_idle() {
  * @brief Makes Mario jump.
  */
 void Mario::jump() {
-    if (jump_ascend < JMP_H && board->path_clear(point.pos + dir)) { // If Mario is ascending
+    if (jump_ascend < JMP_H && board->path_clear(get_pos() + get_dir())) { // If Mario is ascending
         jump_ascend++;
-        dir.y = -1;
+		set_dy(-1);
         step();
     }
     else if (jump_descend < JMP_H && off_ground()) { // If Mario is descending
         jump_descend++;
-        dir.y = 1;
+		set_dy(1);
         step();
     }
     else { // If Mario finishes the jump and starts FALLING
@@ -197,7 +190,7 @@ void Mario::jump() {
  */
 void Mario::fall() {
     fall_count++;
-    dir = { 0, 1 };
+	set_dir(0, 1); // Set the direction to fall
     step();
 }
 
@@ -205,7 +198,7 @@ void Mario::fall() {
  * @brief Makes Mario climb up.
  */
 void Mario::climb_up() {
-    dir.x = 0;
+	set_dx(0);
     step();
 }
 
@@ -213,7 +206,7 @@ void Mario::climb_up() {
  * @brief Makes Mario climb down.
  */
 void Mario::climb_down() {
-    dir.x = 0;
+    set_dx(0);
     step();
 }
 
@@ -222,7 +215,8 @@ void Mario::climb_down() {
  * @return True if Mario can climb, false otherwise.
  */
 bool Mario::can_climb() const {
-    return (dir.y == -1 && behind_ch() == Board::LADDER) || (dir.y == 1 && board->get_char(point.pos.x, point.pos.y + 2) == Board::LADDER);
+    Coordinates pos = get_pos();
+    return (get_dy() == -1 && behind_ch() == Board::LADDER) || (get_dy() == 1 && board->get_char(pos.x, pos.y + 2) == Board::LADDER);
 }
 
 /**
@@ -238,7 +232,7 @@ bool Mario::can_jump() const {
  * @return The type of object Mario hits.
  */
 char Mario::handle_collision() {
-    char obst = getch_console(point.pos + dir);
+    char obst = getch_console(get_pos() + get_dir());
 
     switch (obst) {
     case Board::BARREL: // If Mario hits a barrel
@@ -249,19 +243,19 @@ char Mario::handle_collision() {
 		break;
     case Board::HAMMER: // If Mario hits a hammer
         armed = true;// Set Mario as having a hammer
-        point.icon = Board::SUPER_MARIO; // Change Mario's icon to Mario with a hammer
+        set_icon(Board::SUPER_MARIO); // Change Mario's icon to Mario with a hammer
         break;
     case Board::PAULINE: // If Mario hits Pauline
         update_score(Points::PAULINE_RESCUED);
         rescued_pauline = true; // Set Mario as saved Pauline
         break;
     case Board::ERR: // If Mario's next step is out of bounds
-        dir.x = -dir.x; // Reverse direction if path is not clear
+        invert_dir(); // Reverse direction if path is not clear
         obst = Board::AIR; // Return air to allow Mario to move
         break;
     default: // If a barrel is about to collide with a floor from the side, invert direction
         if (board->is_floor(obst)) {
-            dir.x = 0;
+            set_dx(0);
 			obst = Board::AIR;
         }
         break;
@@ -312,19 +306,17 @@ void Mario::fatory_reset() {
  */
 void Mario::reset() {
 
+	Entity::reset();
+	set_icon(Board::MARIO);
+
     mario_hit = false;
     rescued_pauline = false;
     armed = false;
-
-	point.pos = { -1, -1 };
-    point.icon = Board::MARIO;
     state = State::IDLE;
 
     fall_count = 0;
     jump_ascend = 0;
     jump_descend = 0;
-    dir = { 0, 0 };
-    last_dx = 0;
 }
 
 /**
