@@ -7,14 +7,31 @@ Game::Game()
     : mario(nullptr), display(Display::get_instance(this)) {}
 
 /**
+ * @brief Runs the game and saves the statistics. ( will be used to save a game in Ex.3)
+ */
+void Game::run() {
+
+    show_cursor(false); // Seed the random number generator
+    srand(static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
+	scan_for_fnames(); // Scan for level files
+
+	// Main game loop
+    while (display.main_menu() != Display::Menu_Options::EXIT) {
+		start();
+		reset();
+        // todo write stats to the file here !
+    }
+    // Display the exit message
+    display.exit_message();
+}
+
+/**
  * @brief Starts the game loop and handles user input.
  * @return The game state after the game loop ends (FIN_SUC, FIN_FAIL, TERMINATE).
  */
-const Game::Statistics& Game::start() {
+void Game::start() {
 
 	auto start_t = start_timer(); // Start the timer
-
-    show_cursor(false); // Hide the console cursor for better visuals
 
     // Dynamic allocation to ease the level incrementation and to initiate level only after all the needed data is available
 	set_level(pop_fname());
@@ -35,7 +52,7 @@ const Game::Statistics& Game::start() {
             state = Game_State::RUN;
             break;
         case Game_State::FIN_FAIL: // Finish the game unsuccessfully
-            game_duration = stop_timer(start_t);
+            stats.time_played = stop_timer(start_t);
 			save_stats();
             curr_level->reset_level();
             display.failure_message();
@@ -50,7 +67,7 @@ const Game::Statistics& Game::start() {
             }
             else { // If all the levels are finished, exit the game
                 // Stop the timer, get the duraion and save the statistics
-                game_duration = stop_timer(start_t);
+                stats.time_played = stop_timer(start_t);
                 save_stats();
                 display.winning_message();
                 state = Game_State::TERMINATE;
@@ -60,9 +77,20 @@ const Game::Statistics& Game::start() {
             break;
         }
     }
-	// Display the exit message
-    display.exit_message();
-    return stats;
+}
+
+/**
+ * @brief Resets the game to its initial fields.
+ */
+void Game::reset() {
+	stats = {}; // Reset the statistics
+	lvl_ind = 0;
+
+	dif_lvl = Difficulty::EASY;
+	state = Game_State::IDLE;
+
+	curr_level.reset(); // Free current level
+	mario.fatory_reset(); // Reset Mario to its initial feilds
 }
 
 /**
@@ -71,7 +99,6 @@ const Game::Statistics& Game::start() {
 void Game::save_stats() {
 	stats.score = mario.get_score();
 	stats.difficulty = static_cast<int>(dif_lvl);
-    stats.time_played = game_duration;
 }
 
 /**
@@ -99,7 +126,7 @@ void Game::set_level(const std::string& fname) {
 
 	if (state == Game_State::TERMINATE) return; // If the game is terminated, do nothing
 
-	if (curr_level == nullptr) { // If the current level is not null, use the constructor
+	if (curr_level == nullptr) { // If the current level is null, use the constructor
         curr_level = std::make_unique<Level>(fname, mario, dif_lvl);
 	}
 	else { // If the current level is already initialized, use the move constructor
@@ -268,3 +295,10 @@ int Game::get_nof_levels() const {
     return (int)level_fnames.size();
 }
 
+/**
+ * @brief Sets the nickname of the player.
+ * @param name The nickname to set.
+ */
+ void Game::set_nickname(const std::string& name) {
+	 stats.player_name = name;
+}

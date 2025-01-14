@@ -36,7 +36,7 @@ public:
     bool hitted_mario() const;
 
 	// Checks if a barrel is in a given position
-    void was_hit(Coordinates pos, Coordinates dir);
+    void was_hit(Coordinates pos);
 
 	// Map to store the default amount and interval for each difficulty level
     const std::unordered_map<Difficulty, std::pair<size_t, size_t>> difficulty = {

@@ -85,5 +85,8 @@ private:
 
 	// Method to print mario's gained points
 	void print_score() const;
+
+	// Method to check if an enemy is in the attack range
+    Point is_enemy_hit(Coordinates pos, Coordinates dir);
 };
 

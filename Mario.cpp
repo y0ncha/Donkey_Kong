@@ -45,6 +45,13 @@ void Mario::update_dir(char key) {
 }
 
 /**
+ * @brief Updates mario's score.
+ */
+void Mario::update_score(Points points) {
+	score += static_cast<int>(points);
+}
+
+/**
  * @brief Moves Mario based on the current direction and game state.
  */
 void Mario::move() {
@@ -245,6 +252,7 @@ char Mario::handle_collision() {
         point.icon = Board::SUPER_MARIO; // Change Mario's icon to Mario with a hammer
         break;
     case Board::PAULINE: // If Mario hits Pauline
+        update_score(Points::PAULINE_RESCUED);
         rescued_pauline = true; // Set Mario as saved Pauline
         break;
     case Board::ERR: // If Mario's next step is out of bounds
@@ -279,6 +287,7 @@ int Mario::get_lives() const {
 */
 void Mario::lose_lives() {
 	lives_left--;
+	update_score(Points::LIFE_LOST);
 }
 
 /**
@@ -292,14 +301,23 @@ int Mario::get_score() const {
 /**
  * @brief Resets Mario to its initial fields.
  */
+void Mario::fatory_reset() {
+    score = 0;
+    lives_left = MAX_LIVES;
+    reset();
+}
+
+/**
+ * @brief Resets Mario to the next level
+ */
 void Mario::reset() {
 
     mario_hit = false;
     rescued_pauline = false;
     armed = false;
 
-    point.icon=Board::MARIO;
-    point.pos = board->get_pos(Board::MARIO);
+	point.pos = { -1, -1 };
+    point.icon = Board::MARIO;
     state = State::IDLE;
 
     fall_count = 0;

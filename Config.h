@@ -30,6 +30,12 @@ enum class Difficulty : char {
     HARD,
 };
 
+enum class Points {
+    ENEMY_HIT = 2, // Points gained when hitting an enemy
+    PAULINE_RESCUED = 10, // Points gained when rescuing Pauline
+    LIFE_LOST = -5, // Points lost when losing a life
+};
+
 // Const to hold the screen dimensions
 constexpr size_t SCREEN_WIDTH = 80; // Width of the screen
 constexpr size_t SCREEN_HEIGHT = 25; // Height of the screen
