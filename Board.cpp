@@ -229,8 +229,9 @@ bool Board::pos_inbound(Coordinates pos) {
 Coordinates Board::get_pos(Icon icon, size_t ind) const {
 
 	auto it = map.find(icon);
+	auto end_it = map.end();
 
-	if (it != map.end() && ind < map[icon].size()) {
+	if (it != end_it && ind < map[icon].size()) {
         return map[icon][ind];
 	}
     else {

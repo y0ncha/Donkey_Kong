@@ -28,9 +28,9 @@ void Display::print_layout(const char layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]) c
 */
 Display::Menu_Options Display::main_menu() const {
 
-	game->scan_for_fnames(); // Scan for level files
-    print_layout(main_layout);
-    Menu_Options input = Menu_Options::DEF;
+	prompt_nickname(); // Prompt the user for a nickname
+	print_layout(main_layout); // Print the main menu layout
+	Menu_Options input = Menu_Options::DEF; // Initialize the input
     bool pending = true;
 
     while (pending) {
@@ -350,6 +350,20 @@ void Display::flash_message(const std::vector<std::string>& messages, const std:
     }
     if (_kbhit()) return;
 	Sleep(200);
+}
+
+/**
+ * @brief Prints the nickname prompt and update the game's nickname.
+ */
+void Display::prompt_nickname() const {
+
+	print_layout(nickname_layout);
+	gotoxy(28, 10);
+
+	std::string buff;
+	std::cin >> buff;
+
+	game->set_nickname(buff);
 }
 
 /**
@@ -739,7 +753,35 @@ char Display::winning_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
    "                                                                                ", // 24
 };
 
-
+// Nickname prompt layout
+char Display::nickname_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
+  //01234567890123456789012345678901234567890123456789012345678901234567890123456789
+   "                                                                                ", // 0
+   "                                                                                ", // 1
+   "                                                                                ", // 2
+   "                                                                                ", // 3
+   "                                                                                ", // 4
+   "                                                                                ", // 5
+   "                                                                                ", // 6
+   "                            CHOOESE A NICKNAME !                                ", // 7
+   "                               (max 6 char)                                     ", // 8
+   "                                                                                ", // 9
+   "                                                                                ", // 10
+   "                           *********************                                ", // 11
+   "                                                                                ", // 12
+   "                       -- press Enter to continue --                            ", // 13
+   "                                                                                ", // 14
+   "                                                                                ", // 15
+   "                                                                                ", // 16
+   "                                                                                ", // 18
+   "                                                                                ", // 19
+   "                                                                                ", // 20
+   "                                                                                ", // 21
+   "                                                                                ", // 17
+   "                                                                                ", // 22
+   "                                                                                ", // 23
+   "                                                                                ", // 24
+};
 
 
 

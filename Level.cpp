@@ -120,19 +120,40 @@ void Level::perform_attack() {
 
     Coordinates pos = mario.get_dest(); // Get the next position of Mario
 	Coordinates dir = mario.get_dir(); // Get the direction of Mario
+	Point enemy = is_enemy_hit(pos, dir);
 
-    char enemy = getch_console(pos);// Get the character of the next position
+	if (enemy.icon == Board::BARREL) {
+		barrels.was_hit(enemy.pos);
+        mario.update_score(Points::ENEMY_HIT); // Update the score by 10 points
+	}
+	else if (enemy.icon == Board::GHOST) {
+		ghosts.was_hit(enemy.pos);
+        mario.update_score(Points::ENEMY_HIT); // Update the score by 10 points
+	}
+	print_score(); // Print the updated score
+}
 
-    switch (enemy) {
-    case Board::BARREL: // If the next position is a barrel
-        barrels.was_hit(pos, dir); // Check if the barrel is in range and smash it if it is
-        break;
-    case Board::GHOST: // If the next position is a ghost
-        ghosts.was_hit(pos, dir); // Check if the ghost is in range and kill it if it is
-        break;
-	default:
-		break;
+/**
+* @breif Helper method to check if an enemy is in the attack range.
+* @param pos The position to check.
+* @param dir The direction to check.
+* @return The character of the enemy hit, if non returns '\0'.
+*/
+Point Level::is_enemy_hit(Coordinates pos, Coordinates dir) {
+
+    Point enemy('\0', { -1, -1 }); // Variable to hold the enemy hit
+
+    for (int i = 0; i < Level::ATTACK_RANGE; i++) {
+		char ch = getch_console(pos);
+        if (ch == Board::BARREL || ch == Board::GHOST) {
+			enemy = Point(ch, pos);
+            break;
+        }
+		else {
+			pos += dir;
+		}
     }
+    return enemy;
 }
 
 

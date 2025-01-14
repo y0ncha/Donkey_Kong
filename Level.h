@@ -46,7 +46,7 @@ public:
     // Static consts for the game
     static constexpr int DEF_DELAY = 100; // Default delay in milliseconds
     static constexpr int KILLED_DELAY = 1000; // Delay after Mario is hit
-	static constexpr int ATTACK_RANGE = 2; // Delay after Mario picks up the hammer
+	static constexpr int ATTACK_RANGE = 3; // Delay after Mario picks up the hammer
 
 private:
   
@@ -85,5 +85,8 @@ private:
 
 	// Method to print mario's gained points
 	void print_score() const;
+
+	// Method to check if an enemy is in the attack range
+    Point is_enemy_hit(Coordinates pos, Coordinates dir);
 };
 

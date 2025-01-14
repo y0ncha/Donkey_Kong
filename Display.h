@@ -44,6 +44,7 @@ public:
 	bool error_message(const std::vector<Board::Err_Code>& errors) const;
 	void winning_message() const;
     void keys_menu() const;
+	void prompt_nickname() const;
 
 private:
 
@@ -76,4 +77,5 @@ private:
     static char levels_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
 	static char winning_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]; // todo update
     static char error_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]; // todo update
+	static char nickname_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]; // todo update
 };

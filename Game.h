@@ -21,18 +21,26 @@ class Display;
 class Game {
 
 public:
+
     // Constructor for the Game class
     Game();
 
 	// Struct to hold the game statistics
 	struct Statistics {
+		std::string player_name;
 		int score = 0;
 		std::pair<int, int> time_played = { 0 ,0 };
 		int difficulty = 0;
 	};
 
+	// Method to run the game
+	void run();
+
     // Starts the game loop and handles user input
-    const Game::Statistics& start();
+    void start();
+
+	// Resets the game
+	void reset();
 
 	// Setter for the game status
     bool set_state(Game_State _state);
@@ -67,6 +75,8 @@ public:
 	// Method to scan for level files in the directory
 	void scan_for_fnames(const std::string& directory = std::filesystem::current_path().string());
 
+	// Method to set the player's nickname
+	void set_nickname(const std::string& name);
 
 private:
 
@@ -78,9 +88,6 @@ private:
 
 	// Level index to manage the game levels from the array
     short lvl_ind = 0; 
-
-	// Game duration
-	std::pair<int, int> game_duration;
 
     // Mario to be passed to the levels
     Mario mario;
