@@ -23,7 +23,7 @@ public:
     int get_lives() const;
 
     // Resets Mario to the initial position
-    void reset() override;
+    void reset();
 
     // Reset Mario to it initial feilds
     void fatory_reset();
@@ -36,9 +36,6 @@ public:
     
     // Checks if Mario picked up the hammer
     bool is_armed() const;
-
-	// Setter for the board
-    void set_board(const Board* pBoard);
 
 	// Decreases the number of lives Mario has left
 	void lose_lives();

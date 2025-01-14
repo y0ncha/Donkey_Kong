@@ -40,9 +40,9 @@ public:
 
 	// Map to store the default amount and interval for each difficulty level
     const std::unordered_map<Difficulty, std::pair<size_t, size_t>> difficulty = {
-        { Difficulty::EASY, {10, 30} },
-        { Difficulty::MEDIUM, {15, 20} },
-        { Difficulty::HARD, {20, 15} }
+        { Difficulty::EASY, {10, 40} },
+        { Difficulty::MEDIUM, {15, 30} },
+        { Difficulty::HARD, {20, 20} }
     };
 
 private:

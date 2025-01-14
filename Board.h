@@ -89,6 +89,9 @@ public:
     // Checks if the position is within the game bounds
     static bool pos_inbound(Coordinates pos);
 
+    // Handles the input character while loading the board
+    static bool is_valid_ch(Icon icon);
+
 	// Consts for the width of the legend
 	static constexpr int LEGEND_WIDTH = 20; // Width of the game board
 	static constexpr int LEGEND_HEIGHT = 3; // Height of the game board
@@ -113,9 +116,6 @@ private:
 
 	// Sets the legend on the board
 	void set_legend();
-
-    // Handles the input character while loading the board
-    bool is_valid_ch(Icon icon) const;
      
 	// Maps the icon to its position on the board
 	Icon map_icon(Icon icon, Coordinates pos);
