@@ -37,11 +37,35 @@ void Mario::update_dir(char key) {
     }
 }
 
+// @brief Updates Mario's score and check if he deserves a bonus life 
+bool Mario::update_score(Points points) {
+	score += static_cast<int>(points);// Add the points to the score
+    if (score < 0) { score = 0; } // If the score is negative, set it to 0
+    return check_for_bonus();
+}
+
 /**
- * @brief Updates mario's score.
+ * @brief Checks for bonus life eligibility.
+ * A static variable 'bonus_tracker' tracks the number of bonuses granted to Mario,
+ * ensuring that every time Mario's score reaches a multiple of 15 points, he is granted an extra life.
+ * @return True if a bonus life was granted, false otherwise.
  */
-void Mario::update_score(Points points) {
-	score += static_cast<int>(points);
+bool Mario::check_for_bonus()
+{
+    // Static variable to track the number of times a bonus has been granted
+    static int bonus_tracker = 1;
+
+    // If the score is a multiple of the bonus life threshold
+    // And Mario doesn't have a maximum life.
+    if (score >= static_cast<int>(Points::BONUS_LIFE_THRESHOLD) * bonus_tracker
+        && lives_left < MAX_LIVES)
+    {
+        lives_left++; // Increase the number of lives
+        bonus_tracker++; // Increment the bonus tracker
+        return true; // Return true if a bonus was given
+    }
+
+    return false;
 }
 
 /**

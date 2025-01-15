@@ -120,17 +120,18 @@ void Level::perform_attack() {
 
     Coordinates pos = mario.get_dest(); // Get the next position of Mario
 	Coordinates dir = mario.get_dir(); // Get the direction of Mario
+    bool hud_update_needed = false;
 	Point enemy = is_enemy_hit(pos, dir);
 
 	if (enemy.icon == Board::BARREL) {
 		barrels.was_hit(enemy.pos);
-        mario.update_score(Points::ENEMY_HIT); // Update the score by 10 points
+        hud_update_needed = mario.update_score(Points::ENEMY_HIT);// Update the score by 10 points
 	}
 	else if (enemy.icon == Board::GHOST) {
 		ghosts.was_hit(enemy.pos);
-        mario.update_score(Points::ENEMY_HIT); // Update the score by 10 points
+        hud_update_needed = mario.update_score(Points::ENEMY_HIT); // Update the score by 10 points
 	}
-	print_score(); // Print the updated score
+    hud_update_needed ? render_hud() : print_score(); // Update the HUD if a bonus was given or print the score
 }
 
 /**
