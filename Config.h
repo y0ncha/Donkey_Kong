@@ -40,3 +40,4 @@ enum class Points {
 constexpr size_t SCREEN_WIDTH = 80; // Width of the screen
 constexpr size_t SCREEN_HEIGHT = 25; // Height of the screen
 
+

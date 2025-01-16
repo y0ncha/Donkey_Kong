@@ -27,11 +27,21 @@ public:
 
 	// Struct to hold the game statistics
 	struct Statistics {
-		std::string player_name;
+		char player_name[7];
 		int score = 0;
 		std::pair<int, int> time_played = { 0 ,0 };
 		int difficulty = 0;
 	};
+
+
+	//method to update the stats file
+	void update_stats_file();
+
+	//method to sort the stats file
+	void sort_stats_file();
+
+	//method to update the lowest stats
+	void update_lowest_stats(Game::Statistics& temp_stats, Game::Statistics& lowest_stats, std::streampos temp_pos, std::streampos& lowest_score_pos);
 
 	// Method to run the game
 	void run();
@@ -98,6 +108,12 @@ private:
 	// Game statistics
 	Statistics stats; // Game statistics
 
+	// Number of statistics stored
+	int num_of_stats = 0;
+
+	// Flag to indicate if the stats file is sorted
+	bool stats_file_sorted = false;
+
 	// Pointer to hold the current level, using unique pointer for better memory management and to ease the level incrementation
 	std::unique_ptr<Level> curr_level = nullptr; 
 
@@ -115,4 +131,7 @@ private:
 
 	// Method to inittiate and validate the level
     void set_level(const std::string& fname);
+
+	// Maximum number of statistics to store
+	static constexpr int MAX_STATS = 6; =
 };
