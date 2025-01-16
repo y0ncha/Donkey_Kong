@@ -23,6 +23,7 @@ public:
         DEF,
         START = '1', // Start the game
         LEVELS = '2', // Choose the level
+		HALL_OF_FAME = '7', // Show the hall of fame
         KEYS = '8',  // Show the keys
         EXIT = '9',   // Exit the game
 		ENTER = '\r', // Enter key

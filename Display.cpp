@@ -28,7 +28,6 @@ void Display::print_layout(const char layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]) c
 */
 Display::Menu_Options Display::main_menu() const {
 
-	prompt_nickname(); // Prompt the user for a nickname
 	print_layout(main_layout); // Print the main menu layout
 	Menu_Options input = Menu_Options::DEF; // Initialize the input
     bool pending = true;
@@ -39,6 +38,7 @@ Display::Menu_Options Display::main_menu() const {
             switch (input) {
             case Menu_Options::LEVELS: // Choose the level
                 if (levels_menu()) {
+					prompt_nickname();
                     if (difficulty_menu()) {
                         game->set_state(Game_State::RUN);
                         pending = false;
@@ -57,6 +57,7 @@ Display::Menu_Options Display::main_menu() const {
                 print_layout(main_layout);
                 break;
             case Menu_Options::START: // Start the game
+				prompt_nickname();
                 if (difficulty_menu()) {
                     game->set_state(Game_State::RUN);
                     pending = false;
@@ -70,6 +71,9 @@ Display::Menu_Options Display::main_menu() const {
                 game->set_state(Game_State::TERMINATE);
                 pending = false;
                 break;
+            case Menu_Options::HALL_OF_FAME:
+				// todo: implement hall of fame
+				break;
             default:
                 break;
             }
@@ -360,7 +364,7 @@ void Display::prompt_nickname() const {
 	print_layout(nickname_layout);
 	gotoxy(37, 15);
 
-	std::string buff;
+    char buff[Game::NAME_LEN] = "";
 	std::cin >> buff;
 
 	game->set_nickname(buff);
@@ -444,12 +448,12 @@ char Display::main_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
   R"!({ { \(---)/  }}                                                                 )!",// 17
      "{{  }'-=-'{ } }              START A NEW GAME     - 1                           ",// 18
      "{ { }._:_.{  }}           (OPTIONAL) CHOOSE LEVEL - 2                           ",// 19
-     "{{  } -:- { } }             INSTRUCTIONS & KEYS   - 8                           ",// 20
-     "{_{ }`===`{  _}                    EXIT           - 9                           ",// 21
-  R"!((((\)    (/))))                                                                 )!",// 22
+     "{{  } -:- { } }                 HALL OF FAME      - 7                           ",// 20
+     "{_{ }`===`{  _}              INSTRUCTIONS& KEYS   - 8                           ",// 21
+  R"!((((\)    (/))))                    EXIT           - 9                           )!",// 22
      "================================================================================", // 23
      "                                                                                ", // 24
-};
+};  
 
 //Keys instructions layout
 char Display::keys_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {

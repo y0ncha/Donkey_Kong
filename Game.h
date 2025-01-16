@@ -25,9 +25,11 @@ public:
     // Constructor for the Game class
     Game();
 
+	static constexpr int NAME_LEN = 7; // Maximum length of the player's name
+
 	// Struct to hold the game statistics
 	struct Statistics {
-		std::string player_name;
+		char player_name[NAME_LEN] = "";
 		int score = 0;
 		std::pair<int, int> time_played = { 0 ,0 };
 		int difficulty = 0;
@@ -76,7 +78,7 @@ public:
 	void scan_for_fnames(const std::string& directory = std::filesystem::current_path().string());
 
 	// Method to set the player's nickname
-	void set_nickname(const std::string& name);
+	void set_nickname(const char* name);
 
 private:
 
