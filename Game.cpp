@@ -31,10 +31,11 @@ void Game::run() {
  */
 void Game::start() {
 
-	auto start_t = start_timer(); // Start the timer
-
     // Dynamic allocation to ease the level incrementation and to initiate level only after all the needed data is available
 	set_level(pop_fname());
+
+	// Start the timer
+    auto start_t = start_timer();
 
 	// Main game loop
     while (state != Game_State::TERMINATE) {
@@ -298,7 +299,8 @@ int Game::get_nof_levels() const {
 /**
  * @brief Sets the nickname of the player.
  * @param name The nickname to set.
+ * @note The nickname is limited to 6 characters.
  */
- void Game::set_nickname(const std::string& name) {
-	 stats.player_name = name;
+void Game::set_nickname(const char* name) {
+    strcpy_s(stats.player_name, sizeof(stats.player_name), name);
 }
