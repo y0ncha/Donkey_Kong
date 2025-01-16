@@ -70,6 +70,7 @@ private:
     int fall_count = 0; // Counter for the number of steps Mario has been falling
     int jump_ascend = 0, jump_descend = 0; // Counter for the height of Mario's jump
     int score = 0;
+    int bonus_tracker = 1;
 
     bool mario_hit = false; // Indicates if Mario has been hit
     bool rescued_pauline = false; // Indicates if Mario has saved Pauline
