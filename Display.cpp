@@ -360,7 +360,7 @@ void Display::prompt_nickname() const {
 	print_layout(nickname_layout);
 	gotoxy(28, 10);
 
-	std::string buff;
+    char buff[7] = "";
 	std::cin >> buff;
 
 	game->set_nickname(buff);

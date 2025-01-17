@@ -5,11 +5,14 @@
 #include <filesystem>
 #include <regex>
 #include <chrono>
+#include <algorithm>
 #include "Config.h"
 #include "Mario.h"
 #include "Display.h"
 #include "Level.h"
 #include "Utils.h"
+
+
 
 // Forward declaration of the Level class
 class Level;
@@ -27,7 +30,7 @@ public:
 
 	// Struct to hold the game statistics
 	struct Statistics {
-		char player_name[7];
+		char player_name[7] = "";
 		int score = 0;
 		std::pair<int, int> time_played = { 0 ,0 };
 		int difficulty = 0;
@@ -86,7 +89,7 @@ public:
 	void scan_for_fnames(const std::string& directory = std::filesystem::current_path().string());
 
 	// Method to set the player's nickname
-	void set_nickname(const std::string& name);
+	void set_nickname(const char* name);
 
 private:
 
@@ -133,5 +136,5 @@ private:
     void set_level(const std::string& fname);
 
 	// Maximum number of statistics to store
-	static constexpr int MAX_STATS = 6; =
+	static constexpr int MAX_STATS = 10; 
 };

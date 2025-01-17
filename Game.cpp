@@ -19,12 +19,14 @@ void Game::update_stats_file() {
 			lowest_stats = stats;
 			lowest_score_pos = stats_file.tellg();
             num_of_stats++;
+            stats_file_sorted = false;
         }
 		else if (num_of_stats < MAX_STATS) { //the file of stats is not full soo add the new stats
             temp_pos = stats_file.tellg();
             stats_file.write(reinterpret_cast<const char*>(&stats), size);
             update_lowest_stats(stats, lowest_stats, temp_pos, lowest_score_pos);
             num_of_stats++;
+			stats_file_sorted = false;
         }
         else { //the file of stats is full
             stats_file.seekg(0, std::ios::beg);
@@ -36,12 +38,15 @@ void Game::update_stats_file() {
 			if (stats.score > lowest_stats.score) {
 				stats_file.seekg(lowest_score_pos, std::ios::beg);
 				stats_file.write(reinterpret_cast<const char*>(&stats), size);
+				stats_file_sorted = false;
+                
 			}
         }
 	}
 	else { //if the file is not open, todo -  different error message based on disply maybe
         std::cerr << "Error opening the file" << std::endl;
     }
+
 }
 
 //update the lowest stats
@@ -92,7 +97,6 @@ void Game::run() {
     show_cursor(false); // Seed the random number generator
     srand(static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
 	scan_for_fnames(); // Scan for level files
-    int nums_of_stats = 0;
 	// Main game loop
     while (display.main_menu() != Display::Menu_Options::EXIT) {
 		start();
@@ -383,8 +387,8 @@ int Game::get_nof_levels() const {
  * @brief Sets the nickname of the player.
  * @param name The nickname to set.
  */
- void Game::set_nickname(const std::string& name) {
-     strncpy(stats.player_name, name.c_str(), 6);
+ void Game::set_nickname(const char* name) {
+     strncpy(stats.player_name, name, 6);
      // Ensure the player_name is null-terminated
      stats.player_name[6] = '\0';
 }
