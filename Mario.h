@@ -43,8 +43,11 @@ public:
 	// Gets the number of points Mario has
     int get_score() const;
 
-	// Updates Mario's score
-	void update_score(Points points);
+	// Updates Mario's score and returns true if Mario deserves a bonus life 
+	bool update_score(Points points);
+
+    // A function that checks if Mario deserves an bonus life
+    bool check_for_bonus();
 
   // Consts for Mario's properties
   static constexpr int JMP_H = 2; // Max height of a jump
@@ -67,6 +70,7 @@ private:
     int fall_count = 0; // Counter for the number of steps Mario has been falling
     int jump_ascend = 0, jump_descend = 0; // Counter for the height of Mario's jump
     int score = 0;
+    int bonus_tracker = 1;
 
     bool mario_hit = false; // Indicates if Mario has been hit
     bool rescued_pauline = false; // Indicates if Mario has saved Pauline

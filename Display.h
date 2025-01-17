@@ -23,6 +23,7 @@ public:
         DEF,
         START = '1', // Start the game
         LEVELS = '2', // Choose the level
+		HALL_OF_FAME = '7', // Show the hall of fame
         KEYS = '8',  // Show the keys
         EXIT = '9',   // Exit the game
 		ENTER = '\r', // Enter key
@@ -75,7 +76,8 @@ private:
     static char difficulty_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
     static char strike_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
     static char levels_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
-	static char winning_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]; // todo update
-    static char error_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]; // todo update
-	static char nickname_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]; // todo update
+	static char winning_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char error_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+	static char nickname_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]; 
+    static char top_score[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
 };

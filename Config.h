@@ -34,6 +34,7 @@ enum class Points {
     ENEMY_HIT = 2, // Points gained when hitting an enemy
     PAULINE_RESCUED = 10, // Points gained when rescuing Pauline
     LIFE_LOST = -5, // Points lost when losing a life
+    BONUS_LIFE_THRESHOLD = 15  // Points threshold for gaining an extra life
 };
 
 // Const to hold the screen dimensions

@@ -28,9 +28,11 @@ public:
     // Constructor for the Game class
     Game();
 
+	static constexpr int NAME_LEN = 7; // Maximum length of the player's name
+
 	// Struct to hold the game statistics
 	struct Statistics {
-		char player_name[7] = "";
+		char player_name[NAME_LEN] = "";
 		int score = 0;
 		std::pair<int, int> time_played = { 0 ,0 };
 		int difficulty = 0;
