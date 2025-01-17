@@ -72,7 +72,8 @@ Display::Menu_Options Display::main_menu() const {
                 pending = false;
                 break;
             case Menu_Options::HALL_OF_FAME:
-				// todo: implement hall of fame
+                print_top_score();
+                print_layout(main_layout);
 				break;
             default:
                 break;
@@ -104,6 +105,92 @@ void Display::print_levels(int page_ind, int last_page) const {
     gotoxy(71, 16);
     std::cout << "Page " << page_ind << "/" << last_page;
 }
+
+//prints the top score
+void Display::print_top_score() const
+{
+ bool pending = true;
+ char void_input;
+ int num_of_stats, line=13;
+ Statistics* stats;
+
+ print_layout(top_score);
+
+ std::fstream states_file("game_stats.bin", std::ios::binary | std::ios::in);
+ if (states_file.is_open()) {
+
+     states_file.seekg(0, std::ios::end);
+     num_of_stats = game->get_num_of_states(states_file);
+     states_file.seekg(0, std::ios::beg);
+     stats = new Statistics[num_of_stats];
+
+     readStatistics(states_file, num_of_stats, stats);
+     if (!game->is_sorted()) {
+		 sortStatistics(stats, num_of_stats, states_file);
+	 }
+     states_file.close();
+
+     print_layout(top_score);
+
+     for (int i = 0; i < num_of_stats; i++) {
+         printStatistics(stats[i], line);
+         line++;
+     }
+     delete[] stats;
+ }
+ while (pending){
+         flash_message({ "Press any key to continue" }, { {29, 24} });
+         if (_kbhit()) {
+             void_input = _getch(); // Get the key input to clear the buffer
+             pending = false; // Check if a key is pressed
+         }
+     }
+ }
+
+//reads the statistics from the file
+ void Display:: readStatistics(std::fstream& file, int size,Statistics* stats)const{
+
+    for (int i = 0; i < size; i++) {
+
+        // Read player name 
+        file.read(reinterpret_cast<char*>(&stats[i]), sizeof(Statistics));
+        if (file.fail()) {
+            std::cerr << "Error reading player name." << std::endl;
+            return;
+        }
+    }
+}
+
+ //sorts the statistics
+ void Display::sortStatistics(Statistics* stats, int size, std::fstream& file) const
+ {
+
+     std::sort(stats, stats + size, [](const Statistics& a, const Statistics& b) {
+         return a.score > b.score;
+		 });
+     file.clear();
+	 file.seekp(0, std::ios::beg);
+
+	 for (int i = 0; i < size; i++) {
+		 file.write(reinterpret_cast<char*>(&stats[i]), sizeof(Statistics));
+		 if (file.fail()) {
+			 std::cerr << "Error writing player name." << std::endl;
+			 return;
+		 }
+	 }
+     game->set_sorted();
+ }
+
+ //prints the statistics on the screen
+ void Display::printStatistics(const Statistics& stats, int line) const
+ {
+     gotoxy(30,line);
+     std::cout << stats.player_name;
+     gotoxy(45, line);
+     std::cout << stats.score;
+     gotoxy(58, line);
+     std::cout << stats.time_played.first << ":" << stats.time_played.second;
+ }
 
 /**
 * @brief Prints the levels menu and handles the user input.
@@ -188,7 +275,7 @@ void Display::keys_menu() const {
     bool pending = true;
 
     while (pending) {
-        flash_message({ "Press ESC to return to menu" }, { {26, 22} });
+        flash_message({ "Press ESC to return to menu" }, { {26, 24} });
         if (_kbhit()) pending = (_getch() != Ctrl::ESC);
     }
 }

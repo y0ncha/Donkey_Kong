@@ -8,24 +8,27 @@ Game::Game()
 
 //update the stats file
 void Game::update_stats_file() {
-    std::fstream stats_file("game_stats.bin", std::ios::binary | std::ios::out | std::ios::in | std::ios::app);
+    std::fstream stats_file("game_stats.bin", std::ios::binary | std::ios::out | std::ios::in| std::ios::app);
+
     size_t size = sizeof(Statistics);
-    Statistics temp_stats, lowest_stats;
-    std::streampos temp_pos,lowest_score_pos;
+    Statistics temp_stats;
+    static Statistics lowest_stats = {};
+    std::streampos temp_pos;
+    static std::streampos lowest_score_pos = 0;
+    int num_of_stats;
+
     if (stats_file.is_open()) {
         stats_file.seekg(0, std::ios::end);
+        num_of_stats = get_num_of_states(stats_file);
 		if (num_of_stats == 0) { //the file of stats is empty soo add the new stats
             stats_file.write(reinterpret_cast<const char*>(&stats), size);
 			lowest_stats = stats;
 			lowest_score_pos = stats_file.tellg();
-            num_of_stats++;
-            stats_file_sorted = false;
         }
 		else if (num_of_stats < MAX_STATS) { //the file of stats is not full soo add the new stats
-            temp_pos = stats_file.tellg();
+            temp_pos = stats_file.tellp();
             stats_file.write(reinterpret_cast<const char*>(&stats), size);
             update_lowest_stats(stats, lowest_stats, temp_pos, lowest_score_pos);
-            num_of_stats++;
 			stats_file_sorted = false;
         }
         else { //the file of stats is full
@@ -36,7 +39,7 @@ void Game::update_stats_file() {
 				update_lowest_stats(temp_stats, lowest_stats, temp_pos, lowest_score_pos);
             }
 			if (stats.score > lowest_stats.score) {
-				stats_file.seekg(lowest_score_pos, std::ios::beg);
+				stats_file.seekp(lowest_score_pos, std::ios::beg);
 				stats_file.write(reinterpret_cast<const char*>(&stats), size);
 				stats_file_sorted = false;
                 
@@ -56,38 +59,6 @@ void Game::update_lowest_stats(Game::Statistics& temp_stats, Game::Statistics& l
         lowest_score_pos = temp_pos;
     }
 }
-//sort the stats file
-void Game::sort_stats_file() {
-    std::fstream stats_file("game_stats.bin", std::ios::binary | std::ios::in | std::ios::out);
-    size_t size = sizeof(Statistics);
-    if (stats_file.is_open()) {
-        // Read all statistics into a vector of unique_ptr
-        std::vector<std::unique_ptr<Statistics>> stats_list;
-        stats_list.reserve(num_of_stats);
-        for (int i = 0; i < num_of_stats; i++) {
-            auto temp_stats = std::make_unique<Statistics>();
-            if (!stats_file.read(reinterpret_cast<char*>(temp_stats.get()), size)) {
-                break;
-            }
-            stats_list.push_back(std::move(temp_stats));
-        }
-        // Sort the statistics by score in descending order
-        std::sort(stats_list.begin(), stats_list.end(), [](const std::unique_ptr<Statistics>& a, const std::unique_ptr<Statistics>& b) {
-            return a->score > b->score;
-            });
-        // Write the sorted statistics back to the file
-        stats_file.clear();
-        stats_file.seekp(0, std::ios::beg);
-        for (const auto& stats : stats_list) {
-            stats_file.write(reinterpret_cast<const char*>(stats.get()), size);
-        }
-        stats_file.close();
-		stats_file_sorted = true; // Set the flag to true
-    }
-	else { //if the file is not open, todo -  different error message based on disply maybe
-        std::cerr << "Error opening the file" << std::endl;
-    }
-}
 
 /**
  * @brief Runs the game and saves the statistics. ( will be used to save a game in Ex.3)
@@ -100,15 +71,10 @@ void Game::run() {
 	// Main game loop
     while (display.main_menu() != Display::Menu_Options::EXIT) {
 		start();
-		reset();
         update_stats_file();
+		reset();
     }
 
-    // ???? ?????? ?? ???????? ????? ??? todo
-	// Sort the statistics by score
-    if (!stats_file_sorted) {
-        sort_stats_file();
-    }
     // Display the exit message
     display.exit_message();
 }
@@ -391,4 +357,22 @@ int Game::get_nof_levels() const {
  */
 void Game::set_nickname(const char* name) {
     strcpy_s(stats.player_name, sizeof(stats.player_name), name);
+}
+
+//get the number of stats
+int Game::get_num_of_states(std::fstream& file) const
+{
+    return file.tellg() / sizeof(Statistics);
+}
+
+//check if the stats file is sorted
+bool Game::is_sorted()
+{
+    return stats_file_sorted;
+}
+
+//set the stats file sorted
+void Game::set_sorted()
+{
+    	stats_file_sorted = true;
 }

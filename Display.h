@@ -12,6 +12,15 @@
 class Game;
 class Level;
 
+static constexpr int NAME_LEN = 7; // Maximum length of the player's name
+
+struct Statistics {
+    char player_name[NAME_LEN] = "";
+    int score = 0;
+    std::pair<int, int> time_played = { 0 ,0 };
+    int difficulty = 0;
+};
+
 /**
  * @class Display
  * Represents the game display and menus.
@@ -63,6 +72,18 @@ private:
 
 	// Prints the levels from the levels_fname list
 	void print_levels(int page_ind, int last_page) const;
+
+    // Prints the top score
+    void print_top_score() const;
+
+    // read statistics from a file
+    void readStatistics(std::fstream& file,int size, Statistics* stats)const;
+
+    // sort the statistics and write them to the file
+    void sortStatistics(Statistics* stats, int size, std::fstream& file) const;
+
+    // Prints the statistics on the screen
+    void printStatistics(const Statistics& stats, int line) const;
 
 	// Displays a falshing message on the screen
 	void flash_message(const std::vector<std::string>& messages, const std::vector<Coordinates>& positions) const;

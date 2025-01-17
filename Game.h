@@ -42,9 +42,6 @@ public:
 	//method to update the stats file
 	void update_stats_file();
 
-	//method to sort the stats file
-	void sort_stats_file();
-
 	//method to update the lowest stats
 	void update_lowest_stats(Game::Statistics& temp_stats, Game::Statistics& lowest_stats, std::streampos temp_pos, std::streampos& lowest_score_pos);
 
@@ -93,6 +90,15 @@ public:
 	// Method to set the player's nickname
 	void set_nickname(const char* name);
 
+	// Method to get the number of statistics stored
+	int get_num_of_states(std::fstream& file) const;
+
+	// Method to check if the stats file is sorted
+	bool is_sorted();
+
+	// Method to set the stats file sorted flag
+	void set_sorted();
+
 private:
 
 	// Game state
@@ -112,9 +118,6 @@ private:
 
 	// Game statistics
 	Statistics stats; // Game statistics
-
-	// Number of statistics stored
-	int num_of_stats = 0;
 
 	// Flag to indicate if the stats file is sorted
 	bool stats_file_sorted = false;
@@ -139,4 +142,5 @@ private:
 
 	// Maximum number of statistics to store
 	static constexpr int MAX_STATS = 10; 
+
 };
