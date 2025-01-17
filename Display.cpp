@@ -363,8 +363,8 @@ void Display::prompt_nickname() const {
 
 	print_layout(nickname_layout);
 	gotoxy(37, 15);
-
-    char buff[Game::NAME_LEN] = "";
+  
+  char buff[Game::NAME_LEN] = "";
 	std::cin >> buff;
 
 	game->set_nickname(buff);
