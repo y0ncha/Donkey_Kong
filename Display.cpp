@@ -72,7 +72,8 @@ Display::Menu_Options Display::main_menu() const {
                 pending = false;
                 break;
             case Menu_Options::HALL_OF_FAME:
-				// todo: implement hall of fame
+				top_scores();
+				print_layout(main_layout);
 				break;
             default:
                 break;
@@ -188,7 +189,7 @@ void Display::keys_menu() const {
     bool pending = true;
 
     while (pending) {
-        flash_message({ "Press ESC to return to menu" }, { {26, 22} });
+        flash_message({ "Press ESC to return to menu" }, { {26, 24} });
         if (_kbhit()) pending = (_getch() != Ctrl::ESC);
     }
 }
@@ -272,15 +273,15 @@ void Display::failure_message() const {
     print_layout(fail_layout);
 
     gotoxy(42, 16); // Print the score
-    std::cout << game->get_stats().score;
+    std::cout << game->get_statistics().score;
 
     gotoxy(42, 18); // Print the time played (minutes : seconds)
-    std::cout << std::setw(2) << std::setfill('0') << game->get_stats().time_played.first << ":"
-              << std::setw(2) << std::setfill('0') << game->get_stats().time_played.second;
+    std::cout << std::setw(2) << std::setfill('0') << game->get_statistics().time_played.first << ":"
+              << std::setw(2) << std::setfill('0') << game->get_statistics().time_played.second;
 
 
     while (pending) {
-        flash_message({ "Press ESC to exit" }, { {31, 23} });
+        flash_message({ "Press ESC to exit" }, { {30, 23} });
         if (_kbhit()) {
             void_input = _getch(); // Get the key input to clear the buffer
             pending = (void_input != Ctrl::ESC);
@@ -317,11 +318,11 @@ void Display::winning_message() const {
 	print_layout(winning_layout);
 
 	gotoxy(26, 22); // Print the score
-	std::cout << game->get_stats().score;
+	std::cout << game->get_statistics().score;
     
 	gotoxy(54, 22); // Print the time played (minutes : seconds)
-    std::cout << std::setw(2) << std::setfill('0') << game->get_stats().time_played.first << ":"
-        << std::setw(2) << std::setfill('0') << game->get_stats().time_played.second;
+    std::cout << std::setw(2) << std::setfill('0') << game->get_statistics().time_played.first << ":"
+        << std::setw(2) << std::setfill('0') << game->get_statistics().time_played.second;
 
     while (pending) {
         flash_message({ "Press any key to continue" }, { {27, 24} });
@@ -360,15 +361,16 @@ void Display::flash_message(const std::vector<std::string>& messages, const std:
  * @brief Prints the nickname prompt and update the game's nickname.
  */
 void Display::prompt_nickname() const {
+    print_layout(nickname_layout);
+    gotoxy(37, 15);
 
-	print_layout(nickname_layout);
-	gotoxy(37, 15);
-  
-  char buff[Game::NAME_LEN] = "";
-	std::cin >> buff;
+	std::string buff; // Buffer to store the nickname (using string to make sure non of the chars will be left in the input stream)
+	buff.reserve(Hof::NAME_LEN); // Reserve the maximum nickname length
+    std::cin >> buff; // Read up to 6 characters, leaving space for the null terminator
 
-	game->set_nickname(buff);
+    game->set_nickname(buff);
 }
+
 
 /**
 * @brief Prints the error message.
@@ -423,6 +425,47 @@ bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
 	return true;
 }
 
+/**
+* @brief Prints the top scores.
+*/
+void Display::top_scores() const {
+
+	print_layout(scores_board);
+	int row = 13;
+    bool pending = true;
+
+    // Print the top scores
+    for (const auto& stats : game->get_hof()) {
+        gotoxy(28, row);
+        std::cout << stats.player_name;
+        gotoxy(42, row);
+        std::cout << stats.score;
+        gotoxy(49, row);
+        std::cout << std::setw(2) << std::setfill('0') << stats.time_played.first << ":" << std::setw(2) << std::setfill('0') << stats.time_played.second;
+		gotoxy(57, row);
+		switch (static_cast<Difficulty>(stats.difficulty)) {
+		case Difficulty::EASY:
+			std::cout << "MONKEY";
+			break;
+		case Difficulty::MEDIUM:
+			std::cout << "APE";
+			break;
+		case Difficulty::HARD:
+			std::cout << "D-KONG";
+			break;
+		default:
+			break;
+		}
+
+        row++; // Move to the next row
+    }
+    while (pending) {
+        if (_kbhit()) {
+			_getch() == Ctrl::ESC ? pending = false : pending = true;
+        }
+		flash_message({ "Press ESC to return to menu" }, { {26, 24} });
+    }
+}
 
 
 // Main menu layout
@@ -430,7 +473,6 @@ char Display::main_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
      "================================================================================",// 0
      "                                                                                ",// 1
-     "                                                                                ",// 2
      "                                                                                ",// 3
      "                                                                                ",// 4
      "                _____     ____    _   _   _  __  ______  __     __              ",// 5
@@ -441,16 +483,17 @@ char Display::main_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
   R"!(               |_____/   \____/  |_| \_| |_|\_\ |______|    |_|                 )!",// 10
      "                         _  __   ____    _   _   _____                          ",// 11
   R"!(                        | |/ /  / __ \  | \ | | / ____|                         )!",// 12
-  R"!(     ."`".              | ' /  | |  | | |  \| | | |  __                         )!",// 13
-  R"!( .-./ _=_ \.-.          |  <   | |  | | | . ` | | | |_ |                        )!",// 14
-  R"!({  (,(oYo),) }}         | . \  | |__| | | |\  | | |__| |                        )!",// 15
-  R"!({{ |   "   |} }         |_|\_\  \____/  |_| \_|  \_____|                        )!",// 16
-  R"!({ { \(---)/  }}                                                                 )!",// 17
-     "{{  }'-=-'{ } }              START A NEW GAME     - 1                           ",// 18
-     "{ { }._:_.{  }}           (OPTIONAL) CHOOSE LEVEL - 2                           ",// 19
+  R"!(                        | ' /  | |  | | |  \| | | |  __                         )!",// 13
+  R"!(     ."`".              |  <   | |  | | | . ` | | | |_ |                        )!",// 14
+  R"!( .-./ _=_ \.-.          | . \  | |__| | | |\  | | |__| |                        )!",// 15
+  R"!({  (,(oYo),) }}         |_|\_\  \____/  |_| \_|  \_____|                        )!",// 16
+  R"!({{ |   "   |} }                                                                 )!",// 17
+  R"!({ { \(---)/  }}              START A NEW GAME     - 1                           )!",// 18
+     "{{  }'-=-'{ } }           (OPTIONAL) CHOOSE LEVEL - 2                           ",// 19
      "{{  } -:- { } }                 HALL OF FAME      - 7                           ",// 20
-     "{_{ }`===`{  _}              INSTRUCTIONS& KEYS   - 8                           ",// 21
-  R"!((((\)    (/))))                    EXIT           - 9                           )!",// 22
+     "{{  } -:- { } }              INSTRUCTIONS& KEYS   - 8                           ",// 21
+  R"!({_{ }`===`{  _}                    EXIT           - 9                           )!",// 22
+  R"!((((\)    (/))))                                                                 )!",// 2
      "================================================================================", // 23
      "                                                                                ", // 24
 };  
@@ -632,7 +675,7 @@ char Display::fail_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
      "*                            TIME PLAYED:                                      *", // 18
      "*                                                                              *", // 19
      "*                                                                              *", // 20
-     "*                            BETTER LUCK NEXT TIME !                           *", // 21
+     "*                          BETTER LUCK NEXT TIME !                             *", // 21
      "*                                                                              *", // 22
      "*                                                                              *", // 23
      "********************************************************************************", // 24
@@ -777,18 +820,18 @@ char Display::nickname_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     R"!(||                          Please enter a NICKNAME:                          ||)!", // 13
     R"!(||                                                                            ||)!", // 14
     R"!(||                                                                            ||)!", // 15
-    R"!(||                           **********************                           ||)!", // 16
-    R"!(||                                (max 6 char)                                ||)!", // 17
+    R"!(||                          ***********************                           ||)!", // 16
+    R"!(||                               (max 6 char)                                 ||)!", // 17
     R"!(||                                                                            ||)!", // 18
     R"!(||                                                                            ||)!", // 19
-    R"!(||                        -- press Enter to continue --                       ||)!", // 20
+    R"!(||                       -- press Enter to continue --                        ||)!", // 20
     R"!(||                                                                            ||)!", // 21
     R"!(||                                                                            ||)!", // 22
     R"!(||                                                                            ||)!", // 23
     R"!(||****************************************************************************||)!", // 24
 };
 
-char Display::top_score[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
+char Display::scores_board[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
     //01234567890123456789012345678901234567890123456789012345678901234567890123456789
   R"!(********************************************************************************)!", // 0
   R"!( _____                                                                    _____ )!", // 1
@@ -801,19 +844,19 @@ char Display::top_score[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
   R"!( |___|                                                                    |___| )!", // 8
   R"!((_____)------------------------------------------------------------------(_____))!", // 9
   R"!(             ----------------------------------------------------               )!", // 10
-  R"!(            ||   PLACE    |    NAME    |    SCORE    |    TIME   ||             )!", // 11
+  R"!(            ||   PLACE    |    NAME    | SCORE | TIME  |  MODE   ||             )!", // 11
   R"!(            ||---------------------------------------------------||             )!", // 12
-  R"!(            ||     #1     |            |             |           ||             )!", // 13
-  R"!(            ||     #2     |            |             |           ||             )!", // 14
-  R"!(            ||     #3     |            |             |           ||             )!", // 15
-  R"!(            ||     #4     |            |             |           ||             )!", // 16
-  R"!(            ||     #5     |            |             |           ||             )!", // 17
-  R"!(            ||     #6     |            |             |           ||             )!", // 18
-  R"!(            ||     #7     |            |             |           ||             )!", // 19
-  R"!(            ||     #8     |            |             |           ||             )!", // 20
-  R"!(            ||     #9     |            |             |           ||             )!", // 21
-  R"!(            ||     #10    |            |             |           ||             )!", // 22
+  R"!(            ||     #1     |            |       |       |         ||             )!", // 13
+  R"!(            ||     #2     |            |       |       |         ||             )!", // 14
+  R"!(            ||     #3     |            |       |       |         ||             )!", // 15
+  R"!(            ||     #4     |            |       |       |         ||             )!", // 16
+  R"!(            ||     #5     |            |       |       |         ||             )!", // 17
+  R"!(            ||     #6     |            |       |       |         ||             )!", // 18
+  R"!(            ||     #7     |            |       |       |         ||             )!", // 19
+  R"!(            ||     #8     |            |       |       |         ||             )!", // 20
+  R"!(            ||     #9     |            |       |       |         ||             )!", // 21
+  R"!(            ||     #10    |            |       |       |         ||             )!", // 22
   R"!(             ----------------------------------------------------               )!", // 23
-  R"!(                             press any key to exit                              )!"  // 24
+  R"!(                              press Esc to exit                                 )!"  // 24
   /////////////////////////////flash this message right here//////////////////////////////////
 };

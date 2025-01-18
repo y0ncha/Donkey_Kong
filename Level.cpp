@@ -37,7 +37,7 @@ Level::Level(Level&& other, std::string fname) noexcept
     hammer(Board::HAMMER, board.get_pos(Board::HAMMER))
     {
     mario.set_board(&board);
-	  reset_level();
+	reset_level();
 }
 
 /**
@@ -221,7 +221,7 @@ void Level::print_score() const {
 /**
 * @brief Renders the level by drawing the board, Mario, and the HUD.
 */
-void Level::render_level() const {
+void Level::render_level() {
     board.print(); // Draw the game board
     mario.set(); // Draw Mario
 	ghosts.set_all(); // Draw the ghosts

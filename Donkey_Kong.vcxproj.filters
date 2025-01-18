@@ -43,6 +43,7 @@
     <ClCompile Include="Ghosts.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="Hof.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Barrel.h">
@@ -87,6 +88,7 @@
     <ClInclude Include="Ghosts.h">
       <Filter>hdr</Filter>
     </ClInclude>
+    <ClInclude Include="Hof.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="txt">

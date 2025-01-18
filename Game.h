@@ -11,12 +11,13 @@
 #include "Display.h"
 #include "Level.h"
 #include "Utils.h"
+#include "Hof.h"
 
 
-
-// Forward declaration of the Level class
+// Forward declaration
 class Level;
 class Display;
+class Hof;
 /**
  * @class Game
  * Represents the main game loop and controls the game's logic.
@@ -27,26 +28,6 @@ public:
 
     // Constructor for the Game class
     Game();
-
-	static constexpr int NAME_LEN = 7; // Maximum length of the player's name
-
-	// Struct to hold the game statistics
-	struct Statistics {
-		char player_name[NAME_LEN] = "";
-		int score = 0;
-		std::pair<int, int> time_played = { 0 ,0 };
-		int difficulty = 0;
-	};
-
-
-	//method to update the stats file
-	void update_stats_file();
-
-	//method to sort the stats file
-	void sort_stats_file();
-
-	//method to update the lowest stats
-	void update_lowest_stats(Game::Statistics& temp_stats, Game::Statistics& lowest_stats, std::streampos temp_pos, std::streampos& lowest_score_pos);
 
 	// Method to run the game
 	void run();
@@ -85,24 +66,24 @@ public:
     const std::string& pop_fname(int i = -1) const;
 
 	// Method to get the game statistics
-	const Statistics& get_stats() const;
-
-	// Method to scan for level files in the directory
-	void scan_for_fnames(const std::string& directory = std::filesystem::current_path().string());
+	const Hof::Statistics& get_statistics() const;
 
 	// Method to set the player's nickname
-	void set_nickname(const char* name);
+	void set_nickname(const std::string&);
+
+	// Method to get the hall of fame list
+	const std::list<Hof::Statistics>& get_hof() const;
 
 private:
 
 	// Game state
-    Game_State state = Game_State::IDLE;
+    Game_State state;
 
     // Difficulty level
-    Difficulty dif_lvl = Difficulty::EASY;
+    Difficulty dif_lvl;
 
 	// Level index to manage the game levels from the array
-    short lvl_ind = 0; 
+    short lvl_ind; 
 
     // Mario to be passed to the levels
     Mario mario;
@@ -111,22 +92,19 @@ private:
     Display& display;
 
 	// Game statistics
-	Statistics stats; // Game statistics
+	Hof::Statistics stats; // Game statistics
 
-	// Number of statistics stored
-	int num_of_stats = 0;
-
-	// Flag to indicate if the stats file is sorted
-	bool stats_file_sorted = false;
+	// Hall of fame (Top 10 best scores)
+	Hof& hall_of_fame;
 
 	// Pointer to hold the current level, using unique pointer for better memory management and to ease the level incrementation
-	std::unique_ptr<Level> curr_level = nullptr; 
+	std::unique_ptr<Level> curr_level;
 
 	// List to hold the level files names, sorted alphabetically
     std::list<std::string> level_fnames;
 
 	// Method to save the game statistics
-    void save_stats();
+    void save_statistics();
 
 	// Method to push the level file names to the list
 	bool push_fname(const std::string& fname);
@@ -137,6 +115,6 @@ private:
 	// Method to inittiate and validate the level
     void set_level(const std::string& fname);
 
-	// Maximum number of statistics to store
-	static constexpr int MAX_STATS = 10; 
+	// Method to scan for level files in the directory
+	void scan_for_fnames(const std::string& directory = std::filesystem::current_path().string());
 };

@@ -38,6 +38,7 @@ void Board::load(std::string fname) {
 	else {
 		errors.push_back(Err_Code::FILE_FAIL);
 	}
+	file.close(); // Close the file
 }
 
 void Board::set_legend() {

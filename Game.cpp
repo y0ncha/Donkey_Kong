@@ -3,90 +3,16 @@
 /**
  * @brief Constructor for the Game class.
  */
-Game::Game() 
-    : mario(nullptr), display(Display::get_instance(this)) {}
-
-//update the stats file
-void Game::update_stats_file() {
-    std::fstream stats_file("game_stats.bin", std::ios::binary | std::ios::out | std::ios::in | std::ios::app);
-    size_t size = sizeof(Statistics);
-    Statistics temp_stats, lowest_stats;
-    std::streampos temp_pos,lowest_score_pos;
-    if (stats_file.is_open()) {
-        stats_file.seekg(0, std::ios::end);
-		if (num_of_stats == 0) { //the file of stats is empty soo add the new stats
-            stats_file.write(reinterpret_cast<const char*>(&stats), size);
-			lowest_stats = stats;
-			lowest_score_pos = stats_file.tellg();
-            num_of_stats++;
-            stats_file_sorted = false;
-        }
-		else if (num_of_stats < MAX_STATS) { //the file of stats is not full soo add the new stats
-            temp_pos = stats_file.tellg();
-            stats_file.write(reinterpret_cast<const char*>(&stats), size);
-            update_lowest_stats(stats, lowest_stats, temp_pos, lowest_score_pos);
-            num_of_stats++;
-			stats_file_sorted = false;
-        }
-        else { //the file of stats is full
-            stats_file.seekg(0, std::ios::beg);
-            for (int i = 0; i<MAX_STATS; i++) {
-				temp_pos = stats_file.tellg();
-                stats_file.read(reinterpret_cast<char*>(&temp_stats), size);
-				update_lowest_stats(temp_stats, lowest_stats, temp_pos, lowest_score_pos);
-            }
-			if (stats.score > lowest_stats.score) {
-				stats_file.seekg(lowest_score_pos, std::ios::beg);
-				stats_file.write(reinterpret_cast<const char*>(&stats), size);
-				stats_file_sorted = false;
-                
-			}
-        }
-	}
-	else { //if the file is not open, todo -  different error message based on disply maybe
-        std::cerr << "Error opening the file" << std::endl;
-    }
-
-}
-
-//update the lowest stats
-void Game::update_lowest_stats(Game::Statistics& temp_stats, Game::Statistics& lowest_stats, std::streampos temp_pos, std::streampos& lowest_score_pos) {
-    if (temp_stats.score < lowest_stats.score) {
-        lowest_stats = temp_stats;
-        lowest_score_pos = temp_pos;
-    }
-}
-//sort the stats file
-void Game::sort_stats_file() {
-    std::fstream stats_file("game_stats.bin", std::ios::binary | std::ios::in | std::ios::out);
-    size_t size = sizeof(Statistics);
-    if (stats_file.is_open()) {
-        // Read all statistics into a vector of unique_ptr
-        std::vector<std::unique_ptr<Statistics>> stats_list;
-        stats_list.reserve(num_of_stats);
-        for (int i = 0; i < num_of_stats; i++) {
-            auto temp_stats = std::make_unique<Statistics>();
-            if (!stats_file.read(reinterpret_cast<char*>(temp_stats.get()), size)) {
-                break;
-            }
-            stats_list.push_back(std::move(temp_stats));
-        }
-        // Sort the statistics by score in descending order
-        std::sort(stats_list.begin(), stats_list.end(), [](const std::unique_ptr<Statistics>& a, const std::unique_ptr<Statistics>& b) {
-            return a->score > b->score;
-            });
-        // Write the sorted statistics back to the file
-        stats_file.clear();
-        stats_file.seekp(0, std::ios::beg);
-        for (const auto& stats : stats_list) {
-            stats_file.write(reinterpret_cast<const char*>(stats.get()), size);
-        }
-        stats_file.close();
-		stats_file_sorted = true; // Set the flag to true
-    }
-	else { //if the file is not open, todo -  different error message based on disply maybe
-        std::cerr << "Error opening the file" << std::endl;
-    }
+Game::Game()
+    : state(Game_State::IDLE),
+      dif_lvl(Difficulty::EASY),
+      lvl_ind(0),
+	  mario(nullptr), // Passing nullptr until the level is initialized
+      display(Display::get_instance(this)), // Singleton pattern
+      hall_of_fame(Hof::get_instance()), // Singleton pattern
+      curr_level(nullptr), // Initialize unique_ptr with nullptr
+      level_fnames() { // Default initialization of std::list
+    scan_for_fnames(); // Scan for level files
 }
 
 /**
@@ -96,18 +22,12 @@ void Game::run() {
 
     show_cursor(false); // Seed the random number generator
     srand(static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
-	scan_for_fnames(); // Scan for level files
+
 	// Main game loop
     while (display.main_menu() != Display::Menu_Options::EXIT) {
 		start();
+        hall_of_fame.record_statistics(stats);
 		reset();
-        update_stats_file();
-    }
-
-    // ???? ?????? ?? ???????? ????? ??? todo
-	// Sort the statistics by score
-    if (!stats_file_sorted) {
-        sort_stats_file();
     }
     // Display the exit message
     display.exit_message();
@@ -142,7 +62,7 @@ void Game::start() {
             break;
         case Game_State::FIN_FAIL: // Finish the game unsuccessfully
             stats.time_played = stop_timer(start_t);
-			save_stats();
+			save_statistics();
             curr_level->reset_level();
             display.failure_message();
             state = Game_State::TERMINATE;
@@ -155,9 +75,9 @@ void Game::start() {
                 set_level(pop_fname());
             }
             else { // If all the levels are finished, exit the game
-                // Stop the timer, get the duraion and save the statistics
                 stats.time_played = stop_timer(start_t);
-                save_stats();
+				mario.update_score(Points::GAME_COMPLETE);
+                save_statistics();
                 display.winning_message();
                 state = Game_State::TERMINATE;
             }
@@ -185,7 +105,7 @@ void Game::reset() {
 /**
  * @brief Saves the game statistics.
  */
-void Game::save_stats() {
+void Game::save_statistics() {
 	stats.score = mario.get_score();
 	stats.difficulty = static_cast<int>(dif_lvl);
 }
@@ -193,7 +113,7 @@ void Game::save_stats() {
 /**
  * @brief Gets the game's statisitcs
  */
-const Game::Statistics& Game::get_stats() const {
+const Hof::Statistics& Game::get_statistics() const {
 	return stats;
 }
 
@@ -389,6 +309,14 @@ int Game::get_nof_levels() const {
  * @param name The nickname to set.
  * @note The nickname is limited to 6 characters.
  */
-void Game::set_nickname(const char* name) {
-    strcpy_s(stats.player_name, sizeof(stats.player_name), name);
+void Game::set_nickname(const std::string& name) {
+    strcpy_s(stats.player_name, sizeof(stats.player_name), name.c_str());
+}
+
+/**
+ * @brief Gets the hall of fame list.
+ * @return The hall of fame list.
+ */
+const std::list<Hof::Statistics>& Game::get_hof() const {
+    return hall_of_fame.get_list();
 }
