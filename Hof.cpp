@@ -23,7 +23,7 @@ Hof::Hof() : fsize(0), nof_stats(0) {
     if (file.is_open()) {
         file.seekg(0, std::ios::end);
         fsize = file.tellg();
-        nof_stats = fsize / sizeof(Statistics);
+        nof_stats = fsize / STATS_SIZE;
         load();
     } 
     else {

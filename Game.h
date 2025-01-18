@@ -115,6 +115,6 @@ private:
 	// Method to inittiate and validate the level
     void set_level(const std::string& fname);
 
-	// Method to scan for level files in the directory
+	// Method to scan for level files in a directory (default the .exe directory)
 	void scan_for_fnames(const std::string& directory = std::filesystem::current_path().string());
 };

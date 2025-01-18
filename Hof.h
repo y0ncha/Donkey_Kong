@@ -14,6 +14,7 @@ public:
 	// Constants
     static constexpr int NAME_LEN = 7; // Maximum length of the player's name
     static constexpr int TOP_SCORES = 10; // Maximum number of top scores to display
+	static constexpr int STATS_SIZE = 23; // Stats size in bytes
 
     // Struct to hold the game statistics
     struct Statistics {

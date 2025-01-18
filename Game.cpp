@@ -86,6 +86,8 @@ void Game::start() {
             break;
         }
     }
+	//In any case, save the statistics (even if they are already saved)
+	save_statistics();
 }
 
 /**
