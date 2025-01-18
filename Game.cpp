@@ -22,6 +22,10 @@ void Game::run() {
 
     show_cursor(false); // Seed the random number generator
     srand(static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
+    
+	if (!hall_of_fame.is_available()) { // Check if the hall of fame is online
+		display.error_message("Hall of Fame isnt available - continue playing offline");
+	}
 
 	// Main game loop
     while (display.main_menu() != Display::Menu_Options::EXIT) {

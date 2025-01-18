@@ -46,6 +46,7 @@ public:
     void failure_message() const;
     void success_message() const;
     bool error_message(const std::vector<Board::Err_Code>& errors) const;
+    bool error_message(std::string mesage) const;
     void winning_message() const;
     void keys_menu() const;
     void prompt_nickname() const;

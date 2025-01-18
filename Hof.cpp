@@ -24,10 +24,10 @@ Hof::Hof() : fsize(0), nof_stats(0) {
         file.seekg(0, std::ios::end);
         fsize = file.tellg();
         nof_stats = fsize / STATS_SIZE;
-        load();
+        available = load();
     } 
     else {
-        // todo print error
+		available = false;
     }
     file.close();
 }
@@ -37,7 +37,7 @@ Hof::Hof() : fsize(0), nof_stats(0) {
  * Saves the hall of fame to the file.
  */
 Hof::~Hof() {
-    save();
+    if (available) save();
 }
 
 /**
@@ -71,7 +71,6 @@ bool Hof::save() {
     // Open the file in binary mode for writing
     std::ofstream file(fname, std::ios::binary | std::ios::out);
 
-    // Check if the file was successfully opened
     if (!file.is_open()) {
         return false;
     }
@@ -176,4 +175,12 @@ void Hof::read_statistics(std::ifstream& file, Hof::Statistics& stats) {
 	file.read(reinterpret_cast<char*>(&stats.time_played.first), sizeof(stats.time_played.first));
 	file.read(reinterpret_cast<char*>(&stats.time_played.second), sizeof(stats.time_played.second));
 	file.read(reinterpret_cast<char*>(&stats.difficulty), sizeof(stats.difficulty));
+}
+
+/**
+* @brief Checks if the hall of fame is offline.
+* @return True if the hall of fame is offline, false otherwise.
+*/
+bool Hof::is_available() const {
+	return available;
 }

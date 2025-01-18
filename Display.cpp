@@ -272,7 +272,7 @@ void Display::failure_message() const {
 
     print_layout(fail_layout);
 
-    gotoxy(42, 16); // Print the score
+    gotoxy(40, 16); // Print the score
     std::cout << game->get_statistics().score;
 
     gotoxy(42, 18); // Print the time played (minutes : seconds)
@@ -426,6 +426,31 @@ bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
 }
 
 /**
+* @brief Prints the error message.
+* @param errors The vector of error codes.
+* @return false if there are no errors, true otherwise.
+*/
+bool Display::error_message(std::string message) const {
+
+    // Print the layout
+    print_layout(error_layout);
+	bool pending = true;
+	char void_input;
+
+    gotoxy(33, 14);
+	std::cout << "- " << message;
+   
+    while (pending) {
+        flash_message({ "Press any key to skip to the next level" }, { {22, 23} });
+        if (_kbhit()) {
+            void_input = _getch(); // Get the key input to clear the buffer
+            pending = false; // Check if a key is pressed
+        }
+    }
+    return true;
+}
+
+/**
 * @brief Prints the top scores.
 */
 void Display::top_scores() const {
@@ -433,6 +458,7 @@ void Display::top_scores() const {
 	print_layout(scores_board);
 	int row = 13;
     bool pending = true;
+	char void_input;
 
     // Print the top scores
     for (const auto& stats : game->get_hof()) {
@@ -461,7 +487,7 @@ void Display::top_scores() const {
     }
     while (pending) {
         if (_kbhit()) {
-			_getch() == Ctrl::ESC ? pending = false : pending = true;
+			(void_input = _getch()) == Ctrl::ESC ? pending = false : pending = true;
         }
 		flash_message({ "Press ESC to return to menu" }, { {26, 24} });
     }
@@ -670,7 +696,7 @@ char Display::fail_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
      "*                                                                              *", // 13
      "*                                                                              *", // 14
      "*                                                                              *", // 15
-     "*                                  SCORE:                                      *", // 16
+     "*                                SCORE:                                        *", // 16
      "*                                                                              *", // 17
      "*                            TIME PLAYED:                                      *", // 18
      "*                                                                              *", // 19

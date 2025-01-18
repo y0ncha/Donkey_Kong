@@ -36,6 +36,9 @@ public:
     // Method to get the entire list of statistics
     const std::list<Statistics>& get_list() const;
 
+    // Method to check if the hall of fame is available
+	bool is_available() const;
+
 private:
 
     // Constructor - Checks the file exist and loads the statistics
@@ -51,6 +54,9 @@ private:
     // Delete move constructor and move assignment operator
     Hof(Hof&&) = delete;
     Hof& operator=(Hof&&) = delete;
+
+    // Bool to check if the hall of fame opened successfully
+    bool available;
 
     // Method to load the stats from the file
     bool load();
