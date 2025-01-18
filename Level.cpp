@@ -179,6 +179,7 @@ Game_State Level::advance_entities() {
     }
 	// Check if Mario has rescued Pauline
     else if (mario.has_rescued_pauline()) {
+        mario.update_score(Points::PAULINE_RESCUED);
         state = Game_State::FIN_SUC; // Finish the game successfully
     }
 	return state;

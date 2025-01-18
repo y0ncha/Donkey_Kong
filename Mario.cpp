@@ -267,7 +267,6 @@ char Mario::handle_collision() {
         set_icon(Board::SUPER_MARIO); // Change Mario's icon to Mario with a hammer
         break;
     case Board::PAULINE: // If Mario hits Pauline
-        update_score(Points::PAULINE_RESCUED);
         rescued_pauline = true; // Set Mario as saved Pauline
         break;
     case Board::ERR: // If Mario's next step is out of bounds
