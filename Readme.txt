@@ -45,6 +45,7 @@ These handle error cases such as:
 
 Additionally, in the levels menu, you can "roll" through all screens in the directory matching the regex. There’s no limit to the number of screens the game can handle.
 
+
 Notice :
 ========================
 + the hit range of the hammer is 2 chars as allowed by amir in the forum.
