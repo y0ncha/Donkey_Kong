@@ -81,7 +81,7 @@ private:
 	void render_hud() const;
   
 	// Method to render the level
-	void render_level() const;
+	void render_level();
 
 	// Method to print mario's gained points
 	void print_score() const;

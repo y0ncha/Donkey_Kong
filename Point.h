@@ -13,11 +13,7 @@
 class Point {
 public:
 
-    /**
-     * @brief Constructor to initialize the point with a character and position.
-     * @param ch The character representing the point.
-     * @param init_pos The initial position of the point.
-     */
+	// Constructor for the Point class
     Point(char ch, Coordinates init_pos);
 	Point(Board::Icon icon, Coordinates init_pos);
 

@@ -28,7 +28,8 @@ void Entity::set(size_t i) const {
 		set_pos(pos); // Set the position of the entity
 
 		while (off_ground()) { // Check if the entity is off the ground
-			point.pos.y++; // Move the entity down until it is on the ground
+			pos.y++; // Move the entity down
+			set_pos(pos); // Set the new position
 		}
 	}
 	point.draw(); // Draw the entity at the current position
@@ -206,7 +207,7 @@ char Entity::right_ch() const {
 bool Entity::off_ground() const {
     char bellow = beneath_ch();
 	if (bellow == Board::ERR) { // Check if the character beneath the entity is out of bound
-        return true;
+        return false;
     }
 	else { // Check if the character beneath the entity is not a floor element
         return !board->is_floor(bellow);

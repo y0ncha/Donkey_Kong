@@ -47,6 +47,8 @@ public:
         NO_ERR,
         MISSING_MARIO,
         MISSING_PAULINE,
+        MARIO_OUTBOUND,
+		PAULINE_OUTBOUND,
 		FILE_FAIL,
     };
 

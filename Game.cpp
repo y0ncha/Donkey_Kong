@@ -3,8 +3,17 @@
 /**
  * @brief Constructor for the Game class.
  */
-Game::Game() 
-    : mario(nullptr), display(Display::get_instance(this)) {}
+Game::Game()
+    : state(Game_State::IDLE),
+      dif_lvl(Difficulty::EASY),
+      lvl_ind(0),
+	  mario(nullptr), // Passing nullptr until the level is initialized
+      display(Display::get_instance(this)), // Singleton pattern
+      hall_of_fame(Hof::get_instance()), // Singleton pattern
+      curr_level(nullptr), // Initialize unique_ptr with nullptr
+      level_fnames() { // Default initialization of std::list
+    scan_for_fnames(); // Scan for level files
+}
 
 /**
  * @brief Runs the game and saves the statistics. ( will be used to save a game in Ex.3)
@@ -13,13 +22,12 @@ void Game::run() {
 
     show_cursor(false); // Seed the random number generator
     srand(static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
-	scan_for_fnames(); // Scan for level files
 
 	// Main game loop
     while (display.main_menu() != Display::Menu_Options::EXIT) {
 		start();
+        hall_of_fame.record_statistics(stats);
 		reset();
-        // todo write stats to the file here !
     }
     // Display the exit message
     display.exit_message();
@@ -54,7 +62,7 @@ void Game::start() {
             break;
         case Game_State::FIN_FAIL: // Finish the game unsuccessfully
             stats.time_played = stop_timer(start_t);
-			save_stats();
+			save_statistics();
             curr_level->reset_level();
             display.failure_message();
             state = Game_State::TERMINATE;
@@ -67,9 +75,9 @@ void Game::start() {
                 set_level(pop_fname());
             }
             else { // If all the levels are finished, exit the game
-                // Stop the timer, get the duraion and save the statistics
                 stats.time_played = stop_timer(start_t);
-                save_stats();
+				mario.update_score(Points::GAME_COMPLETE);
+                save_statistics();
                 display.winning_message();
                 state = Game_State::TERMINATE;
             }
@@ -78,6 +86,8 @@ void Game::start() {
             break;
         }
     }
+	//In any case, save the statistics (even if they are already saved)
+	save_statistics();
 }
 
 /**
@@ -97,7 +107,7 @@ void Game::reset() {
 /**
  * @brief Saves the game statistics.
  */
-void Game::save_stats() {
+void Game::save_statistics() {
 	stats.score = mario.get_score();
 	stats.difficulty = static_cast<int>(dif_lvl);
 }
@@ -105,7 +115,7 @@ void Game::save_stats() {
 /**
  * @brief Gets the game's statisitcs
  */
-const Game::Statistics& Game::get_stats() const {
+const Hof::Statistics& Game::get_statistics() const {
 	return stats;
 }
 
@@ -301,6 +311,14 @@ int Game::get_nof_levels() const {
  * @param name The nickname to set.
  * @note The nickname is limited to 6 characters.
  */
-void Game::set_nickname(const char* name) {
-    strcpy_s(stats.player_name, sizeof(stats.player_name), name);
+void Game::set_nickname(const std::string& name) {
+    strcpy_s(stats.player_name, sizeof(stats.player_name), name.c_str());
+}
+
+/**
+ * @brief Gets the hall of fame list.
+ * @return The hall of fame list.
+ */
+const std::list<Hof::Statistics>& Game::get_hof() const {
+    return hall_of_fame.get_list();
 }
