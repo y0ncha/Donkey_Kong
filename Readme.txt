@@ -1,8 +1,8 @@
 IDs :  
 ========================
 + Yonatan Csasznik - 208259077  
-+ Tal Ziv - 315434001  
-+ Itay Meriras - 3153356794  
++ Tal Ziv - 3153356794  
++ Itay Merires - 315434001  
 
 Bonus features:  
 ========================
@@ -49,5 +49,6 @@ Additionally, in the levels menu, you can "roll" through all screens in the dire
 
 Notice :
 ========================
-+ the hit range of the hammer is 2 chars as allowed by amir in the forum.
-+ attached amir's approvel of bonus features and 3 people assignemt
++ The hit range of the hammer is 2 chars as allowed by amir in the forum.
++ Attached amir's approvel of bonus features and 3 people assignemt
++ Corrections from Exercise 1 submission: return to the menu at the end of the game, change the enums to enum class.
