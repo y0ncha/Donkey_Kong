@@ -9,7 +9,7 @@
 */
 Hof::Hof() : fsize(0), nof_stats(0) {
     // Open the file in binary mode for reading only
-    file.open(fname, std::ios::binary | std::ios::in);
+    std::ifstream file(fname, std::ios::binary | std::ios::in);
 
     // Check if the file was successfully opened
     if (!file.is_open()) {
@@ -24,7 +24,7 @@ Hof::Hof() : fsize(0), nof_stats(0) {
         file.seekg(0, std::ios::end);
         fsize = file.tellg();
         nof_stats = fsize / STATS_SIZE;
-        available = load();
+        available = load(file);
     } 
     else {
 		available = false;
@@ -45,15 +45,15 @@ Hof::~Hof() {
  * @return True if the hall of fame was loaded properly, false otherwise.
  * @note the method does not opens the file but do checks if the file is open.
  */
-bool Hof::load() {
-    // Open the file in binary mode for reading
-    std::ifstream file(fname, std::ios::binary | std::ios::in);
+bool Hof::load(std::ifstream& file) {
 
+	// Check if the file is open
     if (!file.is_open()) {
         return false;
     }
 
     // Read the statistics from the file
+    file.seekg(0, std::ios::beg);
     for (size_t i = 0; i < nof_stats; i++) {
         Statistics stats;
         read_statistics(file, stats);
@@ -107,7 +107,9 @@ bool Hof::record_statistics(const Statistics& stats) {
     }
 
     // Insert the new statistics in the correct place
-    for (auto it = stats_list.begin(); it != stats_list.end(); ++it) {
+	auto last_it = stats_list.end();
+
+    for (auto it = stats_list.begin(); it != last_it; ++it) {
         if (stats.score > it->score) {
             stats_list.insert(it, stats);
             if (stats_list.size() > TOP_SCORES) stats_list.pop_back();
@@ -157,6 +159,7 @@ const std::list<Hof::Statistics>& Hof::get_list() const {
  * @param stats The statistics to write.
  */
 void Hof::write_statistics(std::ofstream& file, const Hof::Statistics& stats) {
+    if (!file.is_open()) return;
     file.write(stats.player_name, sizeof(stats.player_name));
     file.write(reinterpret_cast<const char*>(&stats.score), sizeof(stats.score));
     file.write(reinterpret_cast<const char*>(&stats.time_played.first), sizeof(stats.time_played.first));
@@ -170,6 +173,7 @@ void Hof::write_statistics(std::ofstream& file, const Hof::Statistics& stats) {
 * @param stats The statistics to read.
 */
 void Hof::read_statistics(std::ifstream& file, Hof::Statistics& stats) {
+	if (!file.is_open()) return;
 	file.read(stats.player_name, sizeof(stats.player_name));
 	file.read(reinterpret_cast<char*>(&stats.score), sizeof(stats.score));
 	file.read(reinterpret_cast<char*>(&stats.time_played.first), sizeof(stats.time_played.first));

@@ -59,7 +59,7 @@ private:
     bool available;
 
     // Method to load the stats from the file
-    bool load();
+    bool load(std::ifstream& file);
 
     // Method to save the stats to the file
     bool save();
@@ -69,9 +69,6 @@ private:
 
 	// Method to read the stats from the file
 	void read_statistics(std::ifstream& file, Statistics& stats);
-
-    // File to store the Hall Of Fame
-    std::fstream file;
 
     // File name to store the Hall Of Fame
     std::string fname = "hof.bin";
