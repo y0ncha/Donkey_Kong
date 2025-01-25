@@ -78,7 +78,6 @@ inline std::pair<int, int> stop_timer(auto start_time) {
     return { minutes, seconds };
 }
 
-
 /**
  * @brief Overloads the compersion operators for the Ctrl enum class.
  * @param lhs The character to compare.

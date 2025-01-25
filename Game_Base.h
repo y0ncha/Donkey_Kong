@@ -6,18 +6,23 @@
 #include <regex>
 #include <chrono>
 #include <algorithm>
+#include "Level_Base.h"
 #include "Config.h"
 #include "Mario.h"
 #include "Display.h"
-#include "Level.h"
 #include "Utils.h"
 #include "Hof.h"
 
 
 // Forward declaration
-class Level;
 class Display;
 class Hof;
+class Level_Base;
+class Regular_Level;
+class Visual_Level;
+class Silent_Level;
+class Save_Level;
+
 /**
  * @class Game_Base
  * Represents the main Game_Base loop and controls the Game_Base's logic.
@@ -57,7 +62,7 @@ public:
 	Difficulty get_difficulty() const;
 
 	// Setter for the Game_Base level index
-	bool set_level(short ind);
+	bool set_index(short ind);
 
 	// Getter for the Game_Base level index
     int get_mario_lives() const;
@@ -66,10 +71,10 @@ public:
     const std::list<std::string>& get_fnames() const;
 
 	// Method to get the number of levels
-    int get_nof_levels() const;
+    int get_nof_screens() const;
 
     // Method to pop the level file names from the list
-    const std::string& pop_fname(int i = -1) const;
+    const std::string& pop_screen(int i = -1) const;
 
 	// Method to get the Game_Base statistics
 	const Hof::Statistics& get_statistics() const;
@@ -92,7 +97,7 @@ private:
     Difficulty dif_lvl;
 
 	// Level index to manage the Game_Base levels from the array
-    short lvl_ind; 
+    short level_ind; 
 
     // Mario to be passed to the levels
     Mario mario;
@@ -106,24 +111,23 @@ private:
 	// Hall of fame (Top 10 best scores)
 	Hof& hall_of_fame;
 
-	// Pointer to hold the current level, using unique pointer for better memory management and to ease the level incrementation
-	std::unique_ptr<Level> curr_level;
+	std::unique_ptr<Level_Base> curr_level;
 
 	// List to hold the level files names, sorted alphabetically
-    std::list<std::string> level_fnames;
+    std::list<std::string> screens;
 
 	// Method to save the Game_Base statistics
     void save_statistics();
 
 	// Method to push the level file names to the list
-	bool push_fname(const std::string& fname);
+	bool push_screen(const std::string& screen);
 
 	// Method to load the levels from the files
-	void advance_level(const std::string& fname);
+	void advance_level();
 
 	// Method to inittiate and validate the level
-    void set_level(const std::string& fname);
+    bool set_level(const std::string& screen);
 
 	// Method to scan for level files in a directory (default the .exe directory)
-	void scan_for_fnames(const std::string& directory = std::filesystem::current_path().string());
+	void scan_for_screens(const std::string& directory = std::filesystem::current_path().string());
 };

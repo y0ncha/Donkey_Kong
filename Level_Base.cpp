@@ -1,14 +1,14 @@
-#include "Level.h"
+#include "Level_Base.h"
 
 /**
- * @brief Constructor for the Level class.
- * @param fname The name of the file that holds the board layout.
+ * @brief Constructor for the Level_Base class.
+ * @param screen The name of the file that holds the board layout.
  * @param mario Reference to the Mario object.
- * @param dif_lvl The difficulty level of the game.
+ * @param dif_lvl The difficulty Level_Base of the game.
  */
-Level::Level(std::string fname, Mario& mario, Difficulty dif_lvl)
+Level_Base::Level_Base(std::string screen, Mario& mario, Difficulty dif_lvl)
     : dif_lvl(dif_lvl),
-    board(fname),
+    board(screen),
     mario(mario),
     barrels(&board, dif_lvl), 
     ghosts(&board),
@@ -21,13 +21,13 @@ Level::Level(std::string fname, Mario& mario, Difficulty dif_lvl)
 }
 
 /**
-* @brief Move constructor for the Level class.
-* @param other The other Level object to move from.
-* @param fname The name of the file that holds the board layout.
+* @brief Move constructor for the Level_Base class.
+* @param other The other Level_Base object to move from.
+* @param screen The name of the file that holds the board layout.
 */
-Level::Level(Level&& other, std::string fname) noexcept
+Level_Base::Level_Base(Level_Base&& other, std::string screen) noexcept
     : dif_lvl(other.dif_lvl),
-    board(fname),
+    board(screen),
     mario(other.mario),
     barrels(&board, other.dif_lvl),
     ghosts(&board),
@@ -41,11 +41,11 @@ Level::Level(Level&& other, std::string fname) noexcept
 }
 
 /**
- * @brief Move assignment operator for the Level class.
- * @param other The other Level object to move from.
- * @return A reference to this Level object.
+ * @brief Move assignment operator for the Level_Base class.
+ * @param other The other Level_Base object to move from.
+ * @return A reference to this Level_Base object.
  */
-Level& Level::operator=(Level&& other) noexcept {
+Level_Base& Level_Base::operator=(Level_Base&& other) noexcept {
     if (this != &other) {
         board = std::move(other.board);
         barrels = std::move(other.barrels);
@@ -64,9 +64,9 @@ Level& Level::operator=(Level&& other) noexcept {
 }
 
 /**
- * @brief Starts the level loop.
+ * @brief Starts the Level_Base loop.
  */
-Game_State Level::start() {
+Game_State Level_Base::start() {
 
 	Game_State state = Game_State::RUN; // Variable to hold the game state
 	char input; // Variable to hold the user input
@@ -101,9 +101,9 @@ Game_State Level::start() {
 }
 
 /**
- * @brief Resets the level and updates Mario's lives.
+ * @brief Resets the Level_Base and updates Mario's lives.
  */
-void Level::reset_level() {
+void Level_Base::reset_level() {
 	board.reset_hammer(); // Set the hammer on the board
     mario.reset(); // Draw Mario at its default position
     barrels.reset_all(); // Reset the barrels
@@ -116,7 +116,7 @@ void Level::reset_level() {
  * @param pos The position to check for enemies.
  * @return True if an enemy was killed, false otherwise.
  */
-void Level::perform_attack() {
+void Level_Base::perform_attack() {
 
     Coordinates pos = mario.get_dest(); // Get the next position of Mario
 	Coordinates dir = mario.get_dir(); // Get the direction of Mario
@@ -140,11 +140,11 @@ void Level::perform_attack() {
 * @param dir The direction to check.
 * @return The character of the enemy hit, if non returns '\0'.
 */
-Point Level::is_enemy_hit(Coordinates pos, Coordinates dir) {
+Point Level_Base::is_enemy_hit(Coordinates pos, Coordinates dir) {
 
     Point enemy('\0', { -1, -1 }); // Variable to hold the enemy hit
 
-    for (int i = 0; i < Level::ATTACK_RANGE; i++) {
+    for (int i = 0; i < Level_Base::ATTACK_RANGE; i++) {
 		char ch = getch_console(pos);
         if (ch == Board::BARREL || ch == Board::GHOST) {
 			enemy = Point(ch, pos);
@@ -161,7 +161,7 @@ Point Level::is_enemy_hit(Coordinates pos, Coordinates dir) {
 /**
  * @brief Advances the entities in the game.
  */
-Game_State Level::advance_entities() {
+Game_State Level_Base::advance_entities() {
 
     mario.move(); // Move Mario if he is on a floor element
     barrels.move_all(frames); // Move the barrels
@@ -175,7 +175,7 @@ Game_State Level::advance_entities() {
 	// Check if Mario was hit by a barrel or a ghost
     if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) {
         mario.lose_lives(); // Decrease the number of lives Mario has left
-        state = mario.get_lives() > 0 ? Game_State::LVL_RESET : Game_State::FIN_FAIL; // Reset the level if Mario has more lives, else finish the game
+        state = mario.get_lives() > 0 ? Game_State::LVL_RESET : Game_State::FIN_FAIL; // Reset the Level_Base if Mario has more lives, else finish the game
     }
 	// Check if Mario has rescued Pauline
     else if (mario.has_rescued_pauline()) {
@@ -188,14 +188,14 @@ Game_State Level::advance_entities() {
 /**
  * @brief Getter for the board.
  */
-const Board& Level::get_board() const {
+const Board& Level_Base::get_board() const {
 	return board;
 }
 
 /**
 * @brief Renders the HUD (Heads Up Display) with the number of lives.
 */
-void Level::render_hud() const {
+void Level_Base::render_hud() const {
 
 	int hearts_x = legend.pos.x + 6, hearts_y = legend.pos.y; // Set the x-coordinate for the lives display
 
@@ -212,7 +212,7 @@ void Level::render_hud() const {
 /**
 * @brief Prints the points Mario has collected.
 */
-void Level::print_score() const {
+void Level_Base::print_score() const {
     int points_x = legend.pos.x + 6, points_y = legend.pos.y + 1; // Set the x-coordinate for the points display
 	gotoxy(points_x, points_y); // Move the cursor to the position where points are displayed
     mario.get_score();
@@ -220,9 +220,9 @@ void Level::print_score() const {
 }
 
 /**
-* @brief Renders the level by drawing the board, Mario, and the HUD.
+* @brief Renders the Level_Base by drawing the board, Mario, and the HUD.
 */
-void Level::render_level() {
+void Level_Base::render_level() {
     board.print(); // Draw the game board
     mario.set(); // Draw Mario
 	ghosts.set_all(); // Draw the ghosts
@@ -233,7 +233,7 @@ void Level::render_level() {
  * @brief Getter for the errors from the board validation.
  * @return A vector of error codes.
  */
-const std::vector<Board::Err_Code>& Level::get_errors() {
+const std::vector<Board::Err_Code>& Level_Base::get_errors() {
 	return board.validate_board();
 }
 

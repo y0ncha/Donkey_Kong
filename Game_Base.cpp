@@ -1,19 +1,23 @@
 #include "Game_Base.h"
+#include "Regular_Level.h"
+#include "Visual_Level.h"
+#include "Silent_Level.h"
+#include "Save_Level.h"
 
 /**
  * @brief Constructor for the Game_Base class.
  */
 Game_Base::Game_Base(Game_Mode) :
 	mode(mode),
-      state(Game_State::IDLE),
-      dif_lvl(Difficulty::EASY),
-      lvl_ind(0),
-	  mario(nullptr), // Passing nullptr until the level is initialized
-      display(Display::get_instance(this)), // Singleton pattern
-      hall_of_fame(Hof::get_instance()), // Singleton pattern
-      curr_level(nullptr), // Initialize unique_ptr with nullptr
-      level_fnames() { // Default initialization of std::list
-    scan_for_fnames(); // Scan for level files
+    state(Game_State::IDLE),
+    dif_lvl(Difficulty::EASY),
+    level_ind(0),
+	mario(nullptr), // Passing nullptr until the level is initialized
+    display(Display::get_instance(this)), // Singleton pattern
+    hall_of_fame(Hof::get_instance()), // Singleton pattern
+    curr_level(nullptr),
+    screens() { // Default initialization of std::list
+    scan_for_screens(); // Scan for level files
 }
 
 /**
@@ -45,7 +49,8 @@ void Game_Base::run() {
 void Game_Base::start() {
 
     // Dynamic allocation to ease the level incrementation and to initiate level only after all the needed data is available
-	set_level(pop_fname());
+	std::string screen = pop_screen();
+	if (!set_level(screen)) return;
 
 	// Start the timer
     auto start_t = start_timer();
@@ -68,16 +73,15 @@ void Game_Base::start() {
         case Game_State::FIN_FAIL: // Finish the Game_Base unsuccessfully
             stats.time_played = stop_timer(start_t);
 			save_statistics();
-            curr_level->reset_level();
             display.failure_message();
             state = Game_State::TERMINATE;
             break;
         case Game_State::FIN_SUC: // Finish the Game_Base successfully
-            lvl_ind++; // Advance to the next level
-            if (lvl_ind < level_fnames.size()) { // Check if there are more levels
+            if (++level_ind < screens.size()) { // Check if there are more levels
+                advance_level();
                 display.success_message(); 
                 state = Game_State::RUN;
-                set_level(pop_fname());
+                set_level(pop_screen());
             }
             else { // If all the levels are finished, exit the Game_Base
                 stats.time_played = stop_timer(start_t);
@@ -100,7 +104,7 @@ void Game_Base::start() {
  */
 void Game_Base::reset() {
 	stats = {}; // Reset the statistics
-	lvl_ind = 0;
+	level_ind = 0;
 
 	dif_lvl = Difficulty::EASY;
 	state = Game_State::IDLE;
@@ -126,42 +130,65 @@ const Hof::Statistics& Game_Base::get_statistics() const {
 
 /**
  * @brief Advances to the next level.
- * @param fname The filename of the next level.
+ * @param screen The filename of the next level.
  */
-void Game_Base::advance_level(const std::string& fname) {
-    // Using move constructor to pass the current level to avoid memory reaclocation
-    curr_level->reset_level();
-    curr_level = std::make_unique<Level>(std::move(*curr_level), fname);
+void Game_Base::advance_level() {
+    
+	std::string screen = pop_screen();
+	// Check if the level is valid
+	if (!set_level(screen)) {
+		state = Game_State::FIN_SUC;
+		return;
+	}
+
+	std::vector errors = curr_level->get_errors();
+	// Validate the level, while invalid keep advancing
+	while (!errors.empty()) {
+
+		display.error_message(errors);
+		level_ind++;
+
+		if (level_ind < screens.size()) {
+            if (!set_level(screen)) break;
+			errors = curr_level->get_errors();
+		}
+		else {
+			state = Game_State::FIN_SUC;
+			break;
+		}
+	}
 }
 
 /**
  * @brief Initializes the level.
- * @param fname The filename of the level to initialize.
+ * @param screen The filename of the level to initialize.
  */
-void Game_Base::set_level(const std::string& fname) {
+bool Game_Base::set_level(const std::string& screen) {
 
-	if (state == Game_State::TERMINATE) return; // If the Game_Base is terminated, do nothing
+	curr_level.reset(); // Free current level
 
-	if (curr_level == nullptr) { // If the current level is null, use the constructor
-        curr_level = std::make_unique<Level>(fname, mario, dif_lvl);
-	}
-	else { // If the current level is already initialized, use the move constructor
-		curr_level = std::make_unique<Level>(std::move(*curr_level), fname);
+	// Check if the screen is empty
+    if (screen.empty()) return false;
+    
+	// Set the level based on the game mode
+    switch (mode) {
+    case Game_Mode::REGULAR:
+        curr_level = std::make_unique<Regular_Level>(screen, mario, dif_lvl);
+        break;
+    case Game_Mode::SAVE:
+        curr_level = std::make_unique<Save_Level>(screen, mario, dif_lvl);
+        break;
+    case Game_Mode::LOAD:
+        curr_level = std::make_unique<Visual_Level>(screen, mario, dif_lvl);
+        break;
+    case Game_Mode::SILENT:
+        curr_level = std::make_unique<Silent_Level>(screen, mario, dif_lvl);
+        break;
+    default:
+        curr_level = nullptr;
+        break;
     }
-
-	// Validate the level, while invalid keep advancing to the next level
-	while (display.error_message(curr_level->get_errors())) {
-
-		lvl_ind++; // Advance to the next level
-
-		if (lvl_ind < level_fnames.size()) { // If there are more levels, advance to the next one
-			advance_level(pop_fname());
-		}
-		else { // If all the levels are finished, exit the Game_Base
-            state = Game_State::FIN_SUC;
-            break;
-		}
-	}
+	return curr_level != nullptr;
 }
 
 /**
@@ -219,9 +246,9 @@ Difficulty Game_Base::get_difficulty() const {
  * @brief Validate and sets the level index.
  * @param ind The indemenagifull name for x to set.
  */
-bool Game_Base::set_level(short ind) {
-    if (0 <= ind && ind < get_nof_levels()) {
-        lvl_ind = ind;
+bool Game_Base::set_index(short ind) {
+    if (0 <= ind && ind < get_nof_screens()) {
+        level_ind = ind;
         return true;
     }
     return false;
@@ -237,20 +264,20 @@ int Game_Base::get_mario_lives() const {
 
 /**
  * @brief Adds a filename to the list of level files in alphabetical order if it doesn't already exist.
- * @param fname The filename to add.
+ * @param screen The filename to add.
  * @return True if the filename was added, false if it already exists.
  */
-bool Game_Base::push_fname(const std::string& fname) {
+bool Game_Base::push_screen(const std::string& screen) {
     // Find the position where the filename should be inserted to keep the list sorted
-    auto it = std::lower_bound(level_fnames.begin(), level_fnames.end(), fname);
+    auto it = std::lower_bound(screens.begin(), screens.end(), screen);
 
 	// Check if the filename already exists in the list and if the list is not full
-    if (it != level_fnames.end() && *it == fname) {
+    if (it != screens.end() && *it == screen) {
         return false; // File already exists in the list
     }
     else {
         // Insert the filename at the correct position
-        level_fnames.insert(it, fname);
+        screens.insert(it, screen);
         return true;
     }
 }
@@ -260,21 +287,21 @@ bool Game_Base::push_fname(const std::string& fname) {
 * @return The list of level filenames.
 */
 const std::list<std::string>& Game_Base::get_fnames() const {
-    return level_fnames;
+    return screens;
 }
 
 /**
  * @brief Scans for level files in the specified directory that match the template "dkong_$number.screen".
  * @param directory The directory to scan for level files.
  */
-void Game_Base::scan_for_fnames(const std::string& directory) {
+void Game_Base::scan_for_screens(const std::string& directory) {
 
     std::regex pattern(R"(dkong_[a-zA-Z0-9]+\.screen(\.txt)?)");
     for (const auto& entry : std::filesystem::directory_iterator(directory)) {
         if (entry.is_regular_file()) {
             std::string filename = entry.path().filename().string();
             if (std::regex_match(filename, pattern)) {
-                push_fname(filename);
+                push_screen(filename);
             }
         }
     }
@@ -285,20 +312,16 @@ void Game_Base::scan_for_fnames(const std::string& directory) {
  * @param i The index of the filename to pop.
  * @return The filename at the specified index.
  */
-const std::string& Game_Base::pop_fname(int i) const {
-
-	static const std::string empty_str = "";
+const std::string& Game_Base::pop_screen(int i) const {
 
 	// If the index is -1, set it to the current level index
-    if (i == -1) i = lvl_ind;
+    if (i == -1) i = level_ind;
 
 	// Check if the index is out of bounds
-	if (i < 0 || i >= level_fnames.size()) {
-		return empty_str;
-	}
+    if (i < 0 || i >= screens.size()) return "";
 
 	// Get the filename at the specified index
-	auto it = level_fnames.begin();
+	auto it = screens.begin();
 	std::advance(it, i);
 	return *it;
 }
@@ -307,8 +330,8 @@ const std::string& Game_Base::pop_fname(int i) const {
  * @brief Gets the number of levels.
  * @return The number of levels.
  */
-int Game_Base::get_nof_levels() const {
-    return (int)level_fnames.size();
+int Game_Base::get_nof_screens() const {
+    return (int)screens.size();
 }
 
 /**

@@ -9,7 +9,7 @@
 #include "Mario.h"
 #include "Game_Base.h"
 #include "Hof.h"
-#include "Level.h"
+#include "Level_Base.h"
 
 // Forward declaration of the Game_Base class
 class Game_Base;

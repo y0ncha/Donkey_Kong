@@ -1,5 +1,5 @@
 #include "Ghosts.h"
-#include "Level.h"
+#include "Level_Base.h"
 /**
  * @brief Constructor for the Ghosts class.
  * @param pBoard Pointer to the game board.

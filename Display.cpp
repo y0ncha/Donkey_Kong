@@ -44,7 +44,7 @@ Display::Menu_Options Display::main_menu() const {
                         pending = false;
                     }
                     else {
-						pGame->set_level(0);
+						pGame->set_index(0);
                         print_layout(main_layout);
                     }
                 }
@@ -112,7 +112,7 @@ void Display::print_levels(int page_ind, int last_page) const {
 bool Display::levels_menu() const {
 
     Menu_Options input = Menu_Options::DEF;
-    int ind, last_page = (int)pGame->get_nof_levels() / LEVELS_PER_PAGE, page_ind = 0;
+    int ind, last_page = (int)pGame->get_nof_screens() / LEVELS_PER_PAGE, page_ind = 0;
     bool pending = true;
 
     print_layout(levels_layout);
@@ -136,7 +136,7 @@ bool Display::levels_menu() const {
                 print_levels(page_ind, last_page);
                 break;
             default:
-				if (pGame->set_level(ind)) { // If the level index is valid, break
+				if (pGame->set_index(ind)) { // If the level index is valid, break
                     pending = false;
                     return true;
                 }
@@ -392,7 +392,7 @@ bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
 	// Print the layout
 	print_layout(error_layout);
     gotoxy(33, 14);
-    std::cout << '"' << pGame->pop_fname() << '"';
+    std::cout << '"' << pGame->pop_screen() << '"';
 
 
     // Mechnism to print the error messages

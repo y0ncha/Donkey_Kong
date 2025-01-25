@@ -11,10 +11,7 @@ Game::Game(Game_Mode mode) noexcept : mode(mode) {
  * @brief Destructor for the Game class.
  */
 Game::~Game() {
-
-    if (mode != Game_Mode::INVALID) {
-        delete pGame;
-    }
+    delete pGame;
 }
 
 /**

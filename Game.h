@@ -1,5 +1,4 @@
 #pragma once
-
 #include <stdexcept>
 #include <iostream>
 #include "Config.h"
@@ -35,7 +34,7 @@ public:
 	Game& operator=(Game&& other) noexcept;
 
 	// Operator to access the game pointer
-	Game_Base* operator->() const { return pGame; }
+	//Game_Base* operator->() const { return pGame; }
 
 	// Method to get the game Game_Mode
 	Game_Mode get_mode() const { return mode; }
