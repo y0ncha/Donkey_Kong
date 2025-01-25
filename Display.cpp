@@ -482,13 +482,10 @@ void Display::top_scores() const {
 		default:
 			break;
 		}
-
         row++; // Move to the next row
     }
     while (pending) {
-        if (_kbhit()) {
-			(void_input = _getch()) == Ctrl::ESC ? pending = false : pending = true;
-        }
+        if (_kbhit()) (void_input = _getch()) == Ctrl::ESC ? pending = false : pending = true;
 		flash_message({ "Press ESC to return to menu" }, { {26, 24} });
     }
 }

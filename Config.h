@@ -18,9 +18,9 @@ enum class Game_State {
 	TERMINATE, // Game is terminated
     RUN, // Game is running
     PAUSE, // Game is paused
-	LVL_RESET, // Level is reset
-    FIN_FAIL, // Game finished unsuccessfully
-    FIN_SUC, // Game finished successfully
+	RETRY, // Level is reset
+    FAIL, // Game finished unsuccessfully
+    SUCCESS, // Game finished successfully
 	IDLE, // Game is idle
 };
 

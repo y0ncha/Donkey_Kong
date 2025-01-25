@@ -28,10 +28,6 @@ void Game_Base::run() {
     show_cursor(false); // Seed the random number generator
     srand(static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
     
-	if (!hall_of_fame.is_available()) { // Check if the hall of fame is online
-		display.error_message("Hall of Fame isnt available - continue playing offline");
-	}
-
 	// Main Game_Base loop
     while (display.main_menu() != Display::Menu_Options::EXIT) {
 		start();
@@ -60,36 +56,19 @@ void Game_Base::start() {
 		// Main Game_Base loop mamging the different states of the Game_Base
         switch (state) {
         case Game_State::RUN: // Run the Game_Base
-            state = curr_level->start();
-            break;
+			handle_run();
+			break;
         case Game_State::PAUSE: // Pause the Game_Base
-            display.pause_menu();
+			handle_pause();
             break;
-        case Game_State::LVL_RESET: // Reset the level
-            curr_level->reset_level();
-            display.strike_message();
-            state = Game_State::RUN;
+        case Game_State::RETRY: // Reset the level
+            handle_retry();
             break;
-        case Game_State::FIN_FAIL: // Finish the Game_Base unsuccessfully
-            stats.time_played = stop_timer(start_t);
-			save_statistics();
-            display.failure_message();
-            state = Game_State::TERMINATE;
+        case Game_State::FAIL: // Finish the Game_Base unsuccessfully
+			handle_fail(start_t);
             break;
-        case Game_State::FIN_SUC: // Finish the Game_Base successfully
-            if (++level_ind < screens.size()) { // Check if there are more levels
-                advance_level();
-                display.success_message(); 
-                state = Game_State::RUN;
-                set_level(pop_screen());
-            }
-            else { // If all the levels are finished, exit the Game_Base
-                stats.time_played = stop_timer(start_t);
-				mario.update_score(Points::GAME_COMPLETE);
-                save_statistics();
-                display.winning_message();
-                state = Game_State::TERMINATE;
-            }
+        case Game_State::SUCCESS: // Finish the Game_Base successfully
+			handle_success(start_t);
             break;
         default: // Do nothing if the state is not valid
             break;
@@ -97,6 +76,60 @@ void Game_Base::start() {
     }
 	//In any case, save the statistics (even if they are already saved)
 	save_statistics();
+}
+
+/**
+ * @brief Handles the Game_Base run.
+ */
+void Game_Base::handle_run() {
+	state = curr_level->start();
+}
+
+/**
+ * @brief Handles the Game_Base pause.
+ */
+void Game_Base::handle_pause() {
+	display.pause_menu();
+}
+
+/**
+ * @brief Handles the Game_Base retry.
+ */
+void Game_Base::handle_retry() {
+	curr_level->reset_level();
+	display.strike_message();
+	state = Game_State::RUN;
+}
+
+/**
+ * @brief Handles the Game_Base failure.
+ * @param start_t The start time of the Game_Base.
+ */
+void Game_Base::handle_fail(std::chrono::steady_clock::time_point start_t) {
+	stats.time_played = stop_timer(start_t);
+	save_statistics();
+	display.failure_message();
+	state = Game_State::TERMINATE;
+}
+
+/**
+ * @brief Handles the Game_Base success.
+ * @param start_t The start time of the Game_Base.
+ */
+void Game_Base::handle_success(std::chrono::steady_clock::time_point start_t) {
+
+    if (++level_ind < screens.size()) {
+        advance_level();
+        display.success_message();
+        state = Game_State::RUN;
+    }
+    else {
+        stats.time_played = stop_timer(start_t);
+        mario.update_score(Points::GAME_COMPLETE);
+        save_statistics();
+        display.winning_message();
+        state = Game_State::TERMINATE;
+    }
 }
 
 /**
@@ -135,13 +168,17 @@ const Hof::Statistics& Game_Base::get_statistics() const {
 void Game_Base::advance_level() {
     
 	std::string screen = pop_screen();
+    std::vector<Board::Err_Code> errors;
+
 	// Check if the level is valid
-	if (!set_level(screen)) {
-		state = Game_State::FIN_SUC;
+	if (screen.empty()) {
+		state = Game_State::SUCCESS;
 		return;
 	}
 
-	std::vector errors = curr_level->get_errors();
+	// If the level is not valid, keep advancing
+    if (!set_level(screen)) errors.push_back(Board::Err_Code::FILE_FAIL);
+
 	// Validate the level, while invalid keep advancing
 	while (!errors.empty()) {
 
@@ -149,11 +186,11 @@ void Game_Base::advance_level() {
 		level_ind++;
 
 		if (level_ind < screens.size()) {
-            if (!set_level(screen)) break;
+            if (!set_level(screen)) errors.push_back(Board::Err_Code::FILE_FAIL);
 			errors = curr_level->get_errors();
 		}
 		else {
-			state = Game_State::FIN_SUC;
+			state = Game_State::SUCCESS;
 			break;
 		}
 	}
@@ -200,9 +237,9 @@ bool Game_Base::set_state(Game_State _state) {
     case Game_State::TERMINATE:
     case Game_State::RUN:
     case Game_State::PAUSE:
-    case Game_State::LVL_RESET:
-    case Game_State::FIN_FAIL:
-    case Game_State::FIN_SUC:
+    case Game_State::RETRY:
+    case Game_State::FAIL:
+    case Game_State::SUCCESS:
     case Game_State::IDLE:
         state = _state;
         return true;
@@ -318,7 +355,7 @@ const std::string& Game_Base::pop_screen(int i) const {
     if (i == -1) i = level_ind;
 
 	// Check if the index is out of bounds
-    if (i < 0 || i >= screens.size()) return "";
+    if (i < 0 || i >= screens.size()) return empty;
 
 	// Get the filename at the specified index
 	auto it = screens.begin();

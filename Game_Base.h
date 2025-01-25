@@ -130,4 +130,11 @@ private:
 
 	// Method to scan for level files in a directory (default the .exe directory)
 	void scan_for_screens(const std::string& directory = std::filesystem::current_path().string());
+
+	// States handling methods
+	void handle_run();
+	void handle_pause();
+	void handle_retry();
+	void handle_fail(std::chrono::steady_clock::time_point start_t);
+	void handle_success(std::chrono::steady_clock::time_point start_t);
 };

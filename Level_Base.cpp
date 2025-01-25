@@ -166,22 +166,27 @@ Game_State Level_Base::advance_entities() {
     mario.move(); // Move Mario if he is on a floor element
     barrels.move_all(frames); // Move the barrels
 	ghosts.move_all(); // Move the ghosts
-    
-  	Game_State state = Game_State::RUN; // Variable to hold the result state
 
 	// If Mario is armed and remove the hammer from the board
     if (mario.is_armed()) board.remove_hammer();
+	return calc_state(); // Calculate the game state
+}
 
+/**
+ * @brief Calculates the game state.
+ * @return The game state.
+ */
+Game_State Level_Base::calc_state() const {
+	
+	Game_State state = Game_State::RUN; // Variable to hold the result state
 	// Check if Mario was hit by a barrel or a ghost
-    if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) {
-        mario.lose_lives(); // Decrease the number of lives Mario has left
-        state = mario.get_lives() > 0 ? Game_State::LVL_RESET : Game_State::FIN_FAIL; // Reset the Level_Base if Mario has more lives, else finish the game
-    }
+	if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) {
+		state = mario.get_lives() > 0 ? Game_State::RETRY : Game_State::FAIL; // Reset the Level_Base if Mario has more lives, else finish the game
+	}
 	// Check if Mario has rescued Pauline
-    else if (mario.has_rescued_pauline()) {
-        mario.update_score(Points::PAULINE_RESCUED);
-        state = Game_State::FIN_SUC; // Finish the game successfully
-    }
+	else if (mario.has_rescued_pauline()) {
+		state = Game_State::SUCCESS; // Finish the game successfully
+	}
 	return state;
 }
 

@@ -94,5 +94,8 @@ private:
     // Method to check if an enemy is in the attack range
     Point is_enemy_hit(Coordinates pos, Coordinates dir);
 
+	// Method to caclulate the game's state
+	Game_State calc_state() const;
+
 };
 

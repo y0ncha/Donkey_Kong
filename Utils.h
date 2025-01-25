@@ -79,6 +79,11 @@ inline std::pair<int, int> stop_timer(auto start_time) {
 }
 
 /**
+ * @brief Empty string to use as a default value.
+ */
+static std::string empty = "";
+
+/**
  * @brief Overloads the compersion operators for the Ctrl enum class.
  * @param lhs The character to compare.
  * @param rhs The Ctrl enum class to compare.
