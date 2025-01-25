@@ -26,7 +26,7 @@ public:
     void reset();
 
     // Reset Mario to it initial feilds
-    void fatory_reset();
+    void factory_reset();
 
     // Checks if Mario was hit
     bool is_hit() const;

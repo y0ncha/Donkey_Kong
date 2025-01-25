@@ -315,7 +315,7 @@ int Mario::get_score() const {
 /**
  * @brief Resets Mario to its initial fields.
  */
-void Mario::fatory_reset() {
+void Mario::factory_reset() {
     score = 0;
     bonus_tracker = 1;
     lives_left = MAX_LIVES;
