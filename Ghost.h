@@ -15,6 +15,6 @@ public:
 	virtual void move() override;
 
 	// Method to clone the ghost entity
-	Ghost* clone() const override; 
+	std::unique_ptr<GhostEntity> clone() const override;
 
 };

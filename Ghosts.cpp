@@ -24,7 +24,7 @@ Ghosts::Ghosts(const Board* pBoard) : board(pBoard) {
 Ghosts::Ghosts(const Ghosts& other) : board(other.board), amount(other.amount), hit_mario(other.hit_mario) {
     ghosts.reserve(amount);
     for (const auto& ghost : other.ghosts) {
-        ghosts.push_back(std::unique_ptr<GhostEntity>(ghost->clone()));
+        ghosts.push_back(ghost->clone());
     }
 }
 
@@ -41,7 +41,7 @@ Ghosts& Ghosts::operator=(const Ghosts& other) {
         ghosts.clear();
         ghosts.reserve(amount);
         for (const auto& ghost : other.ghosts) {
-            ghosts.push_back(std::unique_ptr<GhostEntity>(ghost->clone()));
+            ghosts.push_back(ghost->clone());
         }
     }
     return *this;

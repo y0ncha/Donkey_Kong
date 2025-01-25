@@ -38,7 +38,7 @@ public:
     void set_dir(Coordinates coord);
 
     // Method to clone the ghost entity
-    virtual GhostEntity* clone() const = 0;
+    virtual std::unique_ptr<GhostEntity> clone() const = 0;
 
 
 protected:

@@ -86,6 +86,6 @@ bool GhostMaster::can_climb() const {
 /**
  * @brief Deactivates the ghost.
  */
-GhostMaster* GhostMaster::clone() const {
-    return new GhostMaster(*this);
+std::unique_ptr<GhostEntity> GhostMaster::clone() const {
+    return std::make_unique<GhostMaster>(*this);
 }

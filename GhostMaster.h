@@ -15,7 +15,7 @@ public:
 	void move() override;
 
 	// Method to clone the ghost entity
-	GhostMaster* clone() const override;
+	std::unique_ptr<GhostEntity> clone() const override;
 
 private:
 

@@ -11,6 +11,7 @@ void Ghost::move() {
 }
 
 // Clone method implementation
-Ghost* Ghost::clone() const {
-    return new Ghost(*this); 
+std::unique_ptr<GhostEntity> Ghost::clone() const {
+    return std::make_unique<Ghost>(*this);
 }
+
