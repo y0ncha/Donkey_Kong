@@ -46,6 +46,12 @@
     <ClCompile Include="Hof.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="GhostEntity.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GhostMaster.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Barrel.h">
@@ -91,6 +97,12 @@
       <Filter>hdr</Filter>
     </ClInclude>
     <ClInclude Include="Hof.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="GhostEntity.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="GhostMaster.h">
       <Filter>hdr</Filter>
     </ClInclude>
   </ItemGroup>

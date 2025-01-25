@@ -11,6 +11,7 @@ Board::Board(std::string fname) : map {
     {PAULINE, {}},
     {HAMMER, {}},
     {GHOST, {}},
+    {SUPER_GHOST, {}},
     {LEGEND, {}},
 } {
     load(fname); // Load the board from the given file
@@ -243,6 +244,7 @@ bool Board::is_valid_ch(Board::Icon icon) {
     case Board::FLOOR_L:
     case Board::FLOOR_R:
 	case Board::SUPER_MARIO:
+    case Board::SUPER_GHOST:
         return true;
         break;
     default:
@@ -279,7 +281,7 @@ Board::Icon Board::map_icon(Icon icon, Coordinates pos) {
     
     if (map.find(icon) != map.end()) {
 
-		if (icon == GHOST || map[icon].empty()) { // Check if the character is a ghost or the no position is stored for the character
+		if (icon == GHOST || icon == SUPER_GHOST ||  map[icon].empty()) { // Check if the character is a ghost or the no position is stored for the character
             map[icon].push_back(pos);
         }
 		else { // Set the character to AIR if the character is already in the map and not a ghost

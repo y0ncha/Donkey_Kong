@@ -1,5 +1,6 @@
 #pragma once
 #include "Ghost.h"
+#include "GhostMaster.h"
 #include <memory>
 
 /**
@@ -45,7 +46,7 @@ public:
     void was_hit(Coordinates pos);
 
     // Method to check if two ghosts collide
-	bool colide(const std::unique_ptr<Ghost>& g1, const std::unique_ptr<Ghost>& g2) const;
+    bool colide(const std::unique_ptr<GhostEntity>& g1, const std::unique_ptr<GhostEntity>& g2) const;
     
 private:
 
@@ -59,7 +60,7 @@ private:
 	const Board* board;
 
 	// Vector to store the ghosts as unique pointers
-	std::vector<std::unique_ptr<Ghost>> ghosts;
+	std::vector<std::unique_ptr<GhostEntity>> ghosts;
 };
 
 

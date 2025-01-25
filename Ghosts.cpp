@@ -7,10 +7,13 @@
 Ghosts::Ghosts(const Board* pBoard) : board(pBoard) {
     set_amount();
     ghosts.reserve(amount);
-
-    for (int i = 0; i < amount; i++) {
-        auto temp = std::make_unique<Ghost>(board);
-        ghosts.emplace_back(std::move(temp));
+    size_t ghost_count = board->count_entity(Board::GHOST);
+    size_t ghost_master_count = board->count_entity(Board::SUPER_GHOST);
+    for (size_t i = 0; i < ghost_count; ++i) {
+        ghosts.push_back(std::make_unique<Ghost>(board));
+    }
+    for (size_t i = 0; i < ghost_master_count; ++i) {
+        ghosts.push_back(std::make_unique<GhostMaster>(board));
     }
 }
 
@@ -21,7 +24,7 @@ Ghosts::Ghosts(const Board* pBoard) : board(pBoard) {
 Ghosts::Ghosts(const Ghosts& other) : board(other.board), amount(other.amount), hit_mario(other.hit_mario) {
     ghosts.reserve(amount);
     for (const auto& ghost : other.ghosts) {
-        ghosts.emplace_back(std::make_unique<Ghost>(*ghost));
+        ghosts.push_back(std::unique_ptr<GhostEntity>(ghost->clone()));
     }
 }
 
@@ -38,7 +41,7 @@ Ghosts& Ghosts::operator=(const Ghosts& other) {
         ghosts.clear();
         ghosts.reserve(amount);
         for (const auto& ghost : other.ghosts) {
-            ghosts.emplace_back(std::make_unique<Ghost>(*ghost));
+            ghosts.push_back(std::unique_ptr<GhostEntity>(ghost->clone()));
         }
     }
     return *this;
@@ -71,8 +74,15 @@ void Ghosts::reset_all() {
  * @brief Method to initialize all ghosts at the beginning of the level.
  */
 void Ghosts::set_all() const {
-    for (int i = 0; i < amount; i++) {
+
+    size_t ghost_count = board->count_entity(Board::GHOST);
+    size_t ghost_master_count = board->count_entity(Board::SUPER_GHOST);
+
+    for (int i = 0; i < ghost_count; i++) {
         ghosts[i]->set(i);
+    }
+    for (int i = 0; i < ghost_master_count; i++) {
+        ghosts[ghost_count + i]->set(i);
     }
 
 }
@@ -81,7 +91,7 @@ void Ghosts::set_all() const {
  * @brief Method to set the amount of ghosts.
  */
 void Ghosts::set_amount() {
-    amount = board->count_entity(Board::GHOST);
+    amount = board->count_entity(Board::GHOST) + board->count_entity(Board::SUPER_GHOST);
 }
 
 /**
@@ -124,12 +134,12 @@ void Ghosts::was_hit(Coordinates pos) {
 }
 
 /**
- * @brief Method to check if any ghost hit Mario.
+ * @brief Method to check if any ghost hit ghost.
  * @param g1 ghost by const ref.
  * @param g2 ghost by const ref.
- * @return True if Mario was hit, false otherwise.
+ * @return True if ghost was hit by ghost, false otherwise.
  */
-bool Ghosts::colide(const std::unique_ptr<Ghost>& g1, const std::unique_ptr<Ghost>& g2) const {
+bool Ghosts::colide(const std::unique_ptr<GhostEntity>& g1, const std::unique_ptr<GhostEntity>& g2) const {
 
 	return (g1->get_dest() == g2->get_dest() ||
 		g1->get_pos() == g2->get_pos() ||
@@ -143,3 +153,4 @@ bool Ghosts::colide(const std::unique_ptr<Ghost>& g1, const std::unique_ptr<Ghos
 bool Ghosts::hitted_mario() const {
     return hit_mario;
 }
+
