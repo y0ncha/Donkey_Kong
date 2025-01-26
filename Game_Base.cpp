@@ -137,6 +137,7 @@ void Game_Base::handle_success(std::chrono::steady_clock::time_point start_t) {
 		state = Game_State::RUN;
 	}
 	else {
+		set_state(Game_State::TERMINATE);
 		stats.time_played = stop_timer(start_t);
 		mario.update_score(Points::GAME_COMPLETE);
 		update_statistics();
@@ -236,6 +237,7 @@ std::vector<Board::Err_Code> Game_Base::set_level(const std::string& screen) {
  */
 bool Game_Base::set_state(Game_State _state) {
     switch (_state) {
+    case Game_State::TERMINATE:
     case Game_State::EXIT:
     case Game_State::RUN:
     case Game_State::PAUSE:
