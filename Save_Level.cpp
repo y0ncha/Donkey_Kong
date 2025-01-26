@@ -8,8 +8,8 @@
  */
 Save_Level::Save_Level(std::string fname, Mario& mario, Difficulty diff, unsigned int seed) :
 	Level_Base(fname, mario, diff),
-	steps(get_fname("steps"), std::ios::out),
-    result(get_fname("result"), std::ios::out) {
+	steps(generate_fname("steps"), std::ios::out),
+    result(generate_fname("result"), std::ios::out) {
 
 	// Check if the files are open
 	if (!steps.is_open()) {
@@ -71,7 +71,7 @@ Game_State Save_Level::start() {
  * @param type The type of the file.
  * @return The file name.
  */
-const std::string Save_Level::get_fname(const std::string& type) {
+const std::string Save_Level::generate_fname(const std::string& type) {
 
 	std::string fname = screen;
 

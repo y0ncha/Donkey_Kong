@@ -5,6 +5,10 @@
 
 class Level_Base;
 
+/**
+ * @class Save_Level
+ * Represents the save level of the game.
+ */
 class Save_Level : public Level_Base {
 
 public:
@@ -19,7 +23,7 @@ public:
 	Game_State start() override;
 
 	// Method to get the file name of a given type
-	const std::string get_fname(const std::string& type);
+	const std::string generate_fname(const std::string& type);
 
 private:
 
@@ -28,6 +32,4 @@ private:
 
 	// File to save the results
 	std::ofstream result;
-
-	void pure() override {} // todo delete
 };

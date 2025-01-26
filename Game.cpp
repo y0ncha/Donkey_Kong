@@ -50,7 +50,7 @@ void Game::configure_game() {
         pGame = new Play_Game(mode);
     }
     else if (mode == Game_Mode::LOAD || mode == Game_Mode::SILENT) {
-        pGame = new Replay_Game(mode);
+        //pGame = new Replay_Game(mode);
     }
     else {
         pGame = nullptr;

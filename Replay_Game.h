@@ -8,5 +8,7 @@ public:
 	~Replay_Game() = default;
 
 private:
-	void pure() override {} // todo delete
+
+	// Method to set the level
+	bool load_level(const std::string& screen) override;
 };

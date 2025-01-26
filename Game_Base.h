@@ -1,5 +1,4 @@
 #pragma once
-
 #include <string>
 #include <list> 
 #include <filesystem>
@@ -30,9 +29,6 @@ class Save_Level;
 class Game_Base {
 
 public:
-
-	// todo delete
-	virtual void pure() = 0;
 
     // Constructor for the Game_Base class
     Game_Base(Game_Mode mode);
@@ -116,6 +112,7 @@ protected:
 	// List to hold the level files names, sorted alphabetically
     std::list<std::string> screens;
 
+	// Random number generator seed
 	unsigned int seed;
 
 	// Method to save the Game_Base statistics
@@ -125,7 +122,7 @@ protected:
 	bool push_screen(const std::string& screen);
 
 	// Method to inittiate and validate the level
-	virtual bool load_level(const std::string& screen);
+	virtual bool load_level(const std::string& screen) = 0;
 
 	// Method to set and validate the level
 	std::vector<Board::Err_Code> set_level(const std::string& screen);

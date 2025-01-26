@@ -15,8 +15,6 @@ class Level_Base {
 
 public:
 
-    virtual void pure() = 0; // todo delete
-
     // Constructor for the Level_Base class
     Level_Base(std::string screen, Mario& mario, Difficulty dif_lvl);
 
@@ -34,10 +32,10 @@ public:
     Level_Base& operator=(const Level_Base&) = delete;
 
     // Starts the Level_Base loop and handles user input
-    virtual Game_State start();
+    virtual Game_State start() = 0;
 
     // Resets the Level_Base
-    void reset_level();
+    void retry_level();
 
     // Handle the hammer attack
     void perform_attack();
