@@ -53,7 +53,7 @@ public:
     static constexpr int KILLED_DELAY = 1000; // Delay after Mario is hit
     static constexpr int ATTACK_RANGE = 2; // Delay after Mario picks up the hammer
 
-private:
+protected:
 
     // Difficulty Level_Base
     Difficulty dif_lvl;
@@ -75,6 +75,9 @@ private:
     Point pauline;
     Point donkey_kong;
     Point hammer;
+
+	// Level's screen
+	std::string screen;
 
     // Frame counter used to follow the Level_Base frames for barrel control (can be used for future Level_Base features)
     unsigned long int frames = 0;

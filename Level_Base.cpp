@@ -15,7 +15,8 @@ Level_Base::Level_Base(std::string screen, Mario& mario, Difficulty dif_lvl)
     legend(Board::LEGEND, board.get_pos(Board::LEGEND)),
     pauline(Board::PAULINE, board.get_pos(Board::PAULINE)),
     donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG)),
-    hammer(Board::HAMMER, board.get_pos(Board::HAMMER)) {
+    hammer(Board::HAMMER, board.get_pos(Board::HAMMER)),
+    screen(screen) {
     mario.set_board(&board);
     mario.reset();
 }

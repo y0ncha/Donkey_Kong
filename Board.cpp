@@ -5,7 +5,7 @@
 * Initializes the map with the valid entities and their corresponding characters.
 * Initializes the board layout with empty characters.
 */
-Board::Board(std::string fname) : map {
+Board::Board(std::string screen) : map {
     {MARIO, {}},
     {DONKEY_KONG, {}},
     {PAULINE, {}},
@@ -13,7 +13,7 @@ Board::Board(std::string fname) : map {
     {GHOST, {}},
     {LEGEND, {}},
 } {
-    load(fname); // Load the board from the given file
+    load(screen); // Load the board from the given file
 }
 
 /**
@@ -22,11 +22,11 @@ Board::Board(std::string fname) : map {
 * Throws an error if the file could not be opened.
 * @param fname The name of the file to load the board layout from.
 */
-void Board::load(std::string fname) {
+void Board::load(std::string screen) {
 
 	Err_Code err = Err_Code::NO_ERR;
     std::string buffer; // Buffer to store each line of the file
-	std::ifstream file(fname); // Open the file with the given filename for reading
+	std::ifstream file(screen); // Open the file with the given filename for reading
 
 	if (file.is_open()) { // Check if the file is open
 		for (int y = 0; y_inbound(y); y++) {

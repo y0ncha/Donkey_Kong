@@ -85,7 +85,7 @@ public:
 	// Method to get the hall of fame list
 	const std::list<Hof::Statistics>& get_hof() const;
 
-private:
+protected:
 
 	// Game mode
 	Game_Mode mode;
@@ -122,11 +122,11 @@ private:
 	// Method to push the level file names to the list
 	bool push_screen(const std::string& screen);
 
-	// Method to load the levels from the files
-	void advance_level();
-
 	// Method to inittiate and validate the level
-    bool set_level(const std::string& screen);
+	virtual bool set_level(const std::string& screen);
+
+	// Method to load the levels from the files
+	virtual void advance_level();
 
 	// Method to scan for level files in a directory (default the .exe directory)
 	void scan_for_screens(const std::string& directory = std::filesystem::current_path().string());
@@ -137,4 +137,7 @@ private:
 	void handle_retry();
 	void handle_fail(std::chrono::steady_clock::time_point start_t);
 	void handle_success(std::chrono::steady_clock::time_point start_t);
+
+	private:
+
 };
