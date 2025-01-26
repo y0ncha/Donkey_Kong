@@ -81,6 +81,20 @@ inline std::pair<int, int> stop_timer(auto start_time) {
 }
 
 /**
+ * @brief Overloads the extraction operator for the Difficulty enum class.
+ * @param in The input stream.
+ * @param diff The Difficulty enum class.
+ * @return The input stream.
+ */
+inline std::istream& operator>>(std::istream& in, Difficulty& diff) {
+    int value;
+    if (in >> value) {
+        diff = static_cast<Difficulty>(value);
+    }
+    return in;
+}
+
+/**
  * @brief Empty string to use as a default value.
  */
 static std::string empty = "";

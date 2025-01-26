@@ -37,12 +37,13 @@ public:
 	virtual ~Game_Base() = default;
 
 	// Method to run the Game_Base
-	void run();
+	virtual void run() = 0;
 
     // Starts the Game_Base loop and handles user input
-    void start();
+    virtual void start() = 0;
 
 	// Resets the Game_Base
+	
 	void reset();
 
 	// Setter for the Game_Base status
@@ -128,18 +129,17 @@ protected:
 	std::vector<Board::Err_Code> set_level(const std::string& screen);
 
 	// Method to load the levels from the files
-	virtual bool advance_level();
+	virtual bool advance_level() = 0;
 
 	// Method to scan for level files in a directory (default the .exe directory)
 	void scan_for_screens(const std::string& directory = std::filesystem::current_path().string());
 
 	// States handling methods
-	void handle_run();
-	void handle_pause();
-	void handle_retry();
-	void handle_fail(std::chrono::steady_clock::time_point start_t);
-	void handle_success(std::chrono::steady_clock::time_point start_t);
-	void handle_exit(std::chrono::steady_clock::time_point start_t);
+	virtual void handle_run() = 0;
+	virtual void handle_retry() = 0;
+	virtual void handle_fail(std::chrono::steady_clock::time_point start_t) = 0;
+	virtual void handle_success(std::chrono::steady_clock::time_point start_t) = 0;
+	virtual void handle_exit(std::chrono::steady_clock::time_point start_t) = 0;
 
 	private:
 

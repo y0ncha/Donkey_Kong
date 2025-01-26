@@ -11,7 +11,7 @@ class Regular_Level : public Level_Base {
 public:
 
 	// Constructor for the Regular_Level class
-	using Level_Base::Level_Base;
+	Regular_Level(std::string fname, Mario& mario, Difficulty diff);
 
 	// Destructor for the Regular_Level class
 	~Regular_Level() = default;

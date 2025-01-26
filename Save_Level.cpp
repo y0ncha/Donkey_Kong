@@ -6,8 +6,8 @@
  * @param mario The Mario object.
  * @param dif_lvl The difficulty level.
  */
-Save_Level::Save_Level(std::string fname, Mario& mario, Difficulty diff, unsigned int seed) :
-	Level_Base(fname, mario, diff),
+Save_Level::Save_Level(std::string fname, Mario& mario, Difficulty _diff) :
+	Level_Base(fname, mario),
 	steps(generate_fname("steps"), std::ios::out),
     result(generate_fname("result"), std::ios::out) {
 
@@ -23,6 +23,9 @@ Save_Level::Save_Level(std::string fname, Mario& mario, Difficulty diff, unsigne
 }
 
 Save_Level::~Save_Level() {
+	
+	steps << frames << " " << TERMINATOR << std::endl; // Write the terminator to the steps file
+
 	steps.close();
 	result.close();
 }
@@ -63,20 +66,4 @@ Game_State Save_Level::start() {
 		frames++; // Increment the frame counter
 	}
 	return state;
-}
-
-
-/**
- * @brief Gets the file name for the save file.
- * @param type The type of the file.
- * @return The file name.
- */
-const std::string Save_Level::generate_fname(const std::string& type) {
-
-	std::string fname = screen;
-
-	fname = remove_ext(fname, ".screen.txt");
-	fname += "." + type + ".txt";
-
-	return fname;
 }

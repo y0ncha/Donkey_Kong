@@ -16,7 +16,7 @@ class Level_Base {
 public:
 
     // Constructor for the Level_Base class
-    Level_Base(std::string screen, Mario& mario, Difficulty dif_lvl);
+    Level_Base(std::string screen, Mario& mario);
 
     // Destructor for the Level_Base class
     virtual ~Level_Base() = default;
@@ -55,6 +55,9 @@ protected:
 
     // Difficulty Level_Base
     Difficulty diff;
+
+	// Randomness seed
+    unsigned int seed;
 
     // Game board
     Board board;
@@ -100,5 +103,8 @@ protected:
 
 	// Method to push an error to the error vector
 	void push_error(Board::Err_Code err);
+
+	// Method to get the screen's steps and results file names
+	const std::string generate_fname(const std::string& type);
 };
 

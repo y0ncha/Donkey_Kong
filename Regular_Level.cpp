@@ -1,5 +1,16 @@
 #include "Regular_Level.h"
 
+
+/**
+ * @brief Constructor for the Regular_Level class.
+ * @param fname The name of the file that holds the board layout.
+ * @param mario Reference to the Mario object.
+ * @param dif_lvl The difficulty level of the game.
+ */
+Regular_Level::Regular_Level(std::string fname, Mario& mario, Difficulty _diff) :
+    Level_Base(fname, mario) {
+	diff = _diff;
+}
 /**
  * @brief Starts the level loop and saves the relevant data.
  * @param seed The seed for the random number generator.

@@ -6,8 +6,9 @@
  * @param mario Reference to the Mario object.
  * @param dif_lvl The difficulty Level_Base of the game.
  */
-Level_Base::Level_Base(std::string screen, Mario& mario, Difficulty diff)
-    : diff(diff),
+Level_Base::Level_Base(std::string screen, Mario& mario) : 
+	diff(Difficulty::EASY),
+    seed(static_cast<unsigned int>(time(nullptr))),
     board(screen),
     mario(mario),
     barrels(&board, diff), 
@@ -17,6 +18,7 @@ Level_Base::Level_Base(std::string screen, Mario& mario, Difficulty diff)
     donkey_kong(Board::DONKEY_KONG, board.get_pos(Board::DONKEY_KONG)),
     hammer(Board::HAMMER, board.get_pos(Board::HAMMER)),
     screen(screen) {
+	srand(seed);
     mario.set_board(&board);
     mario.reset();
 }
@@ -213,4 +215,19 @@ const std::vector<Board::Err_Code>& Level_Base::get_errors() {
  */
 void Level_Base::push_error(Board::Err_Code err) {
 	board.push_error(err);
+}
+
+/**
+ * @brief Gets the file name for the save file.
+ * @param type The type of the file.
+ * @return The file name.
+ */
+const std::string Level_Base::generate_fname(const std::string& type) {
+
+    std::string fname = screen;
+
+    fname = remove_ext(fname, ".screen.txt");
+    fname += "." + type + ".txt";
+
+    return fname;
 }

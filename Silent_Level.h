@@ -7,7 +7,7 @@ class Silent_Level : public Level_Base {
 
 public:
 
-	Silent_Level(std::string fname, Mario& mario, Difficulty dif_lvl) : Level_Base(fname, mario, dif_lvl) {}
+	Silent_Level(std::string fname, Mario& mario) : Level_Base(fname, mario) {}
 	~Silent_Level() = default;
 
 private:

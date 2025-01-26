@@ -42,12 +42,12 @@ public:
     bool difficulty_menu() const;
     bool levels_menu() const;
     void exit_message() const;
-    void strike_message() const;
-    void failure_message() const;
-    void success_message() const;
-    bool error_message(const std::vector<Board::Err_Code>& errors) const;
+    void strike_message(int delay = 0) const;
+    void failure_message(int delay = 0) const;
+    void success_message(int delay = 0) const;
+    bool error_message(const std::vector<Board::Err_Code>& errors, int delay = 0) const;
     bool error_message(std::string mesage) const;
-    void winning_message() const;
+    void winning_message(int delay = 0) const;
     void keys_menu() const;
     void prompt_nickname() const;
 	void top_scores() const;
