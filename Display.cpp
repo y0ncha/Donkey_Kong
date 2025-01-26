@@ -90,8 +90,8 @@ Display::Menu_Options Display::main_menu() const {
  */
 void Display::print_levels(int page_ind, int last_page) const {
     short x = 28, y = 7;
-    auto it = pGame->get_fnames().begin();
-	auto end_it = pGame->get_fnames().end();
+    auto it = pGame->get_screens().begin();
+	auto end_it = pGame->get_screens().end();
     std::advance(it, page_ind * LEVELS_PER_PAGE); // Move the iterator to the start of the current page
 
     // Print 5 levels

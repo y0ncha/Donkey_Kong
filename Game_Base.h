@@ -35,7 +35,7 @@ public:
 	virtual void pure() = 0;
 
     // Constructor for the Game_Base class
-    Game_Base(Game_Mode);
+    Game_Base(Game_Mode mode);
 
 	// Destructor for the Game_Base class
 	virtual ~Game_Base() = default;
@@ -68,7 +68,7 @@ public:
     int get_mario_lives() const;
 
     // Method to get the level file names list
-    const std::list<std::string>& get_fnames() const;
+    const std::list<std::string>& get_screens() const;
 
 	// Method to get the number of levels
     int get_nof_screens() const;

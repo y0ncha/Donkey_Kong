@@ -7,7 +7,7 @@
 /**
  * @brief Constructor for the Game_Base class.
  */
-Game_Base::Game_Base(Game_Mode) :
+Game_Base::Game_Base(Game_Mode mode) :
 	mode(mode),
     state(Game_State::IDLE),
     dif_lvl(Difficulty::EASY),
@@ -323,7 +323,7 @@ bool Game_Base::push_screen(const std::string& screen) {
 * @brief Gets the list of level filenames.
 * @return The list of level filenames.
 */
-const std::list<std::string>& Game_Base::get_fnames() const {
+const std::list<std::string>& Game_Base::get_screens() const {
     return screens;
 }
 
