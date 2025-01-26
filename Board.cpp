@@ -36,9 +36,16 @@ void Board::load(std::string screen) {
         set_legend(); // Set the legend on the board
 	}
 	else {
-		errors.push_back(Err_Code::FILE_FAIL);
+		errors.push_back(Err_Code::SCREEN_FAIL);
 	}
 	file.close(); // Close the file
+}
+
+/**
+* @brief Push an error to the error vector.
+*/
+void Board::push_error(Err_Code err) {
+	errors.push_back(err);
 }
 
 void Board::set_legend() {
@@ -72,7 +79,7 @@ void Board::set_legend() {
  * @brief Validates the board layout and stores any errors in the errors vector.
  * @return A vector of error codes indicating the errors in the board layout.
  */
-const std::vector<Board::Err_Code>& Board::validate_board() {
+const std::vector<Board::Err_Code>& Board::get_errors() {
 
     if (map[Icon::MARIO].empty()) {
         errors.push_back(Err_Code::MISSING_MARIO); // Check if Mario is missing

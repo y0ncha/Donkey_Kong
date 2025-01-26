@@ -29,7 +29,7 @@ void Barrel::move() {
  * @brief Method to handle the direction change when the barrel is on different types of floors.
  * @param beneath The character beneath the barrel.
  */
-void Barrel::update_dir(char beneath) {
+bool Barrel::update_dir(char beneath) {
 
     switch (beneath) {
         case Board::FLOOR_L:
@@ -45,8 +45,9 @@ void Barrel::update_dir(char beneath) {
             reset();
             break;
         default:
-            break;
+            return false;
     }
+    return true;
 }
 
 /**

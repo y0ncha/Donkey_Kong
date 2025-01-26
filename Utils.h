@@ -55,6 +55,7 @@ inline void handle_err(const std::string& message, const char* file, int line) {
  * @return The filename without the ".txt" extension.
  */
 std::string remove_ext(const std::string& filename);
+std::string remove_ext(const std::string& filename, const std::string& toremove);
 
 /**
  * @brief Starts the timer.

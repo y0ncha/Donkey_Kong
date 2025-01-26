@@ -34,7 +34,7 @@ public:
     Level_Base& operator=(const Level_Base&) = delete;
 
     // Starts the Level_Base loop and handles user input
-    Game_State start();
+    virtual Game_State start(unsigned int seed = 0);
 
     // Resets the Level_Base
     void reset_level();
@@ -100,5 +100,7 @@ protected:
 	// Method to caclulate the game's state
 	Game_State calc_state() const;
 
+	// Method to push an error to the error vector
+	void push_error(Board::Err_Code err);
 };
 

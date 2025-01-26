@@ -123,7 +123,10 @@ protected:
 	bool push_screen(const std::string& screen);
 
 	// Method to inittiate and validate the level
-	virtual bool set_level(const std::string& screen);
+	virtual bool load_level(const std::string& screen);
+
+	// Method to set and validate the level
+	std::vector<Board::Err_Code> set_level(const std::string& screen);
 
 	// Method to load the levels from the files
 	virtual void advance_level();

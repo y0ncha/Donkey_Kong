@@ -67,7 +67,7 @@ Level_Base& Level_Base::operator=(Level_Base&& other) noexcept {
 /**
  * @brief Starts the Level_Base loop.
  */
-Game_State Level_Base::start() {
+Game_State Level_Base::start(unsigned int seed) {
 
 	Game_State state = Game_State::RUN; // Variable to hold the game state
 	char input; // Variable to hold the user input
@@ -109,7 +109,6 @@ void Level_Base::reset_level() {
     mario.reset(); // Draw Mario at its default position
     barrels.reset_all(); // Reset the barrels
 	ghosts.reset_all(); // Reset the ghosts
-    frames = 0;
 }
 
 /**
@@ -240,6 +239,13 @@ void Level_Base::render_level() {
  * @return A vector of error codes.
  */
 const std::vector<Board::Err_Code>& Level_Base::get_errors() {
-	return board.validate_board();
+	return board.get_errors();
 }
 
+/**
+ * @brief Pushes an error to the error vector.
+ * @param err The error code to push.
+ */
+void Level_Base::push_error(Board::Err_Code err) {
+	board.push_error(err);
+}

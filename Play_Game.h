@@ -14,7 +14,7 @@ private:
 
 
 	// Method to set the level
-	bool set_level(const std::string& screen) override;
+	bool load_level(const std::string& screen) override;
 
 	void pure() override {} // todo delete
 };

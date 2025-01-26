@@ -407,9 +407,17 @@ bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
             std::cout << "-The screen must include a Pauline ($) instance.";
             row += 1;
 			break;
-		case Board::Err_Code::FILE_FAIL:
-			std::cout << "-File failed to open.";
+		case Board::Err_Code::SCREEN_FAIL:
+			std::cout << "-Screen file failed to open.";
             row += 1;
+			break;
+		case Board::Err_Code::STEPS_FAIL:
+			std::cout << "-Steps file failed to open.";
+			row += 1;
+			break;
+		case Board::Err_Code::RESULT_FAIL:
+			std::cout << "-Result file failed to open.";
+			row += 1;
 			break;
 		default:
 			break;

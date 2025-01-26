@@ -12,7 +12,7 @@ Mario::Mario(const Board* pBoard)
  * @brief Updates Mario's direction based on the key input.
  * @param key The key input to determine the direction.
  */
-void Mario::update_dir(char key) {
+bool Mario::update_dir(char key) {
 
 	// Convert key to lowercase Ctrl type
     Ctrl ctrl = static_cast<Ctrl>(std::tolower(key));
@@ -34,7 +34,10 @@ void Mario::update_dir(char key) {
     case Ctrl::STAY:
         set_dir(0,0); // Stay in place
         break;
+	default:
+		return false;
     }
+    return true;
 }
 
 // @brief Updates Mario's score and check if he deserves a bonus life 

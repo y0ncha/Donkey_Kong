@@ -49,11 +49,16 @@ public:
         MISSING_PAULINE,
         MARIO_OUTBOUND,
 		PAULINE_OUTBOUND,
-		FILE_FAIL,
+		SCREEN_FAIL,
+		STEPS_FAIL,
+		RESULT_FAIL,
     };
 
 	// Checks if the board is valid
-    const std::vector<Err_Code>& validate_board();
+    const std::vector<Err_Code>& get_errors();
+
+	// Pushes an error to the error vector
+	void push_error(Err_Code err);
     
     // Prints the board on the console
     void print(int lives_left = 3) const;

@@ -46,7 +46,7 @@ void Game_Base::start() {
 
     // Dynamic allocation to ease the level incrementation and to initiate level only after all the needed data is available
 	std::string screen = pop_screen();
-	if (!set_level(screen)) return;
+	advance_level();
 
 	// Start the timer
     auto start_t = start_timer();
@@ -176,8 +176,7 @@ void Game_Base::advance_level() {
 		return;
 	}
 
-	// If the level is not valid, keep advancing
-    if (!set_level(screen)) errors.push_back(Board::Err_Code::FILE_FAIL);
+	errors = set_level(screen);
 
 	// Validate the level, while invalid keep advancing
 	while (!errors.empty()) {
@@ -185,10 +184,10 @@ void Game_Base::advance_level() {
 		display.error_message(errors);
 		level_ind++;
 
-		if (level_ind < screens.size()) {
-            if (!set_level(screen)) errors.push_back(Board::Err_Code::FILE_FAIL);
-			errors = curr_level->get_errors();
-		}
+        if (level_ind < screens.size()) {
+            screen = pop_screen(level_ind);
+            errors = set_level(screen);
+        }
 		else {
 			state = Game_State::SUCCESS;
 			break;
@@ -197,16 +196,33 @@ void Game_Base::advance_level() {
 }
 
 /**
- * @brief Initializes the level.
- * @param screen The filename of the level to initialize.
+ * @brief Sets the current level.
+ * @param screen The filename of the level to set.
+ * @return A vector of error codes.
  */
-bool Game_Base::set_level(const std::string& screen) {
+std::vector<Board::Err_Code> Game_Base::set_level(const std::string& screen) {
+	
+    std::vector<Board::Err_Code> errors;
+
+	// Check if the level was loaded propely
+	if (!load_level(screen)) {
+		errors.push_back(Board::Err_Code::SCREEN_FAIL);
+	}
+	else {
+		errors = curr_level->get_errors();
+	}
+	return errors;
+}
+
+/**
+ * @brief Loads the level from the specified file.
+ * @param screen The filename of the level to load.
+ * @return True if the level was loaded, false otherwise.
+ */
+bool Game_Base::load_level(const std::string& screen) {
 
 	curr_level.reset(); // Free current level
 
-	// Check if the screen is empty
-    if (screen.empty()) return false;
-    
 	// Set the level based on the game mode
     switch (mode) {
     case Game_Mode::REGULAR:
