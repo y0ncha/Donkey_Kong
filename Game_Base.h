@@ -94,7 +94,7 @@ protected:
     Game_State state;
 
     // Difficulty level
-    Difficulty dif_lvl;
+    Difficulty diff;
 
 	// Level index to manage the Game_Base levels from the array
     short level_ind; 
@@ -116,8 +116,10 @@ protected:
 	// List to hold the level files names, sorted alphabetically
     std::list<std::string> screens;
 
+	unsigned int seed;
+
 	// Method to save the Game_Base statistics
-    void save_statistics();
+    void update_statistics();
 
 	// Method to push the level file names to the list
 	bool push_screen(const std::string& screen);
@@ -129,7 +131,7 @@ protected:
 	std::vector<Board::Err_Code> set_level(const std::string& screen);
 
 	// Method to load the levels from the files
-	virtual void advance_level();
+	virtual bool advance_level();
 
 	// Method to scan for level files in a directory (default the .exe directory)
 	void scan_for_screens(const std::string& directory = std::filesystem::current_path().string());
@@ -140,6 +142,7 @@ protected:
 	void handle_retry();
 	void handle_fail(std::chrono::steady_clock::time_point start_t);
 	void handle_success(std::chrono::steady_clock::time_point start_t);
+	void handle_exit(std::chrono::steady_clock::time_point start_t);
 
 	private:
 

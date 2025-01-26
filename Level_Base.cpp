@@ -6,11 +6,11 @@
  * @param mario Reference to the Mario object.
  * @param dif_lvl The difficulty Level_Base of the game.
  */
-Level_Base::Level_Base(std::string screen, Mario& mario, Difficulty dif_lvl)
-    : dif_lvl(dif_lvl),
+Level_Base::Level_Base(std::string screen, Mario& mario, Difficulty diff)
+    : diff(diff),
     board(screen),
     mario(mario),
-    barrels(&board, dif_lvl), 
+    barrels(&board, diff), 
     ghosts(&board),
     legend(Board::LEGEND, board.get_pos(Board::LEGEND)),
     pauline(Board::PAULINE, board.get_pos(Board::PAULINE)),
@@ -27,10 +27,10 @@ Level_Base::Level_Base(std::string screen, Mario& mario, Difficulty dif_lvl)
 * @param screen The name of the file that holds the board layout.
 */
 Level_Base::Level_Base(Level_Base&& other, std::string screen) noexcept
-    : dif_lvl(other.dif_lvl),
+    : diff(other.diff),
     board(screen),
     mario(other.mario),
-    barrels(&board, other.dif_lvl),
+    barrels(&board, other.diff),
     ghosts(&board),
     legend(Board::LEGEND, board.get_pos(Board::LEGEND)),
     pauline(Board::PAULINE, board.get_pos(Board::PAULINE)),
@@ -65,13 +65,15 @@ Level_Base& Level_Base::operator=(Level_Base&& other) noexcept {
 }
 
 /**
- * @brief Starts the Level_Base loop.
+ * @brief Starts the level loop and saves the relevant data.
+ * @param seed The seed for the random number generator.
+ * @return The game state.
  */
-Game_State Level_Base::start(unsigned int seed) {
+Game_State Level_Base::start() {
 
-	Game_State state = Game_State::RUN; // Variable to hold the game state
-	char input; // Variable to hold the user input
-	Ctrl key; // Variable to hold the key input
+    Game_State state = Game_State::RUN; // Variable to hold the game state
+    char input; // Variable to hold the user input
+    Ctrl key; // Variable to hold the key input
 
     render_level(); // Update the game screen
 
@@ -79,26 +81,23 @@ Game_State Level_Base::start(unsigned int seed) {
 
         if (_kbhit()) { // Check if a key is pressed
             input = _getch();
-			key = static_cast<Ctrl>(input);
+            key = static_cast<Ctrl>(input);
 
-            switch (key) {
-            case Ctrl::ESC:  // If the key is ESC, open the pause menu
+            if (key == Ctrl::ESC) { // If the key is ESC, open the pause menu
                 return Game_State::PAUSE;
-                break;
-            case Ctrl::HIT: // If the key is HIT, handle the hammer attack
-                if (mario.is_armed())
-                    perform_attack();
-                break;
-            default: // If any other key is pressed
-                mario.update_dir(input); // Update Mario's direction based on the key input
-                break;
-			}
+            }
+            else if (key == Ctrl::HIT && mario.is_armed()) { // If the key is HIT, handle the hammer attack
+                perform_attack();
+            }
+            else {
+				mario.update_dir(input); // If any other key is pressed
+            }
         }
         state = advance_entities(); // Advance all the entities in the game
         Sleep(DEF_DELAY); // Delay for 100 milliseconds
         frames++; // Increment the frame counter
     }
-	return state;
+    return state;
 }
 
 /**
@@ -181,10 +180,12 @@ Game_State Level_Base::calc_state() const {
 	Game_State state = Game_State::RUN; // Variable to hold the result state
 	// Check if Mario was hit by a barrel or a ghost
 	if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) {
+		mario.lose_lives(); // Decrease the number of lives Mario has
 		state = mario.get_lives() > 0 ? Game_State::RETRY : Game_State::FAIL; // Reset the Level_Base if Mario has more lives, else finish the game
 	}
 	// Check if Mario has rescued Pauline
 	else if (mario.has_rescued_pauline()) {
+		mario.update_score(Points::PAULINE_RESCUED); // Update the score by 100 points
 		state = Game_State::SUCCESS; // Finish the game successfully
 	}
 	return state;

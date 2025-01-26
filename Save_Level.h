@@ -10,16 +10,16 @@ class Save_Level : public Level_Base {
 public:
 
 	// Constructor for the Save_Level class
-	Save_Level(std::string fname, Mario& mario, Difficulty dif_lvl);
+	Save_Level(std::string fname, Mario& mario, Difficulty dif_lvl, unsigned int seed);
 	
 	// Destructor for the Save_Level class
 	~Save_Level();
 
 	// Starts the level lop and saves the relvant data
-	Game_State start(unsigned int seed = 0) override;
+	Game_State start() override;
 
 	// Method to get the file name of a given type
-	const std::string& get_fname(const std::string& type);
+	const std::string get_fname(const std::string& type);
 
 private:
 

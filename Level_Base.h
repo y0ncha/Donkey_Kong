@@ -34,7 +34,7 @@ public:
     Level_Base& operator=(const Level_Base&) = delete;
 
     // Starts the Level_Base loop and handles user input
-    virtual Game_State start(unsigned int seed = 0);
+    virtual Game_State start();
 
     // Resets the Level_Base
     void reset_level();
@@ -56,7 +56,7 @@ public:
 protected:
 
     // Difficulty Level_Base
-    Difficulty dif_lvl;
+    Difficulty diff;
 
     // Game board
     Board board;

@@ -10,13 +10,14 @@
 Game_Base::Game_Base(Game_Mode mode) :
 	mode(mode),
     state(Game_State::IDLE),
-    dif_lvl(Difficulty::EASY),
+    diff(Difficulty::EASY),
     level_ind(0),
 	mario(nullptr), // Passing nullptr until the level is initialized
     display(Display::get_instance(this)), // Singleton pattern
     hall_of_fame(Hof::get_instance()), // Singleton pattern
     curr_level(nullptr),
-    screens() { // Default initialization of std::list
+    screens(),
+    seed(0) { // Default initialization of std::list
     scan_for_screens(); // Scan for level files
 }
 
@@ -26,7 +27,7 @@ Game_Base::Game_Base(Game_Mode mode) :
 void Game_Base::run() {
 
     show_cursor(false); // Seed the random number generator
-    srand(static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
+    srand(seed = static_cast<unsigned int>(time(nullptr))); // Explicit cast to unsigned int
     
 	// Main Game_Base loop
     while (display.main_menu() != Display::Menu_Options::EXIT) {
@@ -45,7 +46,6 @@ void Game_Base::run() {
 void Game_Base::start() {
 
     // Dynamic allocation to ease the level incrementation and to initiate level only after all the needed data is available
-	std::string screen = pop_screen();
 	advance_level();
 
 	// Start the timer
@@ -70,12 +70,23 @@ void Game_Base::start() {
         case Game_State::SUCCESS: // Finish the Game_Base successfully
 			handle_success(start_t);
             break;
+		case Game_State::EXIT: // Exit the Game_Base
+			handle_exit(start_t);
+			break;
         default: // Do nothing if the state is not valid
             break;
         }
     }
-	//In any case, save the statistics (even if they are already saved)
-	save_statistics();
+}
+
+/**
+ * @brief Handles the Game_Base exit.
+ * @param start_t The start time of the Game_Base.
+ */
+void Game_Base::handle_exit(std::chrono::steady_clock::time_point start_t) {
+	stats.time_played = stop_timer(start_t);
+    update_statistics();
+	state = Game_State::TERMINATE;
 }
 
 /**
@@ -96,7 +107,7 @@ void Game_Base::handle_pause() {
  * @brief Handles the Game_Base retry.
  */
 void Game_Base::handle_retry() {
-	curr_level->reset_level();
+ 	curr_level->reset_level();
 	display.strike_message();
 	state = Game_State::RUN;
 }
@@ -107,7 +118,7 @@ void Game_Base::handle_retry() {
  */
 void Game_Base::handle_fail(std::chrono::steady_clock::time_point start_t) {
 	stats.time_played = stop_timer(start_t);
-	save_statistics();
+	update_statistics();
 	display.failure_message();
 	state = Game_State::TERMINATE;
 }
@@ -118,18 +129,17 @@ void Game_Base::handle_fail(std::chrono::steady_clock::time_point start_t) {
  */
 void Game_Base::handle_success(std::chrono::steady_clock::time_point start_t) {
 
-    if (++level_ind < screens.size()) {
-        advance_level();
-        display.success_message();
-        state = Game_State::RUN;
-    }
-    else {
-        stats.time_played = stop_timer(start_t);
-        mario.update_score(Points::GAME_COMPLETE);
-        save_statistics();
-        display.winning_message();
-        state = Game_State::TERMINATE;
-    }
+	if (advance_level()) {
+		display.success_message();
+		state = Game_State::RUN;
+	}
+	else {
+		stats.time_played = stop_timer(start_t);
+		mario.update_score(Points::GAME_COMPLETE);
+		update_statistics();
+		display.winning_message();
+		state = Game_State::TERMINATE;
+	}
 }
 
 /**
@@ -139,7 +149,7 @@ void Game_Base::reset() {
 	stats = {}; // Reset the statistics
 	level_ind = 0;
 
-	dif_lvl = Difficulty::EASY;
+	diff = Difficulty::EASY;
 	state = Game_State::IDLE;
 
 	curr_level.reset(); // Free current level
@@ -149,9 +159,9 @@ void Game_Base::reset() {
 /**
  * @brief Saves the Game_Base statistics.
  */
-void Game_Base::save_statistics() {
+void Game_Base::update_statistics() {
 	stats.score = mario.get_score();
-	stats.difficulty = static_cast<int>(dif_lvl);
+	stats.difficulty = static_cast<int>(diff);
 }
 
 /**
@@ -165,34 +175,35 @@ const Hof::Statistics& Game_Base::get_statistics() const {
  * @brief Advances to the next level.
  * @param screen The filename of the next level.
  */
-void Game_Base::advance_level() {
+bool Game_Base::advance_level() {
     
-	std::string screen = pop_screen();
+    std::string screen;
     std::vector<Board::Err_Code> errors;
 
 	// Check if the level is valid
-	if (screen.empty()) {
-		state = Game_State::SUCCESS;
-		return;
+	if (level_ind < screens.size()) {
+        screen = pop_screen(level_ind);
+        errors = set_level(screen);
 	}
-
-	errors = set_level(screen);
-
+	else {
+		return false;
+	}
 	// Validate the level, while invalid keep advancing
 	while (!errors.empty()) {
 
 		display.error_message(errors);
 		level_ind++;
-
+		// Check if the level is valid
         if (level_ind < screens.size()) {
             screen = pop_screen(level_ind);
             errors = set_level(screen);
         }
 		else {
-			state = Game_State::SUCCESS;
-			break;
+            return false;
 		}
 	}
+    level_ind++;
+    return true;
 }
 
 /**
@@ -226,16 +237,16 @@ bool Game_Base::load_level(const std::string& screen) {
 	// Set the level based on the game mode
     switch (mode) {
     case Game_Mode::REGULAR:
-        curr_level = std::make_unique<Regular_Level>(screen, mario, dif_lvl);
+        curr_level = std::make_unique<Regular_Level>(screen, mario, diff);
         break;
     case Game_Mode::SAVE:
-        curr_level = std::make_unique<Save_Level>(screen, mario, dif_lvl);
+        curr_level = std::make_unique<Save_Level>(screen, mario, diff, seed);
         break;
     case Game_Mode::LOAD:
-        curr_level = std::make_unique<Visual_Level>(screen, mario, dif_lvl);
+        curr_level = std::make_unique<Visual_Level>(screen, mario, diff);
         break;
     case Game_Mode::SILENT:
-        curr_level = std::make_unique<Silent_Level>(screen, mario, dif_lvl);
+        curr_level = std::make_unique<Silent_Level>(screen, mario, diff);
         break;
     default:
         curr_level = nullptr;
@@ -250,7 +261,7 @@ bool Game_Base::load_level(const std::string& screen) {
  */
 bool Game_Base::set_state(Game_State _state) {
     switch (_state) {
-    case Game_State::TERMINATE:
+    case Game_State::EXIT:
     case Game_State::RUN:
     case Game_State::PAUSE:
     case Game_State::RETRY:
@@ -281,7 +292,7 @@ bool Game_Base::set_difficulty(Difficulty dif) {
     case Difficulty::EASY:
     case Difficulty::MEDIUM:
     case Difficulty::HARD:
-        dif_lvl = dif;
+        diff = dif;
         return true;
     default:
         return false;
@@ -292,7 +303,7 @@ bool Game_Base::set_difficulty(Difficulty dif) {
  * @brief Gets the Game_Base difficulty.
  */
 Difficulty Game_Base::get_difficulty() const {
-    return dif_lvl;
+    return diff;
 }
 
 /**

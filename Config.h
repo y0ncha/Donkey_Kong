@@ -16,6 +16,7 @@ enum class Ctrl : char {
 // Enum for game state
 enum class Game_State {
 	TERMINATE, // Game is terminated
+	EXIT, // Exit mid-game
     RUN, // Game is running
     PAUSE, // Game is paused
 	RETRY, // Level is reset

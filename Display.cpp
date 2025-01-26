@@ -68,7 +68,7 @@ Display::Menu_Options Display::main_menu() const {
                 break;
             case Menu_Options::EXIT: // Exit the game
                 exit_message();
-                pGame->set_state(Game_State::TERMINATE);
+                pGame->set_state(Game_State::EXIT);
                 pending = false;
                 break;
             case Menu_Options::HALL_OF_FAME:
@@ -170,8 +170,8 @@ void Display::pause_menu() const {
                 print_layout(pause_layout);
                 break;
             case Menu_Options::EXIT:
-                pending = false;
-                pGame->set_state(Game_State::TERMINATE);
+				pending = false;
+                pGame->set_state(Game_State::EXIT);
                 break;
             default:
                 break;

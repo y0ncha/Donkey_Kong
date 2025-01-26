@@ -13,10 +13,10 @@ bool Play_Game::load_level(const std::string& screen) {
 	if (screen.empty()) return false;
 
 	if (mode == Game_Mode::REGULAR) {
-		curr_level = std::make_unique<Regular_Level>(screen, mario, dif_lvl);
+		curr_level = std::make_unique<Regular_Level>(screen, mario, diff);
 	}
 	else if (mode == Game_Mode::SAVE) {
-		curr_level = std::make_unique<Save_Level>(screen, mario, dif_lvl);
+		curr_level = std::make_unique<Save_Level>(screen, mario, diff, seed);
 	}
 	// If non of the above or the allocation failed return false
 	return curr_level != nullptr;

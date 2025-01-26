@@ -98,7 +98,6 @@ void clear_screen() {
  * @return The filename without the extension.
  */
 std::string remove_ext(const std::string& filename) {
-
     size_t last_dot = filename.find_last_of('.');
     if (last_dot == std::string::npos) {
         return filename; // Return the original filename if no dot is found

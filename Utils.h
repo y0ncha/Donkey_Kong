@@ -71,6 +71,7 @@ inline std::chrono::steady_clock::time_point start_timer() {
  * @return The duration in minutes and seconds.
  */
 inline std::pair<int, int> stop_timer(auto start_time) {
+
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time).count();
 

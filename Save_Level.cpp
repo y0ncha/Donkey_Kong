@@ -6,10 +6,10 @@
  * @param mario The Mario object.
  * @param dif_lvl The difficulty level.
  */
-Save_Level::Save_Level(std::string fname, Mario& mario, Difficulty dif_lvl) : 
-	Level_Base(fname, mario, dif_lvl),
+Save_Level::Save_Level(std::string fname, Mario& mario, Difficulty diff, unsigned int seed) :
+	Level_Base(fname, mario, diff),
 	steps(get_fname("steps"), std::ios::out),
-	result(get_fname("result"), std::ios::out) {
+    result(get_fname("result"), std::ios::out) {
 
 	// Check if the files are open
 	if (!steps.is_open()) {
@@ -18,6 +18,8 @@ Save_Level::Save_Level(std::string fname, Mario& mario, Difficulty dif_lvl) :
 	if (!result.is_open()) {
 		push_error(Board::Err_Code::RESULT_FAIL);
 	}
+	steps << static_cast<int>(diff) << std::endl; // Write the difficulty level to the steps file
+	steps << seed << std::endl; // Write the seed to the steps file
 }
 
 Save_Level::~Save_Level() {
@@ -30,10 +32,7 @@ Save_Level::~Save_Level() {
  * @param seed The seed for the random number generator.
  * @return The game state.
  */
-Game_State Save_Level::start(unsigned int seed) {
-	
-	// If its the first start of the level, write the seed to the steps file
-	if (seed != 0) steps << seed << std::endl;
+Game_State Save_Level::start() {
 
     Game_State state = Game_State::RUN; // Variable to hold the game state
     char input; // Variable to hold the user input
@@ -51,11 +50,11 @@ Game_State Save_Level::start(unsigned int seed) {
 				return Game_State::PAUSE;
 			}
 			else if (key == Ctrl::HIT && mario.is_armed()) { // If the key is HIT, handle the hammer attack
-				steps << frames << input << std::endl;
+				steps << frames << " " << input << std::endl;
 				perform_attack();
 			}
 			else if (mario.update_dir(input)) { // If any other key is pressed
-				steps << frames << input << std::endl;
+				steps << frames << " " << input << std::endl;
 
 			}
 		}
@@ -72,7 +71,7 @@ Game_State Save_Level::start(unsigned int seed) {
  * @param type The type of the file.
  * @return The file name.
  */
-const std::string& Save_Level::get_fname(const std::string& type) {
+const std::string Save_Level::get_fname(const std::string& type) {
 
 	std::string fname = screen;
 
