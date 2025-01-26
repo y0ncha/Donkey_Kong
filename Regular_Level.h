@@ -16,8 +16,6 @@ public:
 	// Destructor for the Regular_Level class
 	~Regular_Level() = default;
 
-private:
-
 	// Starts the level loop and saves the relevant data
 	Game_State start() override;
 };

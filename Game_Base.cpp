@@ -45,9 +45,6 @@ void Game_Base::run() {
  */
 void Game_Base::start() {
 
-    // Dynamic allocation to ease the level incrementation and to initiate level only after all the needed data is available
-	advance_level();
-
 	// Start the timer
     auto start_t = start_timer();
 
@@ -93,7 +90,13 @@ void Game_Base::handle_exit(std::chrono::steady_clock::time_point start_t) {
  * @brief Handles the Game_Base run.
  */
 void Game_Base::handle_run() {
-	state = curr_level->start();
+
+	if (curr_level == nullptr) {
+	    advance_level();
+	}
+	if (level_ind < screens.size()) {
+		curr_level->start();
+	}
 }
 
 /**
@@ -138,7 +141,6 @@ void Game_Base::handle_success(std::chrono::steady_clock::time_point start_t) {
 		mario.update_score(Points::GAME_COMPLETE);
 		update_statistics();
 		display.winning_message();
-		state = Game_State::TERMINATE;
 	}
 }
 
@@ -186,8 +188,10 @@ bool Game_Base::advance_level() {
         errors = set_level(screen);
 	}
 	else {
+		set_state(Game_State::SUCCESS);
 		return false;
 	}
+
 	// Validate the level, while invalid keep advancing
 	while (!errors.empty()) {
 
@@ -199,6 +203,7 @@ bool Game_Base::advance_level() {
             errors = set_level(screen);
         }
 		else {
+			set_state(Game_State::SUCCESS);
             return false;
 		}
 	}
