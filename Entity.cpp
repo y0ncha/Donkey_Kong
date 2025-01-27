@@ -243,8 +243,8 @@ bool Entity::set_dx(int dx) {
 }
 
 /*
-* @brief Gets the destination position of the ghost.
-* @return The destination position of the ghost.
+* @brief Gets the destination position of the Regular_Ghost.
+* @return The destination position of the Regular_Ghost.
 */
 Coordinates Entity::get_dest() const {
     return point.pos + dir;

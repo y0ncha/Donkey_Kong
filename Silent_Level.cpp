@@ -57,7 +57,7 @@ void Silent_Level::perform_attack() {
 		barrels.was_hit(enemy.pos);
 		mario.update_score(Points::ENEMY_HIT);// Update the score by 10 points
 	}
-	else if (enemy.icon == Board::GHOST) {
+	else if (enemy.icon == Board::Regular_Ghost) {
 		ghosts.was_hit(enemy.pos);
 		mario.update_score(Points::ENEMY_HIT); // Update the score by 10 points
 	}

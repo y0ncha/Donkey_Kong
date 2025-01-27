@@ -7,10 +7,13 @@
 Ghosts::Ghosts(const Board* pBoard) : board(pBoard) {
     set_amount();
     ghosts.reserve(amount);
-
-    for (int i = 0; i < amount; i++) {
-        auto temp = std::make_unique<Ghost>(board);
-        ghosts.emplace_back(std::move(temp));
+    size_t ghost_count = board->count_entity(Board::Regular_Ghost);
+    size_t ghost_master_count = board->count_entity(Board::SUPER_GHOST);
+    for (size_t i = 0; i < ghost_count; ++i) {
+        ghosts.push_back(std::make_unique<Regular_Ghost>(board));
+    }
+    for (size_t i = 0; i < ghost_master_count; ++i) {
+        ghosts.push_back(std::make_unique<Master_Ghost>(board));
     }
 }
 
@@ -20,8 +23,8 @@ Ghosts::Ghosts(const Board* pBoard) : board(pBoard) {
  */
 Ghosts::Ghosts(const Ghosts& other) : board(other.board), amount(other.amount), hit_mario(other.hit_mario) {
     ghosts.reserve(amount);
-    for (const auto& ghost : other.ghosts) {
-        ghosts.emplace_back(std::make_unique<Ghost>(*ghost));
+    for (const auto& Regular_Ghost : other.ghosts) {
+        ghosts.push_back(Regular_Ghost->clone());
     }
 }
 
@@ -37,8 +40,8 @@ Ghosts& Ghosts::operator=(const Ghosts& other) {
         amount = other.amount;
         ghosts.clear();
         ghosts.reserve(amount);
-        for (const auto& ghost : other.ghosts) {
-            ghosts.emplace_back(std::make_unique<Ghost>(*ghost));
+        for (const auto& Regular_Ghost : other.ghosts) {
+            ghosts.push_back(Regular_Ghost->clone());
         }
     }
     return *this;
@@ -49,11 +52,11 @@ Ghosts& Ghosts::operator=(const Ghosts& other) {
  */
 void Ghosts::move_all() {
     handle_colisions();
-    for (auto& ghost : ghosts) {
-        if (ghost->is_hit_mario()) {
+    for (auto& Regular_Ghost : ghosts) {
+        if (Regular_Ghost->is_hit_mario()) {
             hit_mario = true;
         }
-        ghost->move();
+        Regular_Ghost->move();
     }
 }
 
@@ -62,8 +65,8 @@ void Ghosts::move_all() {
  */
 void Ghosts::reset_all() {
     hit_mario = false;
-    for (auto& ghost : ghosts) {
-        ghost->reset();
+    for (auto& Regular_Ghost : ghosts) {
+        Regular_Ghost->reset();
     }
 }
 
@@ -71,8 +74,15 @@ void Ghosts::reset_all() {
  * @brief Method to initialize all ghosts at the beginning of the level.
  */
 void Ghosts::set_all() const {
-    for (int i = 0; i < amount; i++) {
+
+    size_t ghost_count = board->count_entity(Board::Regular_Ghost);
+    size_t ghost_master_count = board->count_entity(Board::SUPER_GHOST);
+
+    for (int i = 0; i < ghost_count; i++) {
         ghosts[i]->set(i);
+    }
+    for (int i = 0; i < ghost_master_count; i++) {
+        ghosts[ghost_count + i]->set(i);
     }
 
 }
@@ -81,7 +91,7 @@ void Ghosts::set_all() const {
  * @brief Method to set the amount of ghosts.
  */
 void Ghosts::set_amount() {
-    amount = board->count_entity(Board::GHOST);
+    amount = board->count_entity(Board::Regular_Ghost) + board->count_entity(Board::SUPER_GHOST);
 }
 
 /**
@@ -101,40 +111,40 @@ void Ghosts::handle_colisions() {
 
 
 /**
-* @brief Checks if a ghost is in a given position
-* vanishes the ghost if it is and return true, false otherwise.
+* @brief Checks if a Regular_Ghost is in a given position
+* vanishes the Regular_Ghost if it is and return true, false otherwise.
 * @param pos The position to check.
 * */
 void Ghosts::was_hit(Coordinates pos) {
 
-    for (auto& ghost : ghosts) {
+    for (auto& Regular_Ghost : ghosts) {
 
         // If the barrel is inactive skip it
-        if (!ghost->is_active()) continue;
+        if (!Regular_Ghost->is_active()) continue;
 
-        if (pos == ghost->get_pos()) {
-            gotoxy(ghost->get_pos());
+        if (pos == Regular_Ghost->get_pos()) {
+            gotoxy(Regular_Ghost->get_pos());
 			if (display_flag) {
 				std::cout << "*";
             }
 			else {
-				current_screen[ghost->get_pos().y][ghost->get_pos().x] = ' ';
+				current_screen[Regular_Ghost->get_pos().y][Regular_Ghost->get_pos().x] = ' ';
 			}
             Sleep(150);
 
-            ghost->reset();
+            Regular_Ghost->reset();
             break;
         };
     }
 }
 
 /**
- * @brief Method to check if any ghost hit Mario.
- * @param g1 ghost by const ref.
- * @param g2 ghost by const ref.
- * @return True if Mario was hit, false otherwise.
+ * @brief Method to check if any Regular_Ghost hit Regular_Ghost.
+ * @param g1 Regular_Ghost by const ref.
+ * @param g2 Regular_Ghost by const ref.
+ * @return True if Regular_Ghost was hit by Regular_Ghost, false otherwise.
  */
-bool Ghosts::colide(const std::unique_ptr<Ghost>& g1, const std::unique_ptr<Ghost>& g2) const {
+bool Ghosts::colide(const std::unique_ptr<Ghost_Base>& g1, const std::unique_ptr<Ghost_Base>& g2) const {
 
 	return (g1->get_dest() == g2->get_dest() ||
 		g1->get_pos() == g2->get_pos() ||
@@ -142,9 +152,10 @@ bool Ghosts::colide(const std::unique_ptr<Ghost>& g1, const std::unique_ptr<Ghos
 		g1->get_dest() == g2->get_pos());
 }
 /**
- * @brief Method to check if Mario was hit by any ghost.
+ * @brief Method to check if Mario was hit by any Regular_Ghost.
  * @return True if Mario was hit, false otherwise.
  */
 bool Ghosts::hitted_mario() const {
     return hit_mario;
 }
+

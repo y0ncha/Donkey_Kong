@@ -92,7 +92,7 @@ void Level_Base::perform_attack() {
 		barrels.was_hit(enemy.pos);
         hud_update_needed = mario.update_score(Points::ENEMY_HIT);// Update the score by 10 points
 	}
-	else if (enemy.icon == Board::GHOST) {
+	else if (enemy.icon == Board::Regular_Ghost || enemy.icon == Board::SUPER_GHOST) {
 		ghosts.was_hit(enemy.pos);
         hud_update_needed = mario.update_score(Points::ENEMY_HIT); // Update the score by 10 points
 	}
@@ -111,7 +111,7 @@ Point Level_Base::is_enemy_hit(Coordinates pos, Coordinates dir) {
 
     for (int i = 0; i < Level_Base::ATTACK_RANGE; i++) {
 		char ch = getch_console(pos);
-        if (ch == Board::BARREL || ch == Board::GHOST) {
+        if (ch == Board::BARREL || ch == Board::Regular_Ghost || ch == Board::SUPER_GHOST) {
 			enemy = Point(ch, pos);
             break;
         }
@@ -144,7 +144,7 @@ Game_State Level_Base::advance_entities() {
 Game_State Level_Base::calc_state() const {
 	
 	Game_State state = Game_State::RUN; // Variable to hold the result state
-	// Check if Mario was hit by a barrel or a ghost
+	// Check if Mario was hit by a barrel or a Regular_Ghost
 	if (mario.is_hit() || barrels.hitted_mario() || ghosts.hitted_mario()) {
 		mario.lose_lives(); // Decrease the number of lives Mario has
 		state = mario.get_lives() > 0 ? Game_State::RETRY : Game_State::FAIL; // Reset the Level_Base if Mario has more lives, else finish the game

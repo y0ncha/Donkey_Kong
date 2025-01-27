@@ -28,7 +28,8 @@ public:
         BARREL = 'O', // Character representing a barrel
         PAULINE = '$', // Character representing Pauline
 		HAMMER = 'p', // Character representing a hammer
-		GHOST = 'x', // Character representing a ghost
+		Regular_Ghost = 'x', // Character representing a Regular_Ghost
+        SUPER_GHOST = 'X', // Character representing a Master_Ghost
 
 		LEGEND = 'L', // Character representing the legend
 		WALL = 'Q', // Character representing a wall
