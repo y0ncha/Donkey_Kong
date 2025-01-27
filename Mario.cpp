@@ -265,6 +265,9 @@ char Mario::handle_collision() {
 	case Board::GHOST: // If Mario hits a ghost
 		mario_hit = true; // Set Mario as hit
 		break;
+    case Board::SUPER_GHOST: // If Mario hits a ghost
+        mario_hit = true; // Set Mario as hit
+        break;
     case Board::HAMMER: // If Mario hits a hammer
         armed = true;// Set Mario as having a hammer
         set_icon(Board::SUPER_MARIO); // Change Mario's icon to Mario with a hammer

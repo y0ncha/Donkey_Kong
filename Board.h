@@ -29,6 +29,7 @@ public:
         PAULINE = '$', // Character representing Pauline
 		HAMMER = 'p', // Character representing a hammer
 		GHOST = 'x', // Character representing a ghost
+        SUPER_GHOST = 'X', // Character representing a GhostMaster
 
 		LEGEND = 'L', // Character representing the legend
 		WALL = 'Q', // Character representing a wall

@@ -92,7 +92,7 @@ void Level_Base::perform_attack() {
 		barrels.was_hit(enemy.pos);
         hud_update_needed = mario.update_score(Points::ENEMY_HIT);// Update the score by 10 points
 	}
-	else if (enemy.icon == Board::GHOST) {
+	else if (enemy.icon == Board::GHOST || enemy.icon == Board::SUPER_GHOST) {
 		ghosts.was_hit(enemy.pos);
         hud_update_needed = mario.update_score(Points::ENEMY_HIT); // Update the score by 10 points
 	}
@@ -111,7 +111,7 @@ Point Level_Base::is_enemy_hit(Coordinates pos, Coordinates dir) {
 
     for (int i = 0; i < Level_Base::ATTACK_RANGE; i++) {
 		char ch = getch_console(pos);
-        if (ch == Board::BARREL || ch == Board::GHOST) {
+        if (ch == Board::BARREL || ch == Board::GHOST || ch == Board::SUPER_GHOST) {
 			enemy = Point(ch, pos);
             break;
         }
