@@ -243,7 +243,7 @@ void Display::exit_message() const {
 /**
 * @brief Prints the strike message.
 */
-void Display::strike_message(int delay) const {
+void Display::strike_message() const {
 
 	bool pending = true;
 	char void_input;
@@ -251,24 +251,19 @@ void Display::strike_message(int delay) const {
     print_layout(strike_layout);
     std::cout.flush();
 
-    if (delay == 0) {
-        while (pending) {
-            flash_message({ "Press any key to continue" }, { {27, 23} });
-            if (_kbhit()) {
-                void_input = _getch(); // Get the key input to clear the buffer
-                pending = false; // Check if a key is pressed
-            }
+    while (pending) {
+        flash_message({ "Press any key to continue" }, { {27, 23} });
+        if (_kbhit()) {
+        void_input = _getch(); // Get the key input to clear the buffer
+        pending = false; // Check if a key is pressed
         }
-	}
-    else {
-        Sleep(delay);
     }
 }
 
 /**
 * @brief Prints the failure message.
 */
-void Display::failure_message(int delay) const {
+void Display::failure_message() const {
 
     bool pending = true;
     char void_input;
@@ -282,48 +277,38 @@ void Display::failure_message(int delay) const {
     std::cout << std::setw(2) << std::setfill('0') << pGame->get_statistics().time_played.first << ":"
               << std::setw(2) << std::setfill('0') << pGame->get_statistics().time_played.second;
 
-    if (delay == 0) {
-        while (pending) {
-            flash_message({ "Press ESC to exit" }, { {30, 23} });
-            if (_kbhit()) {
-                void_input = _getch(); // Get the key input to clear the buffer
-                pending = (void_input != Ctrl::ESC);
-            }
+    while (pending) {
+        flash_message({ "Press ESC to exit" }, { {30, 23} });
+        if (_kbhit()) {
+            void_input = _getch(); // Get the key input to clear the buffer
+            pending = (void_input != Ctrl::ESC);
         }
     }
-	else {
-		Sleep(delay);
-	}
 }
 
 /**
 * @brief Prints the success message.
 */
-void Display::success_message(int delay) const {
+void Display::success_message() const {
 
     bool pending = true;
     char void_input;
 
     print_layout(success_layout);
 
-    if (delay == 0) {
-        while (pending) {
-            flash_message({ "Press any key to continue" }, { {27, 23} });
-            if (_kbhit()) {
-                void_input = _getch(); // Get the key input to clear the buffer
-                pending = false;
-            }
+    while (pending) {
+        flash_message({ "Press any key to continue" }, { {27, 23} });
+        if (_kbhit()) {
+            void_input = _getch(); // Get the key input to clear the buffer
+            pending = false;
         }
     }
-	else {
-		Sleep(delay);
-	}
 }
 
 /**
  * @brief Prints the winning message (finished all valid levels).
  */
-void Display::winning_message(int delay) const {
+void Display::winning_message() const {
 
     bool pending = true;
     char void_input;
@@ -337,18 +322,14 @@ void Display::winning_message(int delay) const {
     std::cout << std::setw(2) << std::setfill('0') << pGame->get_statistics().time_played.first << ":"
         << std::setw(2) << std::setfill('0') << pGame->get_statistics().time_played.second;
 
-    if (delay == 0) {
-        while (pending) {
-            flash_message({ "Press any key to continue" }, { {27, 24} });
-            if (_kbhit()) {
-                void_input = _getch(); // Get the key input to clear the buffer
-                pending = false;
-            }
+    while (pending) {
+        flash_message({ "Press any key to continue" }, { {27, 24} });
+        if (_kbhit()) {
+            void_input = _getch(); // Get the key input to clear the buffer
+            pending = false;
         }
     }
-	else {
-		Sleep(delay);
-	}
+
 }
 
 /**
@@ -395,7 +376,7 @@ void Display::prompt_nickname() const {
 * @param errors The vector of error codes.
 * @return false if there are no errors, true otherwise.
 */
-bool Display::error_message(const std::vector<Board::Err_Code>& errors, int delay) const {
+bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
 
 	// Check if there are no errors, if so return false to stop the while loop
     if (errors.empty()) {
@@ -442,18 +423,13 @@ bool Display::error_message(const std::vector<Board::Err_Code>& errors, int dela
 		}
 	}
 
-    if (delay == 0) {
-        while (pending) {
-            flash_message({ "Press any key to skip to the next level" }, { {22, 23} });
-            if (_kbhit()) {
-                void_input = _getch(); // Get the key input to clear the buffer
-                pending = false; // Check if a key is pressed
-            }
+    while (pending) {
+        flash_message({ "Press any key to skip to the next level" }, { {22, 23} });
+        if (_kbhit()) {
+            void_input = _getch(); // Get the key input to clear the buffer
+            pending = false; // Check if a key is pressed
         }
     }
-	else {
-		Sleep(delay);
-	}
 	return true;
 }
 
