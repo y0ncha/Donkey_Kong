@@ -5,9 +5,9 @@
 * @param pGame Pointer to the Game instance.
 * @return The singleton instance of Display.
 */
-Display& Display::get_instance(Game* pGame) {
+Display& Display::get_instance(Game_Base* pGame) {
     static Display instance;
-    if (pGame) instance.game = pGame;
+    if (pGame) instance.pGame = pGame;
     return instance;
 }
 
@@ -40,11 +40,11 @@ Display::Menu_Options Display::main_menu() const {
                 if (levels_menu()) {
 					prompt_nickname();
                     if (difficulty_menu()) {
-                        game->set_state(Game_State::RUN);
+                        pGame->set_state(Game_State::RUN);
                         pending = false;
                     }
                     else {
-						game->set_level(0);
+						pGame->set_index(0);
                         print_layout(main_layout);
                     }
                 }
@@ -59,7 +59,7 @@ Display::Menu_Options Display::main_menu() const {
             case Menu_Options::START: // Start the game
 				prompt_nickname();
                 if (difficulty_menu()) {
-                    game->set_state(Game_State::RUN);
+                    pGame->set_state(Game_State::RUN);
                     pending = false;
                 }
                 else {
@@ -68,7 +68,7 @@ Display::Menu_Options Display::main_menu() const {
                 break;
             case Menu_Options::EXIT: // Exit the game
                 exit_message();
-                game->set_state(Game_State::TERMINATE);
+                pGame->set_state(Game_State::EXIT);
                 pending = false;
                 break;
             case Menu_Options::HALL_OF_FAME:
@@ -90,8 +90,8 @@ Display::Menu_Options Display::main_menu() const {
  */
 void Display::print_levels(int page_ind, int last_page) const {
     short x = 28, y = 7;
-    auto it = game->get_fnames().begin();
-	auto end_it = game->get_fnames().end();
+    auto it = pGame->get_screens().begin();
+	auto end_it = pGame->get_screens().end();
     std::advance(it, page_ind * LEVELS_PER_PAGE); // Move the iterator to the start of the current page
 
     // Print 5 levels
@@ -112,7 +112,7 @@ void Display::print_levels(int page_ind, int last_page) const {
 bool Display::levels_menu() const {
 
     Menu_Options input = Menu_Options::DEF;
-    int ind, last_page = (int)game->get_nof_levels() / LEVELS_PER_PAGE, page_ind = 0;
+    int ind, last_page = (int)pGame->get_nof_screens() / LEVELS_PER_PAGE, page_ind = 0;
     bool pending = true;
 
     print_layout(levels_layout);
@@ -136,7 +136,7 @@ bool Display::levels_menu() const {
                 print_levels(page_ind, last_page);
                 break;
             default:
-				if (game->set_level(ind)) { // If the level index is valid, break
+				if (pGame->set_index(ind)) { // If the level index is valid, break
                     pending = false;
                     return true;
                 }
@@ -163,15 +163,15 @@ void Display::pause_menu() const {
             switch (input) {
             case Menu_Options::RESUME:
                 pending = false;
-                game->set_state(Game_State::RUN);
+                pGame->set_state(Game_State::RUN);
                 break;
             case Menu_Options::KEYS:
                 keys_menu();
                 print_layout(pause_layout);
                 break;
             case Menu_Options::EXIT:
-                pending = false;
-                game->set_state(Game_State::TERMINATE);
+				pending = false;
+                pGame->set_state(Game_State::EXIT);
                 break;
             default:
                 break;
@@ -216,15 +216,12 @@ bool Display::difficulty_menu() const {
 
             switch (input) {
             case Difficulty::EASY:
-                game->set_difficulty(Difficulty::EASY);
                 pending = false;
                 break;
             case Difficulty::MEDIUM:
-                game->set_difficulty(Difficulty::MEDIUM);
                 pending = false;
                 break;
             case Difficulty::HARD:
-                game->set_difficulty(Difficulty::HARD);
                 pending = false;
                 break;
             default:
@@ -246,26 +243,32 @@ void Display::exit_message() const {
 /**
 * @brief Prints the strike message.
 */
-void Display::strike_message() const {
+void Display::strike_message(int delay) const {
 
 	bool pending = true;
 	char void_input;
 
     print_layout(strike_layout);
     std::cout.flush();
-    while (pending) {
-		flash_message({ "Press any key to continue" }, { {27, 23} });
-		if (_kbhit()) {
-            void_input = _getch(); // Get the key input to clear the buffer
-			pending = false; // Check if a key is pressed
-		}
+
+    if (delay == 0) {
+        while (pending) {
+            flash_message({ "Press any key to continue" }, { {27, 23} });
+            if (_kbhit()) {
+                void_input = _getch(); // Get the key input to clear the buffer
+                pending = false; // Check if a key is pressed
+            }
+        }
+	}
+    else {
+        Sleep(delay);
     }
 }
 
 /**
 * @brief Prints the failure message.
 */
-void Display::failure_message() const {
+void Display::failure_message(int delay) const {
 
     bool pending = true;
     char void_input;
@@ -273,44 +276,54 @@ void Display::failure_message() const {
     print_layout(fail_layout);
 
     gotoxy(40, 16); // Print the score
-    std::cout << game->get_statistics().score;
+    std::cout << pGame->get_statistics().score;
 
     gotoxy(42, 18); // Print the time played (minutes : seconds)
-    std::cout << std::setw(2) << std::setfill('0') << game->get_statistics().time_played.first << ":"
-              << std::setw(2) << std::setfill('0') << game->get_statistics().time_played.second;
+    std::cout << std::setw(2) << std::setfill('0') << pGame->get_statistics().time_played.first << ":"
+              << std::setw(2) << std::setfill('0') << pGame->get_statistics().time_played.second;
 
-
-    while (pending) {
-        flash_message({ "Press ESC to exit" }, { {30, 23} });
-        if (_kbhit()) {
-            void_input = _getch(); // Get the key input to clear the buffer
-            pending = (void_input != Ctrl::ESC);
+    if (delay == 0) {
+        while (pending) {
+            flash_message({ "Press ESC to exit" }, { {30, 23} });
+            if (_kbhit()) {
+                void_input = _getch(); // Get the key input to clear the buffer
+                pending = (void_input != Ctrl::ESC);
+            }
         }
     }
+	else {
+		Sleep(delay);
+	}
 }
 
 /**
 * @brief Prints the success message.
 */
-void Display::success_message() const {
+void Display::success_message(int delay) const {
 
     bool pending = true;
     char void_input;
 
     print_layout(success_layout);
-    while (pending) {
-        flash_message({ "Press any key to continue" }, { {27, 23} });   
-        if (_kbhit()) {
-            void_input = _getch(); // Get the key input to clear the buffer
-            pending = false;
+
+    if (delay == 0) {
+        while (pending) {
+            flash_message({ "Press any key to continue" }, { {27, 23} });
+            if (_kbhit()) {
+                void_input = _getch(); // Get the key input to clear the buffer
+                pending = false;
+            }
         }
     }
+	else {
+		Sleep(delay);
+	}
 }
 
 /**
  * @brief Prints the winning message (finished all valid levels).
  */
-void Display::winning_message() const {
+void Display::winning_message(int delay) const {
 
     bool pending = true;
     char void_input;
@@ -318,19 +331,24 @@ void Display::winning_message() const {
 	print_layout(winning_layout);
 
 	gotoxy(26, 22); // Print the score
-	std::cout << game->get_statistics().score;
+	std::cout << pGame->get_statistics().score;
     
 	gotoxy(54, 22); // Print the time played (minutes : seconds)
-    std::cout << std::setw(2) << std::setfill('0') << game->get_statistics().time_played.first << ":"
-        << std::setw(2) << std::setfill('0') << game->get_statistics().time_played.second;
+    std::cout << std::setw(2) << std::setfill('0') << pGame->get_statistics().time_played.first << ":"
+        << std::setw(2) << std::setfill('0') << pGame->get_statistics().time_played.second;
 
-    while (pending) {
-        flash_message({ "Press any key to continue" }, { {27, 24} });
-        if (_kbhit()) {
-            void_input = _getch(); // Get the key input to clear the buffer
-            pending = false;
+    if (delay == 0) {
+        while (pending) {
+            flash_message({ "Press any key to continue" }, { {27, 24} });
+            if (_kbhit()) {
+                void_input = _getch(); // Get the key input to clear the buffer
+                pending = false;
+            }
         }
     }
+	else {
+		Sleep(delay);
+	}
 }
 
 /**
@@ -368,7 +386,7 @@ void Display::prompt_nickname() const {
 	buff.reserve(Hof::NAME_LEN); // Reserve the maximum nickname length
     std::cin >> buff; // Read up to 6 characters, leaving space for the null terminator
 
-    game->set_nickname(buff);
+    pGame->set_nickname(buff);
 }
 
 
@@ -377,7 +395,7 @@ void Display::prompt_nickname() const {
 * @param errors The vector of error codes.
 * @return false if there are no errors, true otherwise.
 */
-bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
+bool Display::error_message(const std::vector<Board::Err_Code>& errors, int delay) const {
 
 	// Check if there are no errors, if so return false to stop the while loop
     if (errors.empty()) {
@@ -392,7 +410,7 @@ bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
 	// Print the layout
 	print_layout(error_layout);
     gotoxy(33, 14);
-    std::cout << '"' << game->pop_fname() << '"';
+    std::cout << '"' << pGame->pop_screen() << '"';
 
 
     // Mechnism to print the error messages
@@ -407,20 +425,34 @@ bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
             std::cout << "-The screen must include a Pauline ($) instance.";
             row += 1;
 			break;
-		case Board::Err_Code::FILE_FAIL:
-			std::cout << "-File failed to open.";
+		case Board::Err_Code::SCREEN_FAIL:
+			std::cout << "-Screen file failed to open.";
             row += 1;
+			break;
+		case Board::Err_Code::STEPS_FAIL:
+			std::cout << "-Steps file failed to open.";
+			row += 1;
+			break;
+		case Board::Err_Code::RESULT_FAIL:
+			std::cout << "-Result file failed to open.";
+			row += 1;
 			break;
 		default:
 			break;
 		}
 	}
-	while (pending) {
-		flash_message({ "Press any key to skip to the next level" }, { {22, 23} });
-        if (_kbhit()) {
-            void_input = _getch(); // Get the key input to clear the buffer
-            pending = false; // Check if a key is pressed
+
+    if (delay == 0) {
+        while (pending) {
+            flash_message({ "Press any key to skip to the next level" }, { {22, 23} });
+            if (_kbhit()) {
+                void_input = _getch(); // Get the key input to clear the buffer
+                pending = false; // Check if a key is pressed
+            }
         }
+    }
+	else {
+		Sleep(delay);
 	}
 	return true;
 }
@@ -461,7 +493,7 @@ void Display::top_scores() const {
 	char void_input;
 
     // Print the top scores
-    for (const auto& stats : game->get_hof()) {
+    for (const auto& stats : pGame->get_hof()) {
         gotoxy(28, row);
         std::cout << stats.player_name;
         gotoxy(42, row);
@@ -482,13 +514,10 @@ void Display::top_scores() const {
 		default:
 			break;
 		}
-
         row++; // Move to the next row
     }
     while (pending) {
-        if (_kbhit()) {
-			(void_input = _getch()) == Ctrl::ESC ? pending = false : pending = true;
-        }
+        if (_kbhit()) (void_input = _getch()) == Ctrl::ESC ? pending = false : pending = true;
 		flash_message({ "Press ESC to return to menu" }, { {26, 24} });
     }
 }

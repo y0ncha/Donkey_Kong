@@ -52,7 +52,7 @@ private:
 	char handle_collision() override; 
 
 	// Method to update the direction of the ghost
-	void update_dir(char key = static_cast<char>(Ctrl::DEF)) override;
+	bool update_dir(char key = static_cast<char>(Ctrl::DEF)) override;
 };
 
 

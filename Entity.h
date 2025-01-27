@@ -1,8 +1,8 @@
 #pragma once
-
 #include "Board.h"
 #include "Coord.h"
 #include "Point.h"
+#include "Config.h"
 
 // Forward declaration of the handle_err function
 void handle_err(const std::string& message, const char* file, int line);
@@ -111,7 +111,7 @@ protected:
     virtual char handle_collision() = 0;
 
     // Virtual method to update the entity's direction
-    virtual void update_dir(char key = static_cast<char>(Ctrl::DEF)) = 0;
+    virtual bool update_dir(char key = static_cast<char>(Ctrl::DEF)) = 0;
 
     // Virtual method to handle the direction change when the entity is on different types of floors
     virtual void handle_falling() = 0;

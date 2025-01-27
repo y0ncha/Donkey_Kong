@@ -1,5 +1,5 @@
 #include "Ghosts.h"
-#include "Level.h"
+#include "Level_Base.h"
 /**
  * @brief Constructor for the Ghosts class.
  * @param pBoard Pointer to the game board.
@@ -114,7 +114,12 @@ void Ghosts::was_hit(Coordinates pos) {
 
         if (pos == ghost->get_pos()) {
             gotoxy(ghost->get_pos());
-            std::cout << "*";
+			if (display_flag) {
+				std::cout << "*";
+            }
+			else {
+				current_screen[ghost->get_pos().y][ghost->get_pos().x] = ' ';
+			}
             Sleep(150);
 
             ghost->reset();

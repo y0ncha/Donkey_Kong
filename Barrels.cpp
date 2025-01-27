@@ -1,5 +1,5 @@
 #include "Barrels.h"
-#include "Level.h"
+#include "Level_Base.h"
 
 /**
  * @brief Constructor to initialize the Barrels class.
@@ -113,7 +113,12 @@ void Barrels::was_hit(Coordinates pos) {
 
         if (pos == barrel->get_pos()) {
             gotoxy(barrel->get_pos());
-            std::cout << "*";
+            if (display_flag) {
+                std::cout << "*";
+            }
+            else {
+				current_screen[barrel->get_pos().y][barrel->get_pos().x] = '*';
+            }
             Sleep(150);
 
             barrel->reset();

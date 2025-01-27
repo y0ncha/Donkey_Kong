@@ -5,7 +5,7 @@
 * Initializes the map with the valid entities and their corresponding characters.
 * Initializes the board layout with empty characters.
 */
-Board::Board(std::string fname) : map {
+Board::Board(std::string screen) : map {
     {MARIO, {}},
     {DONKEY_KONG, {}},
     {PAULINE, {}},
@@ -13,7 +13,7 @@ Board::Board(std::string fname) : map {
     {GHOST, {}},
     {LEGEND, {}},
 } {
-    load(fname); // Load the board from the given file
+    load(screen); // Load the board from the given file
 }
 
 /**
@@ -22,11 +22,11 @@ Board::Board(std::string fname) : map {
 * Throws an error if the file could not be opened.
 * @param fname The name of the file to load the board layout from.
 */
-void Board::load(std::string fname) {
+void Board::load(std::string screen) {
 
 	Err_Code err = Err_Code::NO_ERR;
     std::string buffer; // Buffer to store each line of the file
-	std::ifstream file(fname); // Open the file with the given filename for reading
+	std::ifstream file(screen); // Open the file with the given filename for reading
 
 	if (file.is_open()) { // Check if the file is open
 		for (int y = 0; y_inbound(y); y++) {
@@ -36,9 +36,16 @@ void Board::load(std::string fname) {
         set_legend(); // Set the legend on the board
 	}
 	else {
-		errors.push_back(Err_Code::FILE_FAIL);
+		errors.push_back(Err_Code::SCREEN_FAIL);
 	}
 	file.close(); // Close the file
+}
+
+/**
+* @brief Push an error to the error vector.
+*/
+void Board::push_error(Err_Code err) {
+	errors.push_back(err);
 }
 
 void Board::set_legend() {
@@ -72,7 +79,7 @@ void Board::set_legend() {
  * @brief Validates the board layout and stores any errors in the errors vector.
  * @return A vector of error codes indicating the errors in the board layout.
  */
-const std::vector<Board::Err_Code>& Board::validate_board() {
+const std::vector<Board::Err_Code>& Board::get_errors() {
 
     if (map[Icon::MARIO].empty()) {
         errors.push_back(Err_Code::MISSING_MARIO); // Check if Mario is missing
@@ -95,6 +102,20 @@ void Board::print(int lives_left) const {
         std::cout << board_layout[i] << std::endl; // Print each row of the preset board
     }
     std::cout << board_layout[SCREEN_HEIGHT - 1]; // Print the last row without a newline
+}
+
+/**
+ * @brief Draws the game board by printing each row of the layout.
+ * Loops through all rows (from 0 to Screen_Dim::Y-1) and prints each line to the console.
+ * @param lives_left The number of lives left (default is 3).
+ */
+void Board::print(char screen[SCREEN_HEIGHT][SCREEN_WIDTH + 1], int lives_left) const {
+    
+	for (int i = 0; i < SCREEN_HEIGHT; i++) {
+		for (int j = 0; j < SCREEN_WIDTH + 1; j++) {
+			screen[i][j] = board_layout[i][j]; // Print each row of the preset board
+		}
+	}
 }
 
 /**

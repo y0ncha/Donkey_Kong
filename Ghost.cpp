@@ -42,7 +42,7 @@ Coordinates Ghost::init_dir() {
  * @brief Updates the direction of the ghost based on probability.
  *        The ghost has a small chance to change direction randomly.
  */
-void Ghost::update_dir(char key) {
+bool Ghost::update_dir(char key) {
 
     int probability = rand() % 100;
 
@@ -55,6 +55,7 @@ void Ghost::update_dir(char key) {
     if (!valid_move()) {
         invert_dir();
     }
+    return true;
 }
 
 /**

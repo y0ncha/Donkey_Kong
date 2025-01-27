@@ -1,3 +1,6 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+	
 #include "Entity.h"
 
 /**
@@ -259,3 +262,5 @@ bool Entity::set_icon(Board::Icon icon) {
 	}
     return false;
 }
+
+#endif // CONFIG_H

@@ -38,7 +38,7 @@ public:
 
 private:
     // Method to handle the direction change when the barrel is on different types of floors
-    void update_dir(char beneath) override;
+    bool update_dir(char beneath) override;
 
     // Method to handle the falling of the barrel
     void handle_falling() override;
