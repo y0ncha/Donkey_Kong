@@ -34,9 +34,9 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Game_Base.cpp" />
-    <ClCompile Include="Ghost.cpp" />
-    <ClCompile Include="GhostEntity.cpp" />
-    <ClCompile Include="GhostMaster.cpp" />
+    <ClCompile Include="Regular_Ghost.cpp" />
+    <ClCompile Include="Ghost_Base.cpp" />
+    <ClCompile Include="Master_Ghost.cpp" />
     <ClCompile Include="Ghosts.cpp" />
     <ClCompile Include="Hof.cpp" />
     <ClCompile Include="Level_Base.cpp" />
@@ -62,9 +62,9 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Game_Base.h" />
-    <ClInclude Include="Ghost.h" />
-    <ClInclude Include="GhostEntity.h" />
-    <ClInclude Include="GhostMaster.h" />
+    <ClInclude Include="Regular_Ghost.h" />
+    <ClInclude Include="Ghost_Base.h" />
+    <ClInclude Include="Master_Ghost.h" />
     <ClInclude Include="Ghosts.h" />
     <ClInclude Include="Hof.h" />
     <ClInclude Include="Level_Base.h" />

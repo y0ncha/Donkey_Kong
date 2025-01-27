@@ -262,10 +262,10 @@ char Mario::handle_collision() {
     case Board::BARREL: // If Mario hits a barrel
         mario_hit = true; // Set Mario as hit
         break;
-	case Board::GHOST: // If Mario hits a ghost
+	case Board::Regular_Ghost: // If Mario hits a Regular_Ghost
 		mario_hit = true; // Set Mario as hit
 		break;
-    case Board::SUPER_GHOST: // If Mario hits a ghost
+    case Board::SUPER_GHOST: // If Mario hits a Regular_Ghost
         mario_hit = true; // Set Mario as hit
         break;
     case Board::HAMMER: // If Mario hits a hammer

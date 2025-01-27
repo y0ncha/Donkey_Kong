@@ -37,7 +37,7 @@
     <ClCompile Include="Level_Base.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Ghost.cpp">
+    <ClCompile Include="Regular_Ghost.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="Ghosts.cpp">
@@ -65,6 +65,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="Save_Level.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Ghost_Base.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Master_Ghost.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -105,7 +111,7 @@
     <ClInclude Include="Display.h">
       <Filter>hdr</Filter>
     </ClInclude>
-    <ClInclude Include="Ghost.h">
+    <ClInclude Include="Regular_Ghost.h">
       <Filter>hdr</Filter>
     </ClInclude>
     <ClInclude Include="Ghosts.h">
@@ -133,6 +139,12 @@
       <Filter>hdr</Filter>
     </ClInclude>
     <ClInclude Include="Save_Level.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Ghost_Base.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Master_Ghost.h">
       <Filter>hdr</Filter>
     </ClInclude>
   </ItemGroup>

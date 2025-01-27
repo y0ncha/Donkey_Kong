@@ -1,13 +1,12 @@
-#include "GhostEntity.h"
-
+#include "Ghost_Base.h"
 
 /**
- * @brief Constructor for the GhostEntity class.
+ * @brief Constructor for the Ghost_Base class.
  * @param pBoard Pointer to the game board.
- * @param icon Character representing the ghost entity.
- * @param init_pos Initial position of the ghost entity.
+ * @param icon Character representing the Regular_Ghost entity.
+ * @param init_pos Initial position of the Regular_Ghost entity.
  */
-GhostEntity::GhostEntity(const Board* pBoard, char icon, Coordinates init_pos)
+Ghost_Base::Ghost_Base(const Board* pBoard, char icon, Coordinates init_pos)
     : Entity(pBoard, icon, init_pos) {
     init_dir();
     set_last_dx(get_dx());
@@ -15,10 +14,10 @@ GhostEntity::GhostEntity(const Board* pBoard, char icon, Coordinates init_pos)
 }
 
 /**
- * @brief Checks if the ghost's next move is valid.
+ * @brief Checks if the Regular_Ghost's next move is valid.
  * @return True if the move is valid, false otherwise.
  */
-bool GhostEntity::valid_move() {
+bool Ghost_Base::valid_move() {
 
     // Get the character of the next position floor
     char next_floor = board->get_char(get_pos() + get_dir() + Coordinates{ 0, 1 });
@@ -28,10 +27,10 @@ bool GhostEntity::valid_move() {
 }
 
 /**
- * @brief Initializes the direction of the ghost.
- * @return The initial direction of the ghost.
+ * @brief Initializes the direction of the Regular_Ghost.
+ * @return The initial direction of the Regular_Ghost.
  */
-Coordinates GhostEntity::init_dir() {
+Coordinates Ghost_Base::init_dir() {
 
     int dx = rand() % 2 ? 1 : -1;
     Entity::set_dir(dx, 0);
@@ -43,10 +42,10 @@ Coordinates GhostEntity::init_dir() {
 }
 
 /**
- * @brief Updates the direction of the ghost based on probability.
- *        The ghost has a small chance to change direction randomly.
+ * @brief Updates the direction of the Regular_Ghost based on probability.
+ *        The Regular_Ghost has a small chance to change direction randomly.
  */
-void GhostEntity::update_dir(char key) {
+bool Ghost_Base::update_dir(char key) {
 
     int probability = rand() % 100;
 
@@ -59,21 +58,22 @@ void GhostEntity::update_dir(char key) {
     if (!valid_move()) {
         invert_dir();
     }
+    return true;
 }
 
 /**
- * @brief Resets the ghost to its initial state.
+ * @brief Resets the Regular_Ghost to its initial state.
  */
-void GhostEntity::reset() {
+void Ghost_Base::reset() {
     Entity::reset();
     init_dir();
     active = true;
 }
 
 /**
- * @brief Kills the ghost by making it vanish and setting it to inactive.
+ * @brief Kills the Regular_Ghost by making it vanish and setting it to inactive.
  */
-void GhostEntity::kill() {
+void Ghost_Base::kill() {
     Entity::reset();
     active = false;
 }
@@ -81,26 +81,26 @@ void GhostEntity::kill() {
 /**
  * @note Empty implemantation of handle_falling.
  */
-void GhostEntity::handle_falling() {}
+void Ghost_Base::handle_falling() {}
 
 /**
  * @note Empty implemantation of handle_collision.
  */
-char GhostEntity::handle_collision() { return ' '; }
+char Ghost_Base::handle_collision() { return ' '; }
 
 /**
- * @brief Sets the direction of the ghost.
+ * @brief Sets the direction of the Regular_Ghost.
  * @param coord The new direction coordinates.
  */
-void GhostEntity::set_dir(Coordinates coord) {
+void Ghost_Base::set_dir(Coordinates coord) {
     Entity::set_dir(coord);
 }
 
 /**
- * @brief Checks if the ghost has hit Mario.
- * @return True if the ghost has hit Mario, false otherwise.
+ * @brief Checks if the Regular_Ghost has hit Mario.
+ * @return True if the Regular_Ghost has hit Mario, false otherwise.
  */
-bool GhostEntity::is_hit_mario() const {
+bool Ghost_Base::is_hit_mario() const {
     char current = getch_console(get_pos());
     char next = getch_console(get_pos() + get_dir());
 
@@ -109,16 +109,16 @@ bool GhostEntity::is_hit_mario() const {
 }
 
 /**
- * @brief Checks if the ghost is active.
- * @return True if the ghost is active, false otherwise.
+ * @brief Checks if the Regular_Ghost is active.
+ * @return True if the Regular_Ghost is active, false otherwise.
  */
-bool GhostEntity::is_active() const {
+bool Ghost_Base::is_active() const {
     return active;
 }
 
 /**
- * @brief Activates the ghost.
+ * @brief Activates the Regular_Ghost.
  */
-void GhostEntity::activate() {
+void Ghost_Base::activate() {
     active = true;
 }

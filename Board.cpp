@@ -10,7 +10,7 @@ Board::Board(std::string screen) : map {
     {DONKEY_KONG, {}},
     {PAULINE, {}},
     {HAMMER, {}},
-    {GHOST, {}},
+    {Regular_Ghost, {}},
     {SUPER_GHOST, {}},
     {LEGEND, {}},
 } {
@@ -255,7 +255,7 @@ bool Board::is_valid_ch(Board::Icon icon) {
     case Board::DONKEY_KONG:
     case Board::PAULINE:
     case Board::HAMMER:
-    case Board::GHOST:
+    case Board::Regular_Ghost:
     case Board::LEGEND:
     case Board::WALL:
     case Board::LADDER:
@@ -302,10 +302,10 @@ Board::Icon Board::map_icon(Icon icon, Coordinates pos) {
     
     if (map.find(icon) != map.end()) {
 
-		if (icon == GHOST || icon == SUPER_GHOST ||  map[icon].empty()) { // Check if the character is a ghost or the no position is stored for the character
+		if (icon == Regular_Ghost || icon == SUPER_GHOST ||  map[icon].empty()) { // Check if the character is a Regular_Ghost or the no position is stored for the character
             map[icon].push_back(pos);
         }
-		else { // Set the character to AIR if the character is already in the map and not a ghost
+		else { // Set the character to AIR if the character is already in the map and not a Regular_Ghost
 			icon = AIR;
         }
 		// Set the postion to AIR if the character is not a Pauline or Donkey Kong
