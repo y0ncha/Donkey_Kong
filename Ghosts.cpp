@@ -114,7 +114,12 @@ void Ghosts::was_hit(Coordinates pos) {
 
         if (pos == ghost->get_pos()) {
             gotoxy(ghost->get_pos());
-            std::cout << "*";
+			if (display_flag) {
+				std::cout << "*";
+            }
+			else {
+				current_screen[ghost->get_pos().y][ghost->get_pos().x] = ' ';
+			}
             Sleep(150);
 
             ghost->reset();

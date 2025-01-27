@@ -28,6 +28,11 @@ Visual_Level::Visual_Level(std::string screen, Mario& mario) :
 	result.close();
 }
 
+Visual_Level::~Visual_Level() {
+	steps.close();
+	result.close();
+}
+
 /**
  * @brief Starts the level loop.
  * @return The game state.

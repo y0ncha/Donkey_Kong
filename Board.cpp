@@ -105,6 +105,20 @@ void Board::print(int lives_left) const {
 }
 
 /**
+ * @brief Draws the game board by printing each row of the layout.
+ * Loops through all rows (from 0 to Screen_Dim::Y-1) and prints each line to the console.
+ * @param lives_left The number of lives left (default is 3).
+ */
+void Board::print(char screen[SCREEN_HEIGHT][SCREEN_WIDTH + 1], int lives_left) const {
+    
+	for (int i = 0; i < SCREEN_HEIGHT; i++) {
+		for (int j = 0; j < SCREEN_WIDTH + 1; j++) {
+			screen[i][j] = board_layout[i][j]; // Print each row of the preset board
+		}
+	}
+}
+
+/**
  * @brief Retrieves the character at the specified position on the board.
  * Returns ERR if the position is out of bounds.
  * @param coord The coordinates of the position.

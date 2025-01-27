@@ -43,7 +43,6 @@ public:
     virtual void start() = 0;
 
 	// Resets the Game_Base
-	
 	void reset();
 
 	// Setter for the Game_Base status

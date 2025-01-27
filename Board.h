@@ -62,6 +62,7 @@ public:
     
     // Prints the board on the console
     void print(int lives_left = 3) const;
+	void print(char screen[SCREEN_HEIGHT][SCREEN_WIDTH + 1], int lives_left = 3) const;
 
     // Retrieves the character from the board at given coordinates
     char get_char(Coordinates coord) const;

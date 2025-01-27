@@ -1,8 +1,8 @@
 #pragma once
-
 #include "Board.h"
 #include "Coord.h"
 #include "Point.h"
+#include "Config.h"
 
 // Forward declaration of the handle_err function
 void handle_err(const std::string& message, const char* file, int line);

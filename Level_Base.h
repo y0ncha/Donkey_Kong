@@ -38,7 +38,7 @@ public:
     void retry_level();
 
     // Handle the hammer attack
-    void perform_attack();
+    virtual void perform_attack();
 
     // Getter for the board (const by reference)
     const Board& get_board() const;
@@ -84,13 +84,13 @@ protected:
     unsigned long int frames = 0;
 
     // Method to advance the entities in the game
-    Game_State advance_entities();
+    virtual Game_State advance_entities();
 
     // Method to render the HUD
     void render_hud() const;
 
     // Method to render the Level_Base
-    void render_level();
+    virtual void render_level();
 
     // Method to print mario's gained points
     void print_score() const;

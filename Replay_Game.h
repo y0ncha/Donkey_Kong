@@ -1,8 +1,10 @@
 #pragma once
-#include <memory>
 #include "Game_Base.h"
-#include "Level_Base.h"
 
+/**
+ * @class Replay_Game
+ * Represents the replay game mode.
+ */
 class Replay_Game : public Game_Base {
 
 public:

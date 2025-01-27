@@ -15,15 +15,28 @@ Point::Point(Board::Icon ch, Coordinates init_pos) : icon(static_cast<Board::Ico
  * @return The output stream.
  */
 std::ostream& operator<<(std::ostream& os, const Point& point) {
-	gotoxy(point.pos); // Move the cursor to the point's position
-	return std::cout << static_cast<char>(point.icon); // Print the point's character at the position
+
+	if (display_flag) {
+		gotoxy(point.pos); // Move the cursor to the point's position
+		return std::cout << static_cast<char>(point.icon); // Print the point's character at the position
+	}
+	else {
+		current_screen[point.pos.y][point.pos.x] = static_cast<char>(point.icon); // Set the point on the screen buffer
+		return os;
+	}
 }
 
 /**
  * @brief Draws the point at the current position.
  */
 void Point::draw() const {
-	if (Board::pos_inbound(pos)) std::cout << *this; // Print the point on the console
+
+	if (display_flag) {
+		if (Board::pos_inbound(pos)) std::cout << *this; // Print the point on the console
+	}
+	else {
+		current_screen[pos.y][pos.x] = static_cast<char>(icon); // Set the point on the screen buffer
+	}
 }
 
 /**
@@ -31,6 +44,12 @@ void Point::draw() const {
  * @param ch The character to restore at the point's position.
  */
 void Point::erase(char ch) const {
-    gotoxy(pos); // Move the cursor to the point's position
-	if (Board::pos_inbound(pos)) std::cout << ch; // Restore the character from the board
+
+	if (display_flag) {
+		gotoxy(pos); // Move the cursor to the point's position
+		if (Board::pos_inbound(pos)) std::cout << ch; // Restore the character from the board
+	}
+	else {
+		current_screen[pos.y][pos.x] = ch; // Restore the character from the screen buffer
+	}
 }

@@ -67,7 +67,6 @@ void Replay_Game::handle_run() {
  */
 void Replay_Game::handle_retry() {
 	curr_level->retry_level();
-	display.strike_message(MSG_DELAY);
 	state = Game_State::RUN;
 }
 
@@ -78,7 +77,6 @@ void Replay_Game::handle_retry() {
 void Replay_Game::handle_fail(std::chrono::steady_clock::time_point start_t) {
 	stats.time_played = stop_timer(start_t);
 	update_statistics();
-	display.failure_message(MSG_DELAY);
 	state = Game_State::TERMINATE;
 }
 
@@ -88,7 +86,6 @@ void Replay_Game::handle_fail(std::chrono::steady_clock::time_point start_t) {
  */
 void Replay_Game::handle_success(std::chrono::steady_clock::time_point start_t) {
 	if (advance_level()) {
-		display.success_message(MSG_DELAY);
 		state = Game_State::RUN;
 	}
 	else {
@@ -96,7 +93,6 @@ void Replay_Game::handle_success(std::chrono::steady_clock::time_point start_t) 
 		stats.time_played = stop_timer(start_t);
 		mario.update_score(Points::GAME_COMPLETE);
 		update_statistics();
-		display.winning_message(MSG_DELAY);
 	}
 }
 
@@ -125,7 +121,7 @@ bool Replay_Game::load_level(const std::string& screen) {
 		curr_level = std::make_unique<Visual_Level>(screen, mario);
 	}
 	else if (mode == Game_Mode::SILENT) {
-		//curr_level = std::make_unique<Silent_Level>(screen, mario);
+		curr_level = std::make_unique<Silent_Level>(screen, mario);
 	}
 	else {
 		return false;

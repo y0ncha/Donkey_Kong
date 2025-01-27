@@ -43,21 +43,29 @@ void show_cursor(bool flag) {
  * @note Created by copilot
  */
 char getch_console(Coordinates pos) {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hConsole == INVALID_HANDLE_VALUE) {
-        return Board::ERR;
+
+    char ch;
+
+    if (display_flag) {
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (hConsole == INVALID_HANDLE_VALUE) {
+            return Board::ERR;
+        }
+
+        CHAR_INFO charInfo;
+        COORD coord = { (SHORT)pos.x, (SHORT)pos.y };
+        SMALL_RECT readRegion = { (SHORT)pos.x, (SHORT)pos.y, (SHORT)pos.x, (SHORT)pos.y };
+        COORD bufferSize = { 1, 1 };
+
+        if (!ReadConsoleOutput(hConsole, &charInfo, bufferSize, { 0, 0 }, &readRegion) || !Board::pos_inbound(pos)) {
+            return Board::ERR;
+        }
+        ch = charInfo.Char.AsciiChar;
     }
-
-    CHAR_INFO charInfo;
-    COORD coord = { (SHORT)pos.x, (SHORT)pos.y };
-    SMALL_RECT readRegion = { (SHORT)pos.x, (SHORT)pos.y, (SHORT)pos.x, (SHORT)pos.y };
-    COORD bufferSize = { 1, 1 };
-
-    if (!ReadConsoleOutput(hConsole, &charInfo, bufferSize, { 0, 0 }, &readRegion) || !Board::pos_inbound(pos)) {
-        return Board::ERR;
+    else {
+		ch = current_screen[pos.y][pos.x];
     }
-
-    return charInfo.Char.AsciiChar;
+    return ch;
 }
 
 /**
@@ -65,31 +73,41 @@ char getch_console(Coordinates pos) {
  * @note Created by copilot
  */
 void clear_screen() {
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hConsole == INVALID_HANDLE_VALUE) {
-        return;
+
+    if (display_flag) {
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (hConsole == INVALID_HANDLE_VALUE) {
+            return;
+        }
+
+        CONSOLE_SCREEN_BUFFER_INFO csbi;
+        DWORD count;
+        DWORD cellCount;
+        COORD homeCoords = { 0, 0 };
+
+        if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+            return;
+        }
+
+        cellCount = csbi.dwSize.X * csbi.dwSize.Y;
+
+        if (!FillConsoleOutputCharacter(hConsole, (TCHAR)' ', cellCount, homeCoords, &count)) {
+            return;
+        }
+
+        if (!FillConsoleOutputAttribute(hConsole, csbi.wAttributes, cellCount, homeCoords, &count)) {
+            return;
+        }
+
+        SetConsoleCursorPosition(hConsole, homeCoords);
     }
-
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    DWORD count;
-    DWORD cellCount;
-    COORD homeCoords = { 0, 0 };
-
-    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
-        return;
+    else {
+        for (int i = 0; i < SCREEN_HEIGHT; i++) {
+            for (int j = 0; j < SCREEN_WIDTH; j++) {
+                current_screen[i][j] = ' ';
+            }
+        }
     }
-
-    cellCount = csbi.dwSize.X * csbi.dwSize.Y;
-
-    if (!FillConsoleOutputCharacter(hConsole, (TCHAR)' ', cellCount, homeCoords, &count)) {
-        return;
-    }
-
-    if (!FillConsoleOutputAttribute(hConsole, csbi.wAttributes, cellCount, homeCoords, &count)) {
-        return;
-    }
-
-    SetConsoleCursorPosition(hConsole, homeCoords);
 }
 
 /**
@@ -118,6 +136,12 @@ std::string remove_ext(const std::string& filename, const std::string& toremove)
     }
     return filename; // Return the original filename if the extension is not found
 }
+
+// Flag to display the screen layout
+bool display_flag = true;
+
+// Current screen layout
+char current_screen[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
 
 
 // Overloads the comparison operators for the Ctrl enum class

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include "Config.h"
 #include <chrono>
 #include "Coord.h"
 #include "Board.h"
@@ -62,7 +63,7 @@ std::string remove_ext(const std::string& filename, const std::string& toremove)
  * @return The start time.
  */
 inline std::chrono::steady_clock::time_point start_timer() {
-	return std::chrono::high_resolution_clock::now();
+    return std::chrono::high_resolution_clock::now();
 }
 
 /**
@@ -71,7 +72,6 @@ inline std::chrono::steady_clock::time_point start_timer() {
  * @return The duration in minutes and seconds.
  */
 inline std::pair<int, int> stop_timer(auto start_time) {
-
     auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time).count();
 
@@ -99,8 +99,27 @@ inline std::istream& operator>>(std::istream& in, Difficulty& diff) {
  */
 static std::string empty = "";
 
+// Current screen layout
+extern char current_screen[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+
+// Flag to display the screen layout
+extern bool display_flag;
+
 /**
- * @brief Overloads the compersion operators for the Ctrl enum class.
+ * @brief Overloads the insertion operator for the Difficulty enum class.
+ * @param out The output stream.
+ * @param diff The Difficulty enum class.
+ * @return The output stream.
+ */
+inline std::ostream& operator<<(std::ostream& os, const char array[][SCREEN_WIDTH + 1]) {
+    for (size_t i = 0; i < SCREEN_HEIGHT; ++i) {
+        os << array[i] << std::endl;
+    }
+    return os;
+}
+
+/**
+ * @brief Overloads the comparison operators for the Ctrl enum class.
  * @param lhs The character to compare.
  * @param rhs The Ctrl enum class to compare.
  */
@@ -109,7 +128,7 @@ bool operator!=(const Ctrl& lhs, const char& rhs);
 bool operator==(const char& lhs, const Ctrl& rhs);
 bool operator==(const Ctrl& lhs, const char& rhs);
 bool operator<(const char& lhs, const Ctrl& rhs);
-bool operator<(const Ctrl & lhs, const char& rhs);
+bool operator<(const Ctrl& lhs, const char& rhs);
 bool operator>(const char& lhs, const Ctrl& rhs);
 bool operator>(const Ctrl& lhs, const char& rhs);
 bool operator<=(const char& lhs, const Ctrl& rhs);
