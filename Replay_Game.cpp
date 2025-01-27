@@ -7,6 +7,8 @@
  */
 void Replay_Game::run() {
 
+	clear_screen(); // Clear the screen
+	gotoxy(0, 0); // Move the cursor to the top left corner
 	show_cursor(false); // Seed the random number generator
 	set_state(Game_State::RUN);
 
@@ -20,7 +22,7 @@ void Replay_Game::run() {
  * @brief Starts the Replay_Game loop and handles file input.
  */
 void Replay_Game::start() {
-	
+
 	auto start_t = start_timer(); // Start the timer
 
 	while (state != Game_State::TERMINATE) { // Main Game_Base loop

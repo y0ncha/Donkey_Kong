@@ -6,6 +6,8 @@
 void Play_Game::run() {
 
 	show_cursor(false); // Seed the random number generator
+	clear_screen(); // Clear the screen
+	gotoxy(0, 0); // Move the cursor to the top left corner
 
 	// Main Play_Game loop
 	while (display.main_menu() != Display::Menu_Options::EXIT) {

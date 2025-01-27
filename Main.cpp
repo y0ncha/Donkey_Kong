@@ -39,7 +39,6 @@ int main(int argc, char* argv[]) {
 Game_Mode process_input(int argc, char* argv[]) {
 
 	Game_Mode mode = Game_Mode::INVALID;
-	std::string empty = "";
 	std::string arg = argc > 1 ? std::string(argv[1]) : empty;
 
 	if (arg == empty) {
