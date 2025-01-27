@@ -234,6 +234,7 @@ void Display::exit_message() const {
 * @brief Prints the strike message.
 */
 void Display::strike_message() const {
+
     bool pending = true;
     char void_input;
 
@@ -243,8 +244,10 @@ void Display::strike_message() const {
     while (pending) {
         flash_message({ "Press any key to continue" }, { {27, 23} });
         if (_kbhit()) {
-            void_input = _getch(); // Get the key input to clear the buffer
-            pending = false; // Check if a key is pressed
+
+        void_input = _getch(); // Get the key input to clear the buffer
+        pending = false; // Check if a key is pressed
+
         }
     }
 }
@@ -253,6 +256,7 @@ void Display::strike_message() const {
 * @brief Prints the failure message.
 */
 void Display::failure_message() const {
+
     bool pending = true;
     char void_input;
 
@@ -263,7 +267,8 @@ void Display::failure_message() const {
 
     gotoxy(42, 18); // Print the time played (minutes : seconds)
     std::cout << std::setw(2) << std::setfill('0') << pGame->get_statistics().time_played.first << ":"
-        << std::setw(2) << std::setfill('0') << pGame->get_statistics().time_played.second;
+
+              << std::setw(2) << std::setfill('0') << pGame->get_statistics().time_played.second;
 
     while (pending) {
         flash_message({ "Press ESC to exit" }, { {30, 23} });
@@ -278,6 +283,7 @@ void Display::failure_message() const {
 * @brief Prints the success message.
 */
 void Display::success_message() const {
+
     bool pending = true;
     char void_input;
 
@@ -296,6 +302,7 @@ void Display::success_message() const {
  * @brief Prints the winning message (finished all valid levels).
  */
 void Display::winning_message() const {
+
     bool pending = true;
     char void_input;
 
@@ -361,7 +368,8 @@ void Display::prompt_nickname() const {
 * @return false if there are no errors, true otherwise.
 */
 bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
-    // Check if there are no errors, if so return false to stop the while loop
+
+	// Check if there are no errors, if so return false to stop the while loop
     if (errors.empty()) {
         return false;
     }
@@ -405,6 +413,7 @@ bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
         }
     }
 
+
     while (pending) {
         flash_message({ "Press any key to skip to the next level" }, { {22, 23} });
         if (_kbhit()) {
@@ -412,8 +421,7 @@ bool Display::error_message(const std::vector<Board::Err_Code>& errors) const {
             pending = false; // Check if a key is pressed
         }
     }
-
-    return true;
+	return true;
 }
 
 /**
