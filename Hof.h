@@ -36,6 +36,9 @@ public:
     // Method to get the entire list of statistics
     const std::list<Statistics>& get_list() const;
 
+    // Method to check if the hall of fame is available
+	bool is_available() const;
+
 private:
 
     // Constructor - Checks the file exist and loads the statistics
@@ -52,8 +55,11 @@ private:
     Hof(Hof&&) = delete;
     Hof& operator=(Hof&&) = delete;
 
+    // Bool to check if the hall of fame opened successfully
+    bool available;
+
     // Method to load the stats from the file
-    bool load();
+    bool load(std::ifstream& file);
 
     // Method to save the stats to the file
     bool save();
@@ -63,9 +69,6 @@ private:
 
 	// Method to read the stats from the file
 	void read_statistics(std::ifstream& file, Statistics& stats);
-
-    // File to store the Hall Of Fame
-    std::fstream file;
 
     // File name to store the Hall Of Fame
     std::string fname = "hof.bin";

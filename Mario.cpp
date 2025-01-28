@@ -12,7 +12,7 @@ Mario::Mario(const Board* pBoard)
  * @brief Updates Mario's direction based on the key input.
  * @param key The key input to determine the direction.
  */
-void Mario::update_dir(char key) {
+bool Mario::update_dir(char key) {
 
 	// Convert key to lowercase Ctrl type
     Ctrl ctrl = static_cast<Ctrl>(std::tolower(key));
@@ -34,7 +34,10 @@ void Mario::update_dir(char key) {
     case Ctrl::STAY:
         set_dir(0,0); // Stay in place
         break;
+	default:
+		return false;
     }
+    return true;
 }
 
 // @brief Updates Mario's score and check if he deserves a bonus life 
@@ -259,9 +262,12 @@ char Mario::handle_collision() {
     case Board::BARREL: // If Mario hits a barrel
         mario_hit = true; // Set Mario as hit
         break;
-	case Board::GHOST: // If Mario hits a ghost
+	case Board::Regular_Ghost: // If Mario hits a Regular_Ghost
 		mario_hit = true; // Set Mario as hit
 		break;
+    case Board::SUPER_GHOST: // If Mario hits a Regular_Ghost
+        mario_hit = true; // Set Mario as hit
+        break;
     case Board::HAMMER: // If Mario hits a hammer
         armed = true;// Set Mario as having a hammer
         set_icon(Board::SUPER_MARIO); // Change Mario's icon to Mario with a hammer
@@ -315,7 +321,7 @@ int Mario::get_score() const {
 /**
  * @brief Resets Mario to its initial fields.
  */
-void Mario::fatory_reset() {
+void Mario::factory_reset() {
     score = 0;
     bonus_tracker = 1;
     lives_left = MAX_LIVES;

@@ -7,36 +7,36 @@
 #include <iostream>
 #include "Config.h"
 #include "Mario.h"
-#include "Game.h"
+#include "Game_Base.h"
 #include "Hof.h"
-#include "Level.h"
+#include "Level_Base.h"
 
-// Forward declaration of the Game class
-class Game;
+// Forward declaration of the Game_Base class
+class Game_Base;
 class Level;
 
 /**
  * @class Display
- * Represents the game display and menus.
+ * Represents the Game_Base display and menus.
  */
 class Display {
 public:
     // Enum for the menu options
     enum class Menu_Options {
         DEF,
-        START = '1', // Start the game
+        START = '1', // Start the Game_Base
         LEVELS = '2', // Choose the level
         HALL_OF_FAME = '7', // Show the hall of fame
         KEYS = '8',  // Show the keys
-        EXIT = '9',   // Exit the game
+        EXIT = '9',   // Exit the Game_Base
         ENTER = '\r', // Enter key
-        RESUME = 27, // Resume to the game
+        RESUME = 27, // Resume to the Game_Base
     };
 
     // Get the singleton instance of Display
-    static Display& get_instance(Game* pGame = nullptr);
+    static Display& get_instance(Game_Base* pGame = nullptr);
 
-    // Display the game's different menus and messages
+    // Display the Game_Base's different menus and messages
     void pause_menu() const;
     Menu_Options main_menu() const;
     bool difficulty_menu() const;
@@ -46,6 +46,7 @@ public:
     void failure_message() const;
     void success_message() const;
     bool error_message(const std::vector<Board::Err_Code>& errors) const;
+    bool error_message(std::string mesage) const;
     void winning_message() const;
     void keys_menu() const;
     void prompt_nickname() const;
@@ -53,7 +54,7 @@ public:
 
 private:
 
-    // Static consts for the game
+    // Static consts for the Game_Base
     static constexpr int LEVELS_PER_PAGE = 5; // Number of levels to display per page 
 
     // Private constructor to prevent instantiation
@@ -67,8 +68,8 @@ private:
     Display(Display&&) = delete;
     Display& operator=(Display&&) = delete;
 
-    // Pointer to the game
-    Game* game = nullptr;
+    // Pointer to the Game_Base
+    Game_Base* pGame = nullptr;
 
     // Prints the layout to the console
     void print_layout(const char layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]) const;

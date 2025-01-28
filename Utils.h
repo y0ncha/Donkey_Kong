@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include "Config.h"
 #include <chrono>
 #include "Coord.h"
 #include "Board.h"
@@ -55,13 +56,14 @@ inline void handle_err(const std::string& message, const char* file, int line) {
  * @return The filename without the ".txt" extension.
  */
 std::string remove_ext(const std::string& filename);
+std::string remove_ext(const std::string& filename, const std::string& toremove);
 
 /**
  * @brief Starts the timer.
  * @return The start time.
  */
 inline std::chrono::steady_clock::time_point start_timer() {
-	return std::chrono::high_resolution_clock::now();
+    return std::chrono::high_resolution_clock::now();
 }
 
 /**
@@ -78,9 +80,46 @@ inline std::pair<int, int> stop_timer(auto start_time) {
     return { minutes, seconds };
 }
 
+/**
+ * @brief Overloads the extraction operator for the Difficulty enum class.
+ * @param in The input stream.
+ * @param diff The Difficulty enum class.
+ * @return The input stream.
+ */
+inline std::istream& operator>>(std::istream& in, Difficulty& diff) {
+    int value;
+    if (in >> value) {
+        diff = static_cast<Difficulty>(value);
+    }
+    return in;
+}
 
 /**
- * @brief Overloads the compersion operators for the Ctrl enum class.
+ * @brief Empty string to use as a default value.
+ */
+static std::string empty = "";
+
+// Current screen layout
+extern char current_screen[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+
+// Flag to display the screen layout
+extern bool display_flag;
+
+/**
+ * @brief Overloads the insertion operator for the Difficulty enum class.
+ * @param out The output stream.
+ * @param diff The Difficulty enum class.
+ * @return The output stream.
+ */
+inline std::ostream& operator<<(std::ostream& os, const char array[][SCREEN_WIDTH + 1]) {
+    for (size_t i = 0; i < SCREEN_HEIGHT; ++i) {
+        os << array[i] << std::endl;
+    }
+    return os;
+}
+
+/**
+ * @brief Overloads the comparison operators for the Ctrl enum class.
  * @param lhs The character to compare.
  * @param rhs The Ctrl enum class to compare.
  */
@@ -89,7 +128,7 @@ bool operator!=(const Ctrl& lhs, const char& rhs);
 bool operator==(const char& lhs, const Ctrl& rhs);
 bool operator==(const Ctrl& lhs, const char& rhs);
 bool operator<(const char& lhs, const Ctrl& rhs);
-bool operator<(const Ctrl & lhs, const char& rhs);
+bool operator<(const Ctrl& lhs, const char& rhs);
 bool operator>(const char& lhs, const Ctrl& rhs);
 bool operator>(const Ctrl& lhs, const char& rhs);
 bool operator<=(const char& lhs, const Ctrl& rhs);

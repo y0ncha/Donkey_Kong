@@ -17,7 +17,7 @@ public:
     void move() override;
 
     // Updates Mario's direction based on the input key
-    void update_dir(char key = static_cast<char>(Ctrl::DEF)) override;
+    bool update_dir(char key = static_cast<char>(Ctrl::DEF)) override;
 
     // Gets the number of lives Mario has left
     int get_lives() const;
@@ -26,7 +26,7 @@ public:
     void reset();
 
     // Reset Mario to it initial feilds
-    void fatory_reset();
+    void factory_reset();
 
     // Checks if Mario was hit
     bool is_hit() const;

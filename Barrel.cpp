@@ -29,7 +29,7 @@ void Barrel::move() {
  * @brief Method to handle the direction change when the barrel is on different types of floors.
  * @param beneath The character beneath the barrel.
  */
-void Barrel::update_dir(char beneath) {
+bool Barrel::update_dir(char beneath) {
 
     switch (beneath) {
         case Board::FLOOR_L:
@@ -45,8 +45,9 @@ void Barrel::update_dir(char beneath) {
             reset();
             break;
         default:
-            break;
+            return false;
     }
+    return true;
 }
 
 /**
@@ -102,7 +103,12 @@ void Barrel::print_explosion_phase(int radius, Coordinates pos) {
         if (atPos == Board::MARIO || atPos == Board::SUPER_MARIO) {
             state = State::HIT_MARIO;
         }
-        std::cout << "*";
+        if (display_flag) {
+            std::cout << "*";
+        }
+        else {
+			current_screen[pos.y][pos.x] = '*';
+        }
     } 
     else {
         for (int i = -radius; i <= radius; i++) {
@@ -114,7 +120,12 @@ void Barrel::print_explosion_phase(int radius, Coordinates pos) {
                     if (atDest == Board::MARIO || atDest == Board::SUPER_MARIO) {
 						state = State::HIT_MARIO;
 					}
-					std::cout << "*";
+					if (display_flag) {
+						std::cout << "*";
+					}
+                    else {
+						current_screen[dest.y][dest.x] = '*';
+                    }
 				}
             }
         }
@@ -127,13 +138,23 @@ void Barrel::print_explosion_phase(int radius, Coordinates pos) {
  */
 void Barrel::clear_explosion_phase(int radius, Coordinates pos) {
     if (radius == -1) {
-        gotoxy(pos);
-        std::cout << board->get_char(pos);
+        if (display_flag) {
+            gotoxy(pos);
+            std::cout << board->get_char(pos);
+        }
+		else {
+			current_screen[pos.y][pos.x] = board->get_char(pos);
+		}
     } else {
         for (int i = -radius; i <= radius; i++) {
             for (int j = -radius; j <= radius; j++) {
-                gotoxy(pos.x + i,pos.y + j);
-                std::cout << board->get_char(pos.x + i, pos.y + j);
+				if (display_flag) {
+					gotoxy(pos.x + i, pos.y + j);
+					std::cout << board->get_char(pos.x + i, pos.y + j);
+				}
+                else {
+					current_screen[pos.y + j][pos.x + i] = board->get_char(pos.x + i, pos.y + j);
+                }
             }
         }
     }

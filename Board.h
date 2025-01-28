@@ -28,7 +28,8 @@ public:
         BARREL = 'O', // Character representing a barrel
         PAULINE = '$', // Character representing Pauline
 		HAMMER = 'p', // Character representing a hammer
-		GHOST = 'x', // Character representing a ghost
+		Regular_Ghost = 'x', // Character representing a Regular_Ghost
+        SUPER_GHOST = 'X', // Character representing a Master_Ghost
 
 		LEGEND = 'L', // Character representing the legend
 		WALL = 'Q', // Character representing a wall
@@ -49,14 +50,20 @@ public:
         MISSING_PAULINE,
         MARIO_OUTBOUND,
 		PAULINE_OUTBOUND,
-		FILE_FAIL,
+		SCREEN_FAIL,
+		STEPS_FAIL,
+		RESULT_FAIL,
     };
 
 	// Checks if the board is valid
-    const std::vector<Err_Code>& validate_board();
+    const std::vector<Err_Code>& get_errors();
+
+	// Pushes an error to the error vector
+	void push_error(Err_Code err);
     
     // Prints the board on the console
     void print(int lives_left = 3) const;
+	void print(char screen[SCREEN_HEIGHT][SCREEN_WIDTH + 1], int lives_left = 3) const;
 
     // Retrieves the character from the board at given coordinates
     char get_char(Coordinates coord) const;

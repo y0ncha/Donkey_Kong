@@ -34,16 +34,45 @@
     <ClCompile Include="Utils.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Level.cpp">
+    <ClCompile Include="Level_Base.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Ghost.cpp">
+    <ClCompile Include="Regular_Ghost.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="Ghosts.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Hof.cpp" />
+    <ClCompile Include="Hof.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Game_Base.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Play_Game.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Replay_Game.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Silent_Level.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Visual_Level.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Regular_Level.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Save_Level.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Ghost_Base.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Master_Ghost.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Barrel.h">
@@ -76,19 +105,48 @@
     <ClInclude Include="Utils.h">
       <Filter>hdr</Filter>
     </ClInclude>
-    <ClInclude Include="Level.h">
+    <ClInclude Include="Level_Base.h">
       <Filter>hdr</Filter>
     </ClInclude>
     <ClInclude Include="Display.h">
       <Filter>hdr</Filter>
     </ClInclude>
-    <ClInclude Include="Ghost.h">
+    <ClInclude Include="Regular_Ghost.h">
       <Filter>hdr</Filter>
     </ClInclude>
     <ClInclude Include="Ghosts.h">
       <Filter>hdr</Filter>
     </ClInclude>
-    <ClInclude Include="Hof.h" />
+    <ClInclude Include="Hof.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Game_Base.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Play_Game.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Replay_Game.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Silent_Level.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Visual_Level.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Regular_Level.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Save_Level.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Ghost_Base.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Master_Ghost.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="txt">
@@ -105,11 +163,23 @@
     <Text Include="Readme.txt">
       <Filter>txt</Filter>
     </Text>
-    <Text Include="dkong_01.screen.txt" />
-    <Text Include="dkong_02.screen.txt" />
-    <Text Include="dkong_03.screen.txt" />
-    <Text Include="dkong_10.screen.txt" />
-    <Text Include="dkong_A.screen.txt" />
-    <Text Include="dkong_b.screen.txt" />
+    <Text Include="dkong_01.screen.txt">
+      <Filter>txt</Filter>
+    </Text>
+    <Text Include="dkong_02.screen.txt">
+      <Filter>txt</Filter>
+    </Text>
+    <Text Include="dkong_03.screen.txt">
+      <Filter>txt</Filter>
+    </Text>
+    <Text Include="dkong_10.screen.txt">
+      <Filter>txt</Filter>
+    </Text>
+    <Text Include="dkong_A.screen.txt">
+      <Filter>txt</Filter>
+    </Text>
+    <Text Include="dkong_b.screen.txt">
+      <Filter>txt</Filter>
+    </Text>
   </ItemGroup>
 </Project>

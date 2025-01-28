@@ -1,5 +1,6 @@
 #pragma once
-#include "Ghost.h"
+#include "Regular_Ghost.h"
+#include "Master_Ghost.h"
 #include <memory>
 
 /**
@@ -35,17 +36,17 @@ public:
 	// method to set amount of ghosts
     void set_amount();
 
-	// Method to check ghost collision
+	// Method to check Regular_Ghost collision
     void handle_colisions();
 
-	// Method to check if any ghost hit Mario
+	// Method to check if any Regular_Ghost hit Mario
     bool hitted_mario() const;
 
-    // Method to check if a ghost is in a given position and resets it if it is
+    // Method to check if a Regular_Ghost is in a given position and resets it if it is
     void was_hit(Coordinates pos);
 
     // Method to check if two ghosts collide
-	bool colide(const std::unique_ptr<Ghost>& g1, const std::unique_ptr<Ghost>& g2) const;
+    bool colide(const std::unique_ptr<Ghost_Base>& g1, const std::unique_ptr<Ghost_Base>& g2) const;
     
 private:
 
@@ -59,7 +60,7 @@ private:
 	const Board* board;
 
 	// Vector to store the ghosts as unique pointers
-	std::vector<std::unique_ptr<Ghost>> ghosts;
+	std::vector<std::unique_ptr<Ghost_Base>> ghosts;
 };
 
 

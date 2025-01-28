@@ -33,15 +33,24 @@
     <ClCompile Include="Coord.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Ghost.cpp" />
+    <ClCompile Include="Game_Base.cpp" />
+    <ClCompile Include="Regular_Ghost.cpp" />
+    <ClCompile Include="Ghost_Base.cpp" />
+    <ClCompile Include="Master_Ghost.cpp" />
     <ClCompile Include="Ghosts.cpp" />
     <ClCompile Include="Hof.cpp" />
-    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="Level_Base.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Display.cpp" />
+    <ClCompile Include="Play_Game.cpp" />
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="Regular_Level.cpp" />
+    <ClCompile Include="Replay_Game.cpp" />
+    <ClCompile Include="Save_Level.cpp" />
+    <ClCompile Include="Silent_Level.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="Visual_Level.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Barrel.h" />
@@ -52,13 +61,22 @@
     <ClInclude Include="Display.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Ghost.h" />
+    <ClInclude Include="Game_Base.h" />
+    <ClInclude Include="Regular_Ghost.h" />
+    <ClInclude Include="Ghost_Base.h" />
+    <ClInclude Include="Master_Ghost.h" />
     <ClInclude Include="Ghosts.h" />
     <ClInclude Include="Hof.h" />
-    <ClInclude Include="Level.h" />
+    <ClInclude Include="Level_Base.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="Play_Game.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="Regular_Level.h" />
+    <ClInclude Include="Replay_Game.h" />
+    <ClInclude Include="Save_Level.h" />
+    <ClInclude Include="Silent_Level.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="Visual_Level.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dkong_01.screen.txt" />

@@ -1,14 +1,15 @@
 IDs :  
 ========================
 + Yonatan Csasznik - 208259077  
-+ Tal Ziv - 315434001  
-+ Itay Meriras - 3153356794  
++ Tal Ziv - 3153356794  
++ Itay Merires - 315434001  
 
 Bonus features:  
 ========================
 + "Hall Of Fame" : 
 The Hall of Fame, a leaderboard showcasing top players and their achievements, that can be accessed from the main menu. It records the highest scores along with the player's name, the time they took to play, and the difficulty level they played on.
 Every time you finish a game, if your score is among the top, it gets saved in the Hall of Fame. This way, you can see how you stack up against other players and strive to beat the best scores. The Hall of Fame adds an exciting competitive element, encouraging you to improve your performance and achieve higher rankings.
+important ! we supply a prefilled hall of fame - we recommand to also delete "hof.bin" from the directory to reset the scoreboard.
 
 + Bonus Life :
 The Bonus life feature rewards players with an extra life for every 15 points earned, factoring in score deductions. For example, if a player scores 13 points and loses 3, they must earn 5 more points to reach the next multiple of 15.
@@ -45,7 +46,9 @@ These handle error cases such as:
 
 Additionally, in the levels menu, you can "roll" through all screens in the directory matching the regex. There’s no limit to the number of screens the game can handle.
 
+
 Notice :
 ========================
-+ the hit range of the hammer is 2 chars as allowed by amir in the forum.
-+ attached amir's approvel of bonus features and 3 people assignemt
++ The hit range of the hammer is 2 chars as allowed by amir in the forum.
++ Attached amir's approvel of bonus features and 3 people assignemt
++ Corrections from Exercise 1 submission: return to the menu at the end of the game, change the enums to enum class.

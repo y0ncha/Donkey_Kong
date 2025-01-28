@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include "Coord.h"
 #include "Board.h"
+#include "Config.h"
 
 /**
  * @class Point
