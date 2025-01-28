@@ -36,13 +36,13 @@ public:
 	// method to set amount of ghosts
     void set_amount();
 
-	// Method to check Regular_Ghost collision
+	// Method to check ghost collision
     void handle_colisions();
 
-	// Method to check if any Regular_Ghost hit Mario
+	// Method to check if any ghost hit Mario
     bool hitted_mario() const;
 
-    // Method to check if a Regular_Ghost is in a given position and resets it if it is
+    // Method to check if a ghost is in a given position and resets it if it is
     void was_hit(Coordinates pos);
 
     // Method to check if two ghosts collide
