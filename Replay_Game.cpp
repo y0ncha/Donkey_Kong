@@ -14,7 +14,7 @@ void Replay_Game::run() {
 
 	start();
 	reset();
-
+	// todo present result
 	display.exit_message(); // Display the exit message
 }
 
@@ -128,7 +128,7 @@ bool Replay_Game::load_level(const std::string& screen) {
 	else {
 		return false;
 	}
-
+	// Check if the level was loaded properly
     return curr_level != nullptr;
 }
 
@@ -153,7 +153,7 @@ bool Replay_Game::advance_level() {
 
 	// Validate the level, while invalid keep advancing
 	while (!errors.empty()) {
-
+		// todo present error
 		level_ind++;
 		// Check if the level is valid
 		if (level_ind < screens.size()) {

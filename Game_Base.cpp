@@ -17,7 +17,7 @@ Game_Base::Game_Base(Game_Mode mode) :
     hall_of_fame(Hof::get_instance()), // Singleton pattern
     curr_level(nullptr),
     screens(),
-    seed(0) { // Default initialization of std::list
+    seed(0) {
     scan_for_screens(); // Scan for level files
 }
 

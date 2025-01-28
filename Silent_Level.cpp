@@ -23,7 +23,7 @@ Game_State Silent_Level::start() {
 
 		if (frames == next_step.first) {
 
-			input = next_step.second;
+			input = tolower(next_step.second);
 			key = static_cast<Ctrl>(input);
 
 			if (input == TERMINATOR) {
