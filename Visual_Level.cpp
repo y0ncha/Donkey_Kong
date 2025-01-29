@@ -14,20 +14,23 @@ Visual_Level::Visual_Level(std::string screen, Mario& mario) :
 	if (!steps.is_open()) {
 		push_error(Board::Err_Code::STEPS_FAIL);
 	}
-	if (!result.is_open()) {
-		push_error(Board::Err_Code::RESULT_FAIL);
-	}
-
-	if (steps.is_open()) {
+	else {
 		steps >> diff;
 		steps >> seed;
 		next_step = read_next();
 	}
-
+	if (!result.is_open()) {
+		push_error(Board::Err_Code::RESULT_FAIL);
+	}
+	else {
+		result.close();
+	}
 	srand(seed);
-	result.close();
 }
 
+/**
+ * @brief Destructor for the Visual_Level class.
+ */
 Visual_Level::~Visual_Level() {
 	steps.close();
 	result.close();
@@ -43,12 +46,13 @@ Game_State Visual_Level::start() {
 	char input; // Variable to hold the user input
 	Ctrl key; // Variable to hold the key input
 
+	if (!steps.is_open()) return Game_State::TERMINATE; // todo check if result needs to be open
 	render_level(); // Update the game screen
 
 	while (state == Game_State::RUN) { // Main game loop
 
 		if (frames == next_step.first) {
-			input = next_step.second;
+			input = std::tolower(next_step.second);
 			key = static_cast<Ctrl>(input);
 
 			if (input == TERMINATOR) {
@@ -64,7 +68,7 @@ Game_State Visual_Level::start() {
 			next_step = read_next();
 		}
 		state = advance_entities(); // Advance all the entities in the game
-		Sleep(DEF_DELAY); // Delay for 100 milliseconds
+		Sleep(REPLAY_DELAY); // Delay for 100 milliseconds
 		frames++;
 	}
 	return state;

@@ -23,8 +23,8 @@ Ghosts::Ghosts(const Board* pBoard) : board(pBoard) {
  */
 Ghosts::Ghosts(const Ghosts& other) : board(other.board), amount(other.amount), hit_mario(other.hit_mario) {
     ghosts.reserve(amount);
-    for (const auto& Regular_Ghost : other.ghosts) {
-        ghosts.push_back(Regular_Ghost->clone());
+    for (const auto& ghost : other.ghosts) {
+        ghosts.push_back(ghost->clone());
     }
 }
 
@@ -40,8 +40,8 @@ Ghosts& Ghosts::operator=(const Ghosts& other) {
         amount = other.amount;
         ghosts.clear();
         ghosts.reserve(amount);
-        for (const auto& Regular_Ghost : other.ghosts) {
-            ghosts.push_back(Regular_Ghost->clone());
+        for (const auto& ghost : other.ghosts) {
+            ghosts.push_back(ghost->clone());
         }
     }
     return *this;
@@ -52,11 +52,11 @@ Ghosts& Ghosts::operator=(const Ghosts& other) {
  */
 void Ghosts::move_all() {
     handle_colisions();
-    for (auto& Regular_Ghost : ghosts) {
-        if (Regular_Ghost->is_hit_mario()) {
+    for (auto& ghost : ghosts) {
+        if (ghost->is_hit_mario()) {
             hit_mario = true;
         }
-        Regular_Ghost->move();
+       ghost->move();
     }
 }
 
@@ -111,38 +111,38 @@ void Ghosts::handle_colisions() {
 
 
 /**
-* @brief Checks if a Regular_Ghost is in a given position
-* vanishes the Regular_Ghost if it is and return true, false otherwise.
+* @brief Checks if a ghost is in a given position
+* vanishes the ghost if it is and return true, false otherwise.
 * @param pos The position to check.
 * */
 void Ghosts::was_hit(Coordinates pos) {
 
-    for (auto& Regular_Ghost : ghosts) {
+    for (auto& ghost : ghosts) {
 
-        // If the barrel is inactive skip it
-        if (!Regular_Ghost->is_active()) continue;
+        // If the ghost is inactive skip it
+        if (!ghost->is_active()) continue;
 
-        if (pos == Regular_Ghost->get_pos()) {
-            gotoxy(Regular_Ghost->get_pos());
+        if (pos == ghost->get_pos()) {
+            gotoxy(ghost->get_pos());
 			if (display_flag) {
 				std::cout << "*";
             }
 			else {
-				current_screen[Regular_Ghost->get_pos().y][Regular_Ghost->get_pos().x] = ' ';
+				current_screen[ghost->get_pos().y][ghost->get_pos().x] = ' ';
 			}
             Sleep(150);
 
-            Regular_Ghost->reset();
+            ghost->reset();
             break;
         };
     }
 }
 
 /**
- * @brief Method to check if any Regular_Ghost hit Regular_Ghost.
- * @param g1 Regular_Ghost by const ref.
- * @param g2 Regular_Ghost by const ref.
- * @return True if Regular_Ghost was hit by Regular_Ghost, false otherwise.
+ * @brief Method to check if any ghost hit ghost.
+ * @param g1 ghost by const ref.
+ * @param g2 ghost by const ref.
+ * @return True if ghost was hit by ghost, false otherwise.
  */
 bool Ghosts::colide(const std::unique_ptr<Ghost_Base>& g1, const std::unique_ptr<Ghost_Base>& g2) const {
 
@@ -152,7 +152,7 @@ bool Ghosts::colide(const std::unique_ptr<Ghost_Base>& g1, const std::unique_ptr
 		g1->get_dest() == g2->get_pos());
 }
 /**
- * @brief Method to check if Mario was hit by any Regular_Ghost.
+ * @brief Method to check if Mario was hit by any ghost.
  * @return True if Mario was hit, false otherwise.
  */
 bool Ghosts::hitted_mario() const {

@@ -139,7 +139,4 @@ protected:
 	virtual void handle_fail(std::chrono::steady_clock::time_point start_t) = 0;
 	virtual void handle_success(std::chrono::steady_clock::time_point start_t) = 0;
 	virtual void handle_exit(std::chrono::steady_clock::time_point start_t) = 0;
-
-	private:
-
 };

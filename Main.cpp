@@ -50,14 +50,14 @@ Game_Mode process_input(int argc, char* argv[]) {
 	}
 	else if (arg == "-load") {
 
-		arg = argc > 2 ? std::string(argv[2]) : "";
+		arg = argc > 2 ? std::string(argv[2]) : empty;
 
 		if (arg == "-silent") {
 			std::cout << "Running in LOAD mode (silent)." << std::endl;
 			mode = Game_Mode::SILENT;
 		}
 		else {
-			std::cout << "Running in LOAD mode." << std::endl;
+			std::cout << "Running in LOAD mode (visual)." << std::endl;
 			mode = Game_Mode::LOAD;
 		}
 	}

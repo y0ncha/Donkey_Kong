@@ -6,8 +6,8 @@
  * @param mario The Mario object.
  * @param dif_lvl The difficulty level.
  */
-Save_Level::Save_Level(std::string fname, Mario& mario, Difficulty _diff) :
-	Level_Base(fname, mario),
+Save_Level::Save_Level(std::string screen, Mario& mario, Difficulty _diff) :
+	Level_Base(screen, mario),
 	steps(generate_fname("steps"), std::ios::out),
     result(generate_fname("result"), std::ios::out) {
 
@@ -15,11 +15,18 @@ Save_Level::Save_Level(std::string fname, Mario& mario, Difficulty _diff) :
 	if (!steps.is_open()) {
 		push_error(Board::Err_Code::STEPS_FAIL);
 	}
+	else {
+		steps << static_cast<int>(diff) << std::endl; // Write the difficulty level to the steps file
+		steps << seed << std::endl; // Write the seed to the steps file
+	}
+
 	if (!result.is_open()) {
 		push_error(Board::Err_Code::RESULT_FAIL);
 	}
-	steps << static_cast<int>(diff) << std::endl; // Write the difficulty level to the steps file
-	steps << seed << std::endl; // Write the seed to the steps file
+	else {
+		result.close();
+	}
+
 }
 
 Save_Level::~Save_Level() {
@@ -41,6 +48,7 @@ Game_State Save_Level::start() {
     char input; // Variable to hold the user input
     Ctrl key; // Variable to hold the key input
 
+	if (!steps.is_open()) return Game_State::TERMINATE; // todo if need result to be open ####
     render_level(); // Update the game screen
 
 	while (state == Game_State::RUN) { // Main game loop
@@ -58,7 +66,6 @@ Game_State Save_Level::start() {
 			}
 			else if (mario.update_dir(input)) { // If any other key is pressed
 				steps << frames << " " << input << std::endl;
-
 			}
 		}
 		state = advance_entities(); // Advance all the entities in the game
