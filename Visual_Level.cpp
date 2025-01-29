@@ -68,7 +68,7 @@ Game_State Visual_Level::start() {
 			next_step = read_next();
 		}
 		state = advance_entities(); // Advance all the entities in the game
-		Sleep(DEF_DELAY); // Delay for 100 milliseconds
+		Sleep(REPLAY_DELAY); // Delay for 100 milliseconds
 		frames++;
 	}
 	return state;
