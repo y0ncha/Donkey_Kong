@@ -3,8 +3,8 @@
 /**
  * @brief Constructor for the Ghost_Base class.
  * @param pBoard Pointer to the game board.
- * @param icon Character representing the Regular_Ghost entity.
- * @param init_pos Initial position of the Regular_Ghost entity.
+ * @param icon Character representing the Ghost_Base entity.
+ * @param init_pos Initial position of the Ghost_Base entity.
  */
 Ghost_Base::Ghost_Base(const Board* pBoard, char icon, Coordinates init_pos)
     : Entity(pBoard, icon, init_pos) {
@@ -14,7 +14,7 @@ Ghost_Base::Ghost_Base(const Board* pBoard, char icon, Coordinates init_pos)
 }
 
 /**
- * @brief Checks if the Regular_Ghost's next move is valid.
+ * @brief Checks if the Ghost_Base's next move is valid.
  * @return True if the move is valid, false otherwise.
  */
 bool Ghost_Base::valid_move() {
@@ -27,8 +27,8 @@ bool Ghost_Base::valid_move() {
 }
 
 /**
- * @brief Initializes the direction of the Regular_Ghost.
- * @return The initial direction of the Regular_Ghost.
+ * @brief Initializes the direction of the Ghost_Base.
+ * @return The initial direction of the Ghost_Base.
  */
 Coordinates Ghost_Base::init_dir() {
 
@@ -42,8 +42,8 @@ Coordinates Ghost_Base::init_dir() {
 }
 
 /**
- * @brief Updates the direction of the Regular_Ghost based on probability.
- *        The Regular_Ghost has a small chance to change direction randomly.
+ * @brief Updates the direction of the Ghost_Base based on probability.
+ *        The Ghost_Base has a small chance to change direction randomly.
  */
 bool Ghost_Base::update_dir(char key) {
 
@@ -62,7 +62,7 @@ bool Ghost_Base::update_dir(char key) {
 }
 
 /**
- * @brief Resets the Regular_Ghost to its initial state.
+ * @brief Resets the Ghost_Base to its initial state.
  */
 void Ghost_Base::reset() {
     Entity::reset();
@@ -71,7 +71,7 @@ void Ghost_Base::reset() {
 }
 
 /**
- * @brief Kills the Regular_Ghost by making it vanish and setting it to inactive.
+ * @brief Kills the Ghost_Base by making it vanish and setting it to inactive.
  */
 void Ghost_Base::kill() {
     Entity::reset();
@@ -89,7 +89,7 @@ void Ghost_Base::handle_falling() {}
 char Ghost_Base::handle_collision() { return ' '; }
 
 /**
- * @brief Sets the direction of the Regular_Ghost.
+ * @brief Sets the direction of the Ghost_Base.
  * @param coord The new direction coordinates.
  */
 void Ghost_Base::set_dir(Coordinates coord) {
@@ -97,8 +97,8 @@ void Ghost_Base::set_dir(Coordinates coord) {
 }
 
 /**
- * @brief Checks if the Regular_Ghost has hit Mario.
- * @return True if the Regular_Ghost has hit Mario, false otherwise.
+ * @brief Checks if the Ghost_Base has hit Mario.
+ * @return True if the Ghost_Base has hit Mario, false otherwise.
  */
 bool Ghost_Base::is_hit_mario() const {
     char current = getch_console(get_pos());
@@ -109,15 +109,15 @@ bool Ghost_Base::is_hit_mario() const {
 }
 
 /**
- * @brief Checks if the Regular_Ghost is active.
- * @return True if the Regular_Ghost is active, false otherwise.
+ * @brief Checks if the Ghost_Base is active.
+ * @return True if the Ghost_Base is active, false otherwise.
  */
 bool Ghost_Base::is_active() const {
     return active;
 }
 
 /**
- * @brief Activates the Regular_Ghost.
+ * @brief Activates the Ghost_Base.
  */
 void Ghost_Base::activate() {
     active = true;

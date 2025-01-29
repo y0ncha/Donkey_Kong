@@ -2,42 +2,45 @@
 #include "Ghost_Base.h"
 
 /**
- * @class Regular_Ghost
- * Represents a Regular_Ghost entity in the game.
+ * @class Master_Ghost
+ * Represents a Master_Ghost entity in the game.
  */
 class Master_Ghost : public Ghost_Base {
 
 public:
-	// Constructor for the Regular_Ghost class
+	// Constructor for the Master_Ghost class
 	Master_Ghost(const Board* pBoard);
 
-	// Method to move the Regular_Ghost
+	// Method to move the Master_Ghost
 	void move() override;
 
-	// Method to clone the Regular_Ghost entity
+	// Method to clone the Master_Ghost entity
 	std::unique_ptr<Ghost_Base> clone() const override;
+
+	// Method to reset the Master_Ghost
+	void reset() override;
 
 private:
 
-	// State of the Regular_Ghost
+	// State of the Master_Ghost
 	enum class State { IDLE, CLIMBING } state = State::IDLE;
 
-	// Makes Regular_Ghost climb up
+	// Makes Master_Ghost climb up
 	void climb();
 
-	// Checks if Regular_Ghost can climb down
+	// Checks if Master_Ghost can climb down
 	bool can_climb_down() const;
 
-	// Checks if Regular_Ghost can climb up
+	// Checks if Master_Ghost can climb up
 	bool can_climb_up() const;
 
-	// Checks if Regular_Ghost can start climb
+	// Checks if Master_Ghost can start climb
 	bool can_start_climb() const;
 
-	// Checks if Regular_Ghost can climb
+	// Checks if Master_Ghost can climb
 	bool can_climb() const;
 
-	// Handles Regular_Ghost's climbing logic
+	// Handles Master_Ghost's climbing logic
 	void handle_climbing();
 
 };
