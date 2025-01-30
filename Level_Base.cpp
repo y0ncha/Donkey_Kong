@@ -210,6 +210,16 @@ const std::vector<Board::Err_Code>& Level_Base::get_errors() {
 }
 
 /**
+ * @brief Determines if an action is required in the result file.
+ * @param state The game state.
+ * @return True if an action is required, false otherwise.
+ */
+bool Level_Base::is_result_action_required(Game_State state)
+{
+    return (state == Game_State::SUCCESS || state == Game_State::FAIL || state==Game_State::RETRY);
+}
+
+/**
  * @brief Pushes an error to the error vector.
  * @param err The error code to push.
  */

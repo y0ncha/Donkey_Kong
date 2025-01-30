@@ -36,9 +36,14 @@ Game_State Silent_Level::start() {
 			else {
 				mario.update_dir(input); // If any other key is pressed
 			}
-			next_step = read_next();
+			next_step = read_next(Pair_Type::STEPS);
 		}
 		state = advance_entities(); // Advance all the entities in the game
+		if (is_result_action_required(state)) {
+			check_result(state);
+			if (next_res.second != static_cast<char>(Result_Type::SCORE_GAINED))
+				next_res = read_next(Pair_Type::RES);
+		}
 		frames++; // Increment the frame counter
 	}
 	return state;

@@ -36,6 +36,9 @@ public:
     // Get the singleton instance of Display
     static Display& get_instance(Game_Base* pGame = nullptr);
 
+    // put the result errors in the static vector
+    static void push_res_errors(const std::string str);
+
     // Display the Game_Base's different menus and messages
     void pause_menu() const;
     Menu_Options main_menu() const;
@@ -51,6 +54,7 @@ public:
     void keys_menu() const;
     void prompt_nickname() const;
 	void top_scores() const;
+    void result_message() const;
 
 private:
 
@@ -80,6 +84,9 @@ private:
     // Displays a flashing message on the screen
     void flash_message(const std::vector<std::string>& messages, const std::vector<Coordinates>& positions) const;
 
+    // Vector of results errors messages
+    static std::vector<std::string> Res_Errors;
+
     static char main_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
     static char keys_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
     static char pause_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
@@ -93,4 +100,7 @@ private:
     static char error_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
     static char nickname_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]; 
     static char scores_board[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char result_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char step_file_missing[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char result_file_missing[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
 };

@@ -50,6 +50,18 @@ enum class Game_Mode {
 	INVALID, // Invalid game mode
 };
 
+// Enum for the result types
+enum class Result_Type {
+	LIFE_LOST='L',// Mario lost life 
+	FINISH_SCREEN='F',// Mario finished the screen
+    SCORE_GAINED='S',// How much score mario gained
+};
+
+enum class Pair_Type {
+	RES, // Pair for the result
+	STEPS, // Pair for the steps
+};
+
 // Const to hold the screen dimensions
 constexpr size_t SCREEN_WIDTH = 80; // Width of the screen
 constexpr size_t SCREEN_HEIGHT = 25; // Height of the screen

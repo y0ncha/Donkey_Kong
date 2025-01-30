@@ -46,6 +46,9 @@ public:
     // Method to get the errors from the board validation
     const std::vector<Board::Err_Code>& get_errors();
 
+    // Method to determine if an action is required in the result file
+    bool is_result_action_required(Game_State state);
+
     // Static consts for the game
     static constexpr int DEF_DELAY = 100; // Default delay in milliseconds
     static constexpr int REPLAY_DELAY = 60; // Delay for the replay
