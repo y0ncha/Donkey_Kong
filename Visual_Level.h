@@ -20,7 +20,7 @@ protected:
 	Game_State start() override;
 
 	// Method to read the next step from the file
-	std::pair<int, char> read_next(Pair_Type type);
+	std::pair<int, char> read_next(File_Type type);
 
 	// Variable to hold the next step
 	std::pair<int, char> next_step;
@@ -43,7 +43,14 @@ protected:
 	// Method to compare the score
 	void compare_score();
 
+	// Method to check if the result file is open
+	bool result_file_open() { return result.is_open(); };
+
+	// Method to check if the steps file is open
+	bool steps_file_open() { return steps.is_open(); };
+
 private: 
+
 
 	// File to read the steps from
 	std::ifstream steps;

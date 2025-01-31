@@ -39,6 +39,9 @@ public:
     // put the result errors in the static vector
     static void push_res_errors(const std::string str);
 
+    // print the file missing message
+    static void print_file_missing(File_Type type, Game_Mode mode);
+
     // Display the Game_Base's different menus and messages
     void pause_menu() const;
     Menu_Options main_menu() const;
@@ -101,6 +104,8 @@ private:
     static char nickname_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]; 
     static char scores_board[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
     static char result_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
-    static char step_file_missing[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
-    static char result_file_missing[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char step_file_missing_load[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char step_file_missing_save[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char result_file_missing_save[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char result_file_missing_load[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
 };

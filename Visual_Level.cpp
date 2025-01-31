@@ -11,19 +11,13 @@ Visual_Level::Visual_Level(std::string screen, Mario& mario) :
 	steps(generate_fname("steps"), std::ios::in),
 	result(generate_fname("result"), std::ios::in) {
 
-	if (!steps.is_open()) {
-		push_error(Board::Err_Code::STEPS_FAIL);
-	}
-	else {
+	if (steps.is_open()) {
 		steps >> diff;
 		steps >> seed;
-		next_step = read_next(Pair_Type::STEPS);
+		next_step = read_next(File_Type::STEPS);
 	}
-	if (!result.is_open()) {
-		push_error(Board::Err_Code::RESULT_FAIL);
-	}
-	else {
-		next_res = read_next(Pair_Type::RES);
+	if (result.is_open()) {
+		next_res = read_next(File_Type::RES); 
 	}
 	srand(seed);
 }
@@ -45,9 +39,10 @@ Game_State Visual_Level::start() {
 	Game_State state = Game_State::RUN; // Variable to hold the game state
 	char input; // Variable to hold the user input
 	Ctrl key; // Variable to hold the key input
+	
+	if (!steps.is_open()) return handle_steps_isnt_open(Game_Mode::LOAD);
+	if (!result.is_open()&&!res_message_appear) handle_result_isnt_open(Game_Mode::LOAD);
 
-	//todo screen for failure open
-	if (!steps.is_open()||!result.is_open()) return Game_State::TERMINATE;
 	render_level(); // Update the game screen
 
 	while (state == Game_State::RUN) { // Main game loop
@@ -66,13 +61,13 @@ Game_State Visual_Level::start() {
 			else {
 				mario.update_dir(input); // If any other key is pressed
 			}
-			next_step = read_next(Pair_Type::STEPS);
+			next_step = read_next(File_Type::STEPS);
 		}
 		state = advance_entities(); // Advance all the entities in the game
-		if (is_result_action_required(state)) {
+		if (result.is_open()&&is_result_action_required(state)) {
 			check_result(state);
 			if (next_res.second != static_cast<char>(Result_Type::SCORE_GAINED))
-			next_res = read_next(Pair_Type::RES);
+			next_res = read_next(File_Type::RES);
 		}
 		Sleep(REPLAY_DELAY); // Delay for 100 milliseconds
 		frames++;
@@ -84,12 +79,12 @@ Game_State Visual_Level::start() {
  * @brief Reads the next step or result from the file.
  * @return The next step or result
  */
-std::pair<int, char> Visual_Level::read_next(Pair_Type type) {
+std::pair<int, char> Visual_Level::read_next(File_Type type) {
 	std::pair<int, char> next_type;
-	if (type == Pair_Type::STEPS&&steps.is_open()) {
+	if (type == File_Type::STEPS&&steps.is_open()) {
 		steps >> next_type.first >> next_type.second;
 		}
-	else if(type == Pair_Type::RES&&result.is_open()){
+	else if(type == File_Type::RES&&result.is_open()){
 		result >> next_type.first >> next_type.second;
 	}
 	return next_type;
@@ -145,7 +140,7 @@ void Visual_Level::check_result(Game_State state)
 	case Game_State::SUCCESS:
 		unknown = Result_Type::FINISH_SCREEN;
 		if (valid = compare_results(Result_Type::FINISH_SCREEN)){// Check if the recorded result is the same as the displayed result
-			next_res = read_next(Pair_Type::RES);
+			next_res = read_next(File_Type::RES);
 			compare_score();
 		}
 		break;
@@ -153,7 +148,7 @@ void Visual_Level::check_result(Game_State state)
 	case Game_State::FAIL:
 		unknown = Result_Type::SCORE_GAINED;
 		if (valid = compare_results(Result_Type::LIFE_LOST)) {// Check if the recorded result is life lost
-			next_res = read_next(Pair_Type::RES);
+			next_res = read_next(File_Type::RES);
 			compare_score();
 		}
 	};
@@ -182,4 +177,5 @@ void Visual_Level::compare_score()
 		if (mario.get_score() != next_res.first)// Check if the recorded score is the same as the displayed score
 			Display::push_res_errors(generate_error_string(Result_Type::SCORE_GAINED));
 }
+
 

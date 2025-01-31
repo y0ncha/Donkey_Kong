@@ -11,17 +11,10 @@ Save_Level::Save_Level(std::string screen, Mario& mario, Difficulty _diff) :
 	steps(generate_fname("steps"), std::ios::out),
     result(generate_fname("result"), std::ios::out) {
 
-	// Check if the files are open
-	if (!steps.is_open()) {
-		push_error(Board::Err_Code::STEPS_FAIL);
-	}
-	else {
+	// Check if steps file is open
+	if (steps.is_open()) {
 		steps << static_cast<int>(diff) << std::endl; // Write the difficulty level to the steps file
 		steps << seed << std::endl; // Write the seed to the steps file
-	}
-
-	if (!result.is_open()) {
-		push_error(Board::Err_Code::RESULT_FAIL);
 	}
 }
 
@@ -44,10 +37,11 @@ Game_State Save_Level::start() {
     char input; // Variable to hold the user input
     Ctrl key; // Variable to hold the key input
 
-	//todo add screen for failure open steps 
-	if (!steps.is_open()) return Game_State::TERMINATE;
-	if (!result.is_open()) {};//todo add screen for failure open result
+	if (!steps.is_open()) return handle_steps_isnt_open(Game_Mode::SAVE);
+	if (!result.is_open() && !res_message_appear) handle_result_isnt_open(Game_Mode::SAVE);
+
     render_level(); // Update the game screen
+
 
 	while (state == Game_State::RUN) { // Main game loop
 

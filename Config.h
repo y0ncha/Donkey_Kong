@@ -21,7 +21,8 @@ enum class Game_State {
     PAUSE, // Game is paused
 	RETRY, // Level is reset
     FAIL, // Game finished unsuccessfully
-    SUCCESS, // Game finished successfully
+    SUCCESS=6,// Game finished successfully
+    NOT_OPEN=6,// level file not open
 	IDLE, // Game is idle
 };
 
@@ -57,7 +58,7 @@ enum class Result_Type {
     SCORE_GAINED='S',// How much score mario gained
 };
 
-enum class Pair_Type {
+enum class File_Type {
 	RES, // Pair for the result
 	STEPS, // Pair for the steps
 };

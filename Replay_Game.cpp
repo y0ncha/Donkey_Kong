@@ -154,7 +154,7 @@ bool Replay_Game::advance_level() {
 
 	// Validate the level, while invalid keep advancing
 	while (!errors.empty()) {
-		// todo present error
+		//display.error_message(errors); //todo uncomment
 		level_ind++;
 		// Check if the level is valid
 		if (level_ind < screens.size()) {

@@ -49,6 +49,15 @@ public:
     // Method to determine if an action is required in the result file
     bool is_result_action_required(Game_State state);
 
+    // Method to show the result file opening faile message
+    void handle_result_isnt_open(Game_Mode mode);
+
+    // Method to set the result file opening faile message appears to true
+    void set_res_message_appear() { res_message_appear = true; };
+
+    // Method to handle the steps file opening faile message
+    Game_State handle_steps_isnt_open(Game_Mode mode);
+
     // Static consts for the game
     static constexpr int DEF_DELAY = 100; // Default delay in milliseconds
     static constexpr int REPLAY_DELAY = 60; // Delay for the replay
@@ -110,5 +119,8 @@ protected:
 
 	// Method to get the screen's steps and results file names
 	const std::string generate_fname(const std::string& type);
+
+    // method to check if the result file opening faile message already appeard
+    bool res_message_appear = false;
 };
 
