@@ -21,7 +21,7 @@ enum class Game_State {
     PAUSE, // Game is paused
 	RETRY, // Level is reset
     FAIL, // Game finished unsuccessfully
-    SUCCESS = 6,// Game finished successfully
+	SUCCESS = 6,// Game finished successfully (intentionally both set to 6 to serve game's logic)
     NOT_OPEN = 6,// level file not open
 	IDLE, // Game is idle
 };
