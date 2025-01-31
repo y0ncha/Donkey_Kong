@@ -9,12 +9,13 @@ void Replay_Game::run() {
 
 	clear_screen(); // Clear the screen
 	gotoxy(0, 0); // Move the cursor to the top left corner
-	show_cursor(false); // Seed the random number generator
+	show_cursor(false); 
 	set_state(Game_State::RUN);
 
 	start();
 	reset();
-	// todo present result
+	
+	display.result_message(); // Display the result message
 	display.exit_message(); // Display the exit message
 }
 
@@ -153,7 +154,7 @@ bool Replay_Game::advance_level() {
 
 	// Validate the level, while invalid keep advancing
 	while (!errors.empty()) {
-		// todo present error
+		//display.error_message(errors); //todo uncomment
 		level_ind++;
 		// Check if the level is valid
 		if (level_ind < screens.size()) {

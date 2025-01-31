@@ -51,8 +51,6 @@ public:
         MARIO_OUTBOUND,
 		PAULINE_OUTBOUND,
 		SCREEN_FAIL,
-		STEPS_FAIL,
-		RESULT_FAIL,
     };
 
 	// Checks if the board is valid

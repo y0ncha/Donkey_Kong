@@ -210,6 +210,42 @@ const std::vector<Board::Err_Code>& Level_Base::get_errors() {
 }
 
 /**
+ * @brief Determines if an action is required in the result file.
+ * @param state The game state.
+ * @return True if an action is required, false otherwise.
+ */
+bool Level_Base::is_result_action_required(Game_State state)
+{
+    return (state == Game_State::SUCCESS || state == Game_State::FAIL || state==Game_State::RETRY);
+}
+
+/**
+ * @brief Handles the result file not being open.
+ * @param mode The game mode.
+ */
+void Level_Base::handle_result_isnt_open(Game_Mode mode)
+{
+    if (mode != Game_Mode::SILENT)
+        Display::print_file_missing(File_Type::RES, mode);
+    set_res_message_appear();
+    Display::push_res_errors(screen + "\nFailed to open results file");
+}
+
+/**
+ * @brief Handles the steps file not being open.
+ * @param mode The game mode.
+ * @return Game_State::NOT_OPEN.
+ */
+Game_State Level_Base::handle_steps_isnt_open(Game_Mode mode)
+{
+    if (mode != Game_Mode::SILENT)
+        Display::print_file_missing(File_Type::STEPS, mode);
+    Display::push_res_errors(screen + "\nFailed to open steps file");
+    return Game_State::NOT_OPEN;// to move to next screen
+}
+
+
+/**
  * @brief Pushes an error to the error vector.
  * @param err The error code to push.
  */

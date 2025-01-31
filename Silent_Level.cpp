@@ -17,6 +17,10 @@ Game_State Silent_Level::start() {
 	Game_State state = Game_State::RUN; // Variable to hold the game state
 	char input; // Variable to hold the user input
 	Ctrl key; // Variable to hold the key input
+
+	if (!steps_file_open()) return handle_steps_isnt_open(Game_Mode::SILENT);
+	if (!result_file_open() && !res_message_appear) handle_result_isnt_open(Game_Mode::SILENT);
+
 	render_level(); // Update the game screen
 
 	while (state == Game_State::RUN) { // Main game loop
@@ -36,9 +40,14 @@ Game_State Silent_Level::start() {
 			else {
 				mario.update_dir(input); // If any other key is pressed
 			}
-			next_step = read_next();
+			next_step = read_next(File_Type::STEPS);
 		}
 		state = advance_entities(); // Advance all the entities in the game
+		if (result_file_open()&& is_result_action_required(state)) {
+			check_result(state);
+			if (next_res.second != static_cast<char>(Result_Type::SCORE_GAINED))
+				next_res = read_next(File_Type::RES);
+		}
 		frames++; // Increment the frame counter
 	}
 	return state;
