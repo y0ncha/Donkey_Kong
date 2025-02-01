@@ -1,0 +1,35 @@
+# File Formats
+
+## Steps Format (dkong_*.steps)
+
+The steps file records the sequence of key inputs and frames during a game run. The format is as follows:
+
+1. **Difficulty Level**: An integer representing the difficulty level of the game.
+2. **Seed**: The seed used for the random number generator, typically the time of the run.
+3. **Steps**: A series of pairs representing the frame number and the key input. Only valid steps are recorded.
+   - `<frame_num (unsigned long), key_input (char)>`
+4. **End of Run**: The last frame and a terminator character to indicate the end of the run.
+   - `<last_frame, TEMINATOR>` (where TERMINATOR = '~')
+
+====================================================================================================
+
+## Result Format (dkong_*.result)
+
+The result file records significant events during the game run. The format is as follows:
+
+1. **Life Lost**: The frame number when Mario loses a life.
+   - `<frame_num (int), Result_Type::LIFE_LOST>`
+2. **Finish Screen**: The frame number when Mario finishes the screen (only if finished).
+   - `<frame_num (int), Result_Type::FINISH_SCREEN>`
+3. **Score Gained**: The score gained by Mario.
+   - `<score (int), Result_Type::SCORE_GAINED>`
+
+### Result_Type Definitions
+- `LIFE_LOST = 'L'` : Mario lost a life.
+- `FINISH_SCREEN = 'F'` : Mario finished the screen.
+- `SCORE_GAINED = 'S'` : The score Mario gained.
+
+
+
+
+
