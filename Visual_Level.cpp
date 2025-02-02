@@ -93,7 +93,7 @@ std::pair<int, char> Visual_Level::read_next(File_Type type) {
 // Method to generate the error string
 std::string Visual_Level::generate_error_string(Result_Type type,bool UnKnown) const
 {
-	std::string res = screen+"\n";
+	std::string res ="##ERROR##- "+ screen + "\n";
 	if (!UnKnown) {
 		if (type == Result_Type::LIFE_LOST || type == Result_Type::FINISH_SCREEN) {
 			res += " -- Recorded screen frame: " + std::to_string(next_res.first) + " -- Dispalyed screen frame: " + std::to_string(frames);
@@ -176,6 +176,13 @@ void Visual_Level::compare_score()
 	if (next_res.second == static_cast<char>(Result_Type::SCORE_GAINED))// Check if the recorded result is score gained
 		if (mario.get_score() != next_res.first)// Check if the recorded score is the same as the displayed score
 			Display::push_res_errors(generate_error_string(Result_Type::SCORE_GAINED));
+		else
+		{
+			Display::push_res_errors("##EQUAL SCORE## - " + screen 
+				                   + "\n -- Recorded screen score : " + std::to_string(next_res.first)
+								     + " -- Displayed screen score: " + std::to_string(mario.get_score()));
+			Display::Num_of_Test_Passed++;	
+		}
 }
 
 

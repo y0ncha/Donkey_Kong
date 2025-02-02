@@ -42,6 +42,8 @@ public:
     // print the file missing message
     static void print_file_missing(File_Type type, Game_Mode mode);
 
+    static int Num_of_Test_Passed; // Number of tests passed
+
     // Display the Game_Base's different menus and messages
     void pause_menu() const;
     Menu_Options main_menu() const;
@@ -64,6 +66,8 @@ private:
     // Static consts for the Game_Base
     static constexpr int LEVELS_PER_PAGE = 5; // Number of levels to display per page 
 
+    static constexpr int RESULTS_ERRORS_PER_PAGE = 4; //Number of results errors display per page
+    
     // Private constructor to prevent instantiation
     Display() = default;
 
@@ -83,6 +87,8 @@ private:
 
     // Prints the levels from the levels_fname list
     void print_levels(int page_ind, int last_page) const;
+
+    void print_res_errors(int page_ind, int last_page) const;
 
     // Displays a flashing message on the screen
     void flash_message(const std::vector<std::string>& messages, const std::vector<Coordinates>& positions) const;

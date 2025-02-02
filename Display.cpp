@@ -147,6 +147,22 @@ void Display::print_levels(int page_ind, int last_page) const {
     std::cout << "Page " << page_ind << "/" << last_page;
 }
 
+void Display::print_res_errors(int page_ind, int last_page) const
+{
+    short row = 10;
+    auto it = Res_Errors.begin();
+    auto end_it= Res_Errors.end();
+    std::advance(it, page_ind * RESULTS_ERRORS_PER_PAGE);
+
+    for (int i = 1; it != end_it && i <= RESULTS_ERRORS_PER_PAGE; i++, ++it) {
+        gotoxy(1, row);
+        std::cout << *it;
+        row += 3;
+    }
+    gotoxy(71, 24);
+    std::cout << "Page " << page_ind << "/" << last_page;
+}
+
 /**
 * @brief Prints the levels menu and handles the user input.
 * @return True if a level was selected, false otherwise.
@@ -523,50 +539,52 @@ void Display::top_scores() const {
 void Display::result_message() const
 {
     print_layout(result_layout);
-    if (Res_Errors.empty()) {
-        gotoxy(22, 13);
-        std::cout << ("No errors were found in the record.");
+
+    if (Res_Errors.size() == Num_of_Test_Passed) {
+        gotoxy(19, 13);
+        std::cout << ("## No errors were found in the record. ##");
         Sleep(500);
-        gotoxy(36, 15);
-        std::cout << ("Exiting.");
-        gotoxy(35, 16);
-        for (int i = 0; i < 9; i++) {
+        gotoxy(31, 15);
+        std::cout << ("Showing score");
+        gotoxy(31, 16);
+        for (int i = 0; i < 13; i++) {
             std::cout << (".");
-            Sleep(300);
+            Sleep(150);
         }
-        
     }
-    else {
-        int row = 10;
-        gotoxy(1, row);
-        for (const auto& error : Res_Errors) {
-            gotoxy(1, row);
-            std::cout << error;
-            Sleep(500);
-            row += 3;
-            if (row >= 22) {
-                Sleep(3000);
-                print_layout(result_layout);
-                row = 10;
-                gotoxy(23, row);
-                std::cout << "Too many problems to display.";
-                for (int i = 0; i < 5; i++) {
-                    std::cout << (".");
-                    Sleep(200);
+
+        Menu_Options input = Menu_Options::DEF;
+        int last_page = (int)Res_Errors.size() / RESULTS_ERRORS_PER_PAGE, page_ind = 0;
+        bool pending = true;
+
+        print_layout(result_layout);
+        print_res_errors(page_ind, last_page);
+
+        while (pending) {
+            flash_message({ "Press ESC to exit",  "Press Enter for next page" }, { {28, 22}, {26, 23} });
+            if (_kbhit()) {
+                input = static_cast<Menu_Options>(_getch());
+
+                switch (input) {
+                case Menu_Options::RESUME:
+                    pending = false;
+                    break;
+                case Menu_Options::ENTER:
+                    page_ind = (last_page == page_ind) ? 0 : page_ind + 1;
+                    print_layout(result_layout);
+                    print_res_errors(page_ind, last_page);
+                    break;
                 }
-                row++;
             }
         }
-        for (int i=5;i>0;i--) {
-			gotoxy(35, 24);
-			std::cout << "Exit in "<<i;
-			Sleep(1000);
-		}
-    }
+
+    
 }
 
 // Static member initialization
 std::vector<std::string> Display::Res_Errors;
+
+int Display::Num_of_Test_Passed = 0;
 
 // Main menu layout
 char Display::main_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1] = {
