@@ -59,7 +59,7 @@ void Display::print_file_missing(File_Type type, Game_Mode mood)
     gotoxy(35, 23);
     for (int i = 0; i < 9; i++) {
         std::cout << (".");
-        Sleep(200);
+        Sleep(400);
     }
 }
 
