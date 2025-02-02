@@ -50,6 +50,12 @@ Game_State Silent_Level::start() {
 		}
 		frames++; // Increment the frame counter
 	}
+	if (level_success && (state == Game_State::EXIT || state == Game_State::FAIL))
+		state = Game_State::SUCCESS;
+
+	if (state == Game_State::EXIT || state == Game_State::FAIL || state == Game_State::SUCCESS)
+		push_remaining_results();
+
 	return state;
 }
 

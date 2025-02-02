@@ -53,9 +53,16 @@ enum class Game_Mode {
 
 // Enum for the result types
 enum class Result_Type {
+
+    LEVEL_END = 'E',// Level ended
 	LIFE_LOST = 'L',// Mario lost life 
 	FINISH_SCREEN = 'F',// Mario finished the screen
     SCORE_GAINED = 'S',// How much score mario gained
+};
+
+enum class SUC_OR_FAIL {
+	SUCCESS,
+	FAIL,
 };
 
 enum class File_Type {

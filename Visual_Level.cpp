@@ -17,6 +17,7 @@ Visual_Level::Visual_Level(std::string screen, Mario& mario) :
 		next_step = read_next(File_Type::STEPS);
 	}
 	if (result.is_open()) {
+		is_level_sucsses();
 		next_res = read_next(File_Type::RES); 
 	}
 	srand(seed);
@@ -72,6 +73,15 @@ Game_State Visual_Level::start() {
 		Sleep(REPLAY_DELAY); // Delay for 100 milliseconds
 		frames++;
 	}
+
+	if (level_success && (state == Game_State::EXIT || state == Game_State::FAIL)) {
+		state = Game_State::SUCCESS;
+		Display::print_load_bug();
+	}
+
+	if (state== Game_State::EXIT||state==Game_State::FAIL||state==Game_State::SUCCESS)
+	push_remaining_results();
+
 	return state;
 }
 
@@ -141,7 +151,6 @@ void Visual_Level::check_result(Game_State state)
 		unknown = Result_Type::FINISH_SCREEN;
 		if (valid = compare_results(Result_Type::FINISH_SCREEN)){// Check if the recorded result is the same as the displayed result
 			next_res = read_next(File_Type::RES);
-			compare_score();
 		}
 		break;
 
@@ -149,7 +158,6 @@ void Visual_Level::check_result(Game_State state)
 		unknown = Result_Type::SCORE_GAINED;
 		if (valid = compare_results(Result_Type::LIFE_LOST)) {// Check if the recorded result is life lost
 			next_res = read_next(File_Type::RES);
-			compare_score();
 		}
 	};
 	// Push the unknown error to the error vector if the result not match the game state
@@ -183,6 +191,45 @@ void Visual_Level::compare_score()
 								     + " -- Displayed screen score: " + std::to_string(mario.get_score()));
 			Display::Num_of_Test_Passed++;	
 		}
+}
+
+void Visual_Level::is_level_sucsses()
+{
+	int size = sizeof(int) + sizeof(char) + sizeof(" ");
+	result.seekg(-size, std::ios::end);
+	next_res = read_next(File_Type::RES);
+	if (next_res.second == static_cast<char>(Result_Type::LEVEL_END) && next_res.first == static_cast<int>(SUC_OR_FAIL::SUCCESS))
+		level_success = true;
+	else level_success = false;
+	result.seekg(0, std::ios::beg);
+}
+
+// Method to push the remaining results to the vector
+void Visual_Level::push_remaining_results()
+{
+	std::string res;
+
+	while (next_res.second!=static_cast<char> (Result_Type::LEVEL_END))
+	{
+		res = "";
+		switch (next_res.second)
+		{
+		case static_cast<char>(Result_Type::LIFE_LOST):
+			res += "##LOAD AND SAVE NOT EQUAL## "+screen+"\n--Recorded screen frame : "
+				+ std::to_string(next_res.first) + " Mario lost life";
+			Display::push_res_errors(res);
+			break;
+		case static_cast<char>(Result_Type::FINISH_SCREEN):
+			res += "##LOAD AND SAVE NOT EQUAL## " + screen + "\n--Recorded screen frame : "
+				+ std::to_string(next_res.first) + " Mario finished the screen";
+			Display::push_res_errors(res);
+			break;
+		case static_cast<char>(Result_Type::SCORE_GAINED):
+			compare_score();
+			break;
+		}
+		next_res=read_next(File_Type::RES);
+	}
 }
 
 

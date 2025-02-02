@@ -23,11 +23,14 @@ The result file records significant events during the game run. The format is as
    - `<frame_num (int), Result_Type::FINISH_SCREEN>`
 3. **Score Gained**: The score gained by Mario.
    - `<score (int), Result_Type::SCORE_GAINED>`
+4.**Level End**: Mario passed the stage successfully or was failed.
+   - '<SUC_OR_FAIL (int), Result_Type::LEVEL_END>'
 
 ### Result_Type Definitions
 - `LIFE_LOST = 'L'` : Mario lost a life.
 - `FINISH_SCREEN = 'F'` : Mario finished the screen.
 - `SCORE_GAINED = 'S'` : The score Mario gained.
+- `LEVEL_END = 'E'` : Mario passed/failed the stage.
 
 
 

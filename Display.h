@@ -42,7 +42,11 @@ public:
     // print the file missing message
     static void print_file_missing(File_Type type, Game_Mode mode);
 
-    static int Num_of_Test_Passed; // Number of tests passed
+    // print the load bug message
+    static void print_load_bug();
+
+    // Number of tests passed
+    static int Num_of_Test_Passed; 
 
     // Display the Game_Base's different menus and messages
     void pause_menu() const;
@@ -88,6 +92,7 @@ private:
     // Prints the levels from the levels_fname list
     void print_levels(int page_ind, int last_page) const;
 
+    // Prints the results errors from the Res_Errors list
     void print_res_errors(int page_ind, int last_page) const;
 
     // Displays a flashing message on the screen
@@ -114,4 +119,5 @@ private:
     static char step_file_missing_save[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
     static char result_file_missing_save[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
     static char result_file_missing_load[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
+    static char load_bug_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1];
 };
