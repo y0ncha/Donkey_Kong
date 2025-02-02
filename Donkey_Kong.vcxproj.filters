@@ -73,6 +73,9 @@
     <ClCompile Include="Master_Ghost.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="Mini_Game.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Barrel.h">
@@ -145,6 +148,9 @@
       <Filter>hdr</Filter>
     </ClInclude>
     <ClInclude Include="Master_Ghost.h">
+      <Filter>hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="Mini_Game.h">
       <Filter>hdr</Filter>
     </ClInclude>
   </ItemGroup>
