@@ -81,10 +81,12 @@ void Save_Level::write_to_result(Game_State state)
 	case Game_State::SUCCESS:
 		result << frames << " " << static_cast<char>(Result_Type::FINISH_SCREEN) << std::endl;
 		result << mario.get_score() << " " << static_cast<char>(Result_Type::SCORE_GAINED) << std::endl;
+		result << (int)SUC_OR_FAIL::SUCCESS<<" "<< static_cast<char>(Result_Type::LEVEL_END) << std::endl;
 		break;
 	case Game_State::FAIL:
 		result << frames << " " << static_cast<char>(Result_Type::LIFE_LOST) << std::endl;
 		result << mario.get_score() << " " << static_cast<char>(Result_Type::SCORE_GAINED) << std::endl;
+		result << (int)SUC_OR_FAIL::FAIL << " " << static_cast<char>(Result_Type::LEVEL_END) << std::endl;
 		break;
 	}
 }

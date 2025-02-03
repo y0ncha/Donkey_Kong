@@ -63,6 +63,16 @@ void Display::print_file_missing(File_Type type, Game_Mode mood)
     }
 }
 
+void Display::print_load_bug()
+{
+    Display& display = Display::get_instance();
+    display.print_layout(load_bug_layout);
+    gotoxy(35, 23);
+    for (int i = 0; i < 9; i++) {
+        std::cout << (".");
+        Sleep(350);
+    }
+}
 
 /**
 * @brief Prints the main menu and handles the user input.
@@ -154,7 +164,7 @@ void Display::print_res_errors(int page_ind, int last_page) const
     auto end_it= Res_Errors.end();
     std::advance(it, page_ind * RESULTS_ERRORS_PER_PAGE);
 
-    for (int i = 1; it != end_it && i <= RESULTS_ERRORS_PER_PAGE; i++, ++it) {
+    for (int i = 1; it != end_it && i <= RESULTS_ERRORS_PER_PAGE; ++i, ++it) {
         gotoxy(1, row);
         std::cout << *it;
         row += 3;
@@ -542,7 +552,7 @@ void Display::result_message() const
 
     if (Res_Errors.size() == Num_of_Test_Passed) {
         gotoxy(19, 13);
-        std::cout << ("## No errors were found in the record. ##");
+        std::cout << ("## No errors were found in the record ##");
         Sleep(500);
         gotoxy(31, 15);
         std::cout << ("Showing score");
@@ -554,7 +564,7 @@ void Display::result_message() const
     }
 
         Menu_Options input = Menu_Options::DEF;
-        int last_page = (int)Res_Errors.size() / RESULTS_ERRORS_PER_PAGE, page_ind = 0;
+        int last_page = (((int)Res_Errors.size())-1) / RESULTS_ERRORS_PER_PAGE, page_ind = 0;
         bool pending = true;
 
         print_layout(result_layout);
@@ -1130,4 +1140,33 @@ char Display::result_file_missing_load[SCREEN_HEIGHT][SCREEN_WIDTH + 1]
    R"!(                                                                                )!", // 23
    R"!(                                                                                )!", // 24
 
+};
+
+char Display::load_bug_layout[SCREEN_HEIGHT][SCREEN_WIDTH + 1]{
+    //01234567890123456789012345678901234567890123456789012345678901234567890123456789
+  R"!(                           _    _      _                                        )!", // 0
+  R"!(    ___   ___   _ __ ___  | |_ | |__  (_) _ __    __ _                          )!", // 1
+  R"!(   / __| / _ \ | '_ ` _ \ | __|| '_ \ | || '_ \  / _` |                         )!", // 2
+  R"!(   \__ \| (_) || | | | | || |_ | | | || || | | || (_| |                         )!", // 3
+  R"!(   |___/ \___/ |_| |_| |_| \__||_| |_||_||_| |_| \__, |                         )!", // 4
+  R"!(                          _                      |___/                          )!", // 5
+  R"!(   __      __ ___  _ __  | |_  __      __ _ __  ___   _ __    __ _              )!", // 6
+  R"!(   \ \ /\ / // _ \| '_ \ | __| \ \ /\ / /| '__|/ _ \ | '_ \  / _` |             )!", // 7
+  R"!(    \ V  V /|  __/| | | || |_   \ V  V / | |  | (_) || | | || (_| | _  _        )!", // 8
+  R"!(     \_/\_/  \___||_| |_| \__|   \_/\_/  |_|   \___/ |_| |_| \__, |(_)(_)       )!", // 9
+  R"!(                               _                  _          |___/              )!", // 10
+  R"!(       _ __ ___    ___ __   __(_) _ __    __ _   | |_  ___                      )!", // 11
+  R"!(      | '_ ` _ \  / _ \\ \ / /| || '_ \  / _` |  | __|/ _ \                     )!", // 12
+  R"!(      | | | | | || (_) |\ V / | || | | || (_| |  | |_| (_) |                    )!", // 13
+  R"!(      |_| |_| |_| \___/  \_/  |_||_| |_| \__, |   \__|\___/                     )!", // 14
+  R"!(                        _        _        |___/       _                         )!", // 15
+  R"!(     _ __    ___ __  __| |_     | |  ___ __   __ ___ | |                        )!", // 16
+  R"!(    | '_ \  / _ \\ \/ /| __|    | | / _ \\ \ / // _ \| |                        )!", // 17
+  R"!(    | | | ||  __/ >  < | |_     | ||  __/ \ V /|  __/| |                        )!", // 18
+  R"!(    |_| |_| \___|/_/\_\ \__|    |_| \___|  \_/  \___||_|                        )!", // 19
+  R"!(                                                                                )!", // 20
+  R"!(                                                                                )!", // 21
+  R"!(                                                                                )!", // 22
+  R"!(                                                                                )!", // 23
+  R"!(                                                                                )!"  // 24
 };
