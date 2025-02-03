@@ -4,16 +4,19 @@
  * @brief Constructor for the Ghosts class.
  * @param pBoard Pointer to the game board.
  */
-Ghosts::Ghosts(const Board* pBoard) : board(pBoard) {
+Ghosts::Ghosts(const Board* pBoard, const Mario& mario) : board(pBoard) {
+
     set_amount();
     ghosts.reserve(amount);
-    size_t ghost_count = board->count_entity(Board::Regular_Ghost);
-    size_t ghost_master_count = board->count_entity(Board::SUPER_GHOST);
-    for (size_t i = 0; i < ghost_count; ++i) {
+
+    size_t nof_regular = board->count_entity(Board::Regular_Ghost);
+    size_t nof_master = board->count_entity(Board::SUPER_GHOST);
+
+    for (size_t i = 0; i < nof_regular; ++i) {
         ghosts.push_back(std::make_unique<Regular_Ghost>(board));
     }
-    for (size_t i = 0; i < ghost_master_count; ++i) {
-        ghosts.push_back(std::make_unique<Master_Ghost>(board));
+    for (size_t i = 0; i < nof_master; ++i) {
+        ghosts.push_back(std::make_unique<Master_Ghost>(board, mario));
     }
 }
 

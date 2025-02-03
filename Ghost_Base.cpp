@@ -6,8 +6,8 @@
  * @param icon Character representing the Ghost_Base entity.
  * @param init_pos Initial position of the Ghost_Base entity.
  */
-Ghost_Base::Ghost_Base(const Board* pBoard, char icon, Coordinates init_pos)
-    : Entity(pBoard, icon, init_pos) {
+Ghost_Base::Ghost_Base(const Board* pBoard, char icon, Coordinates init_pos) : 
+    Entity(pBoard, icon, init_pos) {
     init_dir();
     set_last_dx(get_dx());
     active = true;
@@ -24,21 +24,6 @@ bool Ghost_Base::valid_move() {
 
     // Check if the next move is above floor and if is inbound
     return board->is_floor(next_floor) && board->path_clear(get_pos() + get_dir());
-}
-
-/**
- * @brief Initializes the direction of the Ghost_Base.
- * @return The initial direction of the Ghost_Base.
- */
-Coordinates Ghost_Base::init_dir() {
-
-    int dx = rand() % 2 ? 1 : -1;
-    Entity::set_dir(dx, 0);
-
-    if (!valid_move()) {
-        invert_dir();
-    }
-    return get_dir();
 }
 
 /**
@@ -59,6 +44,21 @@ bool Ghost_Base::update_dir(char key) {
         invert_dir();
     }
     return true;
+}
+
+/**
+ * @brief Initializes the direction of the Ghost_Base.
+ * @return The initial direction of the Ghost_Base.
+ */
+Coordinates Ghost_Base::init_dir() {
+
+    int dx = rand() % 2 ? 1 : -1;
+    Entity::set_dir(dx, 0);
+
+    if (!valid_move()) {
+        invert_dir();
+    }
+    return get_dir();
 }
 
 /**

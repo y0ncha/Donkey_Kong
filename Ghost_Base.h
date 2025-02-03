@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "Board.h"
+#include "Mario.h"
 
 /**
  * @class Ghost_Base
@@ -42,24 +43,24 @@ public:
 
 
 protected:
+
     // Method to update the direction of the Ghost_Base
-    virtual bool update_dir(char key = static_cast<char>(Ctrl::DEF)) override;
+    bool update_dir(char key = static_cast<char>(Ctrl::DEF));
+    
+    // Method to check if the Ghost_Base's next move is valid
+    bool valid_move();
 
 private:
 
     // Flag to indicate if the Ghost_Base is active
     bool active = false;
 
-    // Method to check if the Ghost_Base's next move is valid
-    bool valid_move();
-
     // Method to initialize the direction of the Ghost_Base
     Coordinates init_dir();
 
     // Empty implementation of handle_falling
-    virtual void handle_falling() override;
+    void handle_falling() override;
 
     // Empty implementation of handle_collision
-    virtual char handle_collision() override;
-
+    char handle_collision() override;
 };
