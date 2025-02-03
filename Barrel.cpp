@@ -99,6 +99,7 @@ void Barrel::print_explosion_phase(int radius, Coordinates pos) {
 
     if (radius == 0) {
         gotoxy(pos);
+
         char atPos = getch_console(pos);
         if (atPos == Board::MARIO || atPos == Board::SUPER_MARIO) {
             state = State::HIT_MARIO;
@@ -214,6 +215,7 @@ void Barrel::spawn() {
  * @return The type of object the barrel collides with.
  */
 char Barrel::handle_collision() {
+
     char obst = getch_console(get_pos() + get_dir());
 
     switch (obst) {
