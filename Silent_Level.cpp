@@ -49,6 +49,13 @@ Game_State Silent_Level::start() {
 				next_res = read_next(File_Type::RES);
 		}
 		frames++; // Increment the frame counter
+		/*for (int i = 0; i < SCREEN_HEIGHT; i++) {
+			for (int j = 0; j < SCREEN_WIDTH; j++) {
+				gotoxy(j, i);
+				std::cout << current_screen[i][j];
+			}
+		}
+		Sleep(20);*/
 	}
 	if (level_success && (state == Game_State::EXIT || state == Game_State::FAIL))
 		state = Game_State::SUCCESS;
