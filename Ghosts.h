@@ -12,7 +12,7 @@ class Ghosts {
 public:
 
     // Constructor for the Ghosts class
-    Ghosts(const Board* pBoard);
+    Ghosts(const Board* pBoard, const Mario& mario);
 
     // copy constructor
     Ghosts(const Ghosts& other);

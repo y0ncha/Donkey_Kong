@@ -12,7 +12,7 @@ public:
 	Regular_Ghost(const Board* pBoard = nullptr);
 
 	// Method to move the Regular_Ghost
-	virtual void move() override;
+	void move() override;
 
 	// Method to clone the Regular_Ghost entity
 	std::unique_ptr<Ghost_Base> clone() const override;
