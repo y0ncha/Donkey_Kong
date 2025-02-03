@@ -172,13 +172,7 @@
     <Text Include="dkong_03.screen.txt">
       <Filter>txt</Filter>
     </Text>
-    <Text Include="dkong_10.screen.txt">
-      <Filter>txt</Filter>
-    </Text>
-    <Text Include="dkong_A.screen.txt">
-      <Filter>txt</Filter>
-    </Text>
-    <Text Include="dkong_b.screen.txt">
+    <Text Include="file_format.txt">
       <Filter>txt</Filter>
     </Text>
   </ItemGroup>

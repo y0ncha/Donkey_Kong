@@ -22,6 +22,9 @@ public:
 	// Starts the level lop and saves the relvant data
 	Game_State start() override;
 
+	// Write the result to the file
+	void write_to_result(Game_State state);
+
 private:
 
 	// File to save the steps

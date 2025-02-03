@@ -21,7 +21,8 @@ enum class Game_State {
     PAUSE, // Game is paused
 	RETRY, // Level is reset
     FAIL, // Game finished unsuccessfully
-    SUCCESS, // Game finished successfully
+	SUCCESS = 6,// Game finished successfully (intentionally both set to 6 to serve game's logic)
+    NOT_OPEN = 6,// level file not open
 	IDLE, // Game is idle
 };
 
@@ -48,6 +49,25 @@ enum class Game_Mode {
 	LOAD, // Load game mode
 	SILENT, // Silent load game mode
 	INVALID, // Invalid game mode
+};
+
+// Enum for the result types
+enum class Result_Type {
+
+    LEVEL_END = 'E',// Level ended
+	LIFE_LOST = 'L',// Mario lost life 
+	FINISH_SCREEN = 'F',// Mario finished the screen
+    SCORE_GAINED = 'S',// How much score mario gained
+};
+
+enum class SUC_OR_FAIL {
+	SUCCESS,
+	FAIL,
+};
+
+enum class File_Type {
+	RES, // Pair for the result
+	STEPS, // Pair for the steps
 };
 
 // Const to hold the screen dimensions
