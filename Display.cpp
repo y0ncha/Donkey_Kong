@@ -422,9 +422,13 @@ void Display::prompt_nickname() const {
     print_layout(nickname_layout);
     gotoxy(37, 15);
 
-    std::string buff; // Buffer to store the nickname (using string to make sure non of the chars will be left in the input stream)
-    buff.reserve(Hof::NAME_LEN); // Reserve the maximum nickname length
-    std::cin >> buff; // Read up to 6 characters, leaving space for the null terminator
+    std::string buff;
+    buff.reserve(Hof::NAME_LEN);
+    std::cin >> buff;
+
+    if (buff.length() > 6) {
+        buff = buff.substr(0, 6); // Truncate to 6 characters
+    }
 
     pGame->set_nickname(buff);
 }
